@@ -6,12 +6,13 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "responses.hpp"
 
 class User {
 private:
-  std::string nickname;
-  std::string username;
-  UserPriviledge priviledge;
+  std::string m_nickname;
+  std::string m_username;
+  UserPriviledge m_priviledge;
 
 public:
   User();
@@ -19,8 +20,9 @@ public:
   User(const User &copy);
   ~User();
 
-  void setNickname();
-  void setUsername();
+  void setNickname(std::string nickname);
+  void setUsername(std::string username);
+
 	std::string getNickname() const;
 	std::string getUsername() const;
   UserPriviledge getPriviledge() const;

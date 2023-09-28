@@ -4,18 +4,27 @@
 #include "user.hpp"
 #include <map>
 #include <string>
+#include "responses.hpp"
 
 class User;
 
 class UserManagement {
 private:
-  std::map<int, User> users;
+  std::map<int, User> m_users;
 
 public:
   void addUser(int socket_fd, std::string nickname, std::string username,
                UserPriviledge priviledge);
   void eraseUser(int socket_fd);
 	void print();
+	int getNumberUsers() const;
+
+
+
+	std::string getNumberUsersAsString();
+	std::string getNick(int socket);
+
+	void setNick(int socket, std::string parameter);
 };
 
 #endif

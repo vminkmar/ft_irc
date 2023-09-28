@@ -1,14 +1,14 @@
 #include "user.hpp"
-User::User() : nickname(""), username(""), priviledge(USER){}
+User::User() : m_nickname(""), m_username(""), m_priviledge(USER){}
 User::User(std::string nickname, std::string username,
            UserPriviledge priviledge)
-    : nickname(nickname), username(username), priviledge(priviledge) {}
+    : m_nickname(nickname), m_username(username), m_priviledge(priviledge) {}
 
 User::User(const User &copy)
 {
-	this->nickname = copy.nickname;
-	this->username = copy.username;
-	this->priviledge = copy.priviledge;
+	this->m_nickname = copy.m_nickname;
+	this->m_username = copy.m_username;
+	this->m_priviledge = copy.m_priviledge;
 }
 
 User::~User() {}
@@ -16,10 +16,15 @@ User::~User() {}
 
 void getUser(){}
 
-std::string User::getNickname() const { return nickname;}
-std::string User::getUsername() const { return username;}
-UserPriviledge User::getPriviledge() const { return priviledge;}
+std::string User::getNickname() const { return m_nickname;}
+std::string User::getUsername() const { return m_username;}
+UserPriviledge User::getPriviledge() const { return m_priviledge;}
 
+
+void User::setNickname(std::string nickname)
+{
+	this->m_nickname = nickname;
+}
 
 std::ostream &operator<<(std::ostream &os, const User &user)
 {

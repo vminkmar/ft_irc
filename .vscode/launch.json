@@ -4,8 +4,8 @@
 	"configurations": [{
 		"name":"Launch",
 		"type":"cppdbg",
-		"program":"${workspaceFolder}/irc",
-		"args":[""],
+		"program":"${workspaceFolder}/a.out",
+		"args":["Hello darkness my old friend"],
 		"cwd":"${workspaceFolder}",
 		"request":"launch",
 		"MIMode":"lldb"

@@ -5,6 +5,5 @@ int main(int argc, char *argv[]) {
   (void)argv;
   Server server;
   // server.getPortAndPasswd(argv);
-	close(PORT);
   server.createSocket();
 }
