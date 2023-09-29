@@ -20,11 +20,11 @@ public:
 	int getNumberUsers() const;
 
 
-
 	std::string getNumberUsersAsString();
 	std::string getNick(int socket);
 
 	void setNick(int socket, std::string parameter);
+	void setUser(int socket, std::string parameter);
 };
 
 #endif

@@ -7,7 +7,7 @@ Server::~Server(){};
 
 void Server::createSocket() {
   // create the socket for the server
-  
+
   this->m_addrlen = sizeof(address);
   if ((this->m_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     error("In socket");
@@ -65,7 +65,7 @@ void Server::receiveMessage() {
 
       char buffer[30000] = {0};
       int valread = read(m_pollfds[i].fd, buffer, sizeof(buffer));
-      valread = 0; //error
+      valread = 0; // error
       parseIncomingMessage(buffer, m_pollfds[i].fd);
       memset(buffer, 0, sizeof(buffer));
     }
@@ -86,11 +86,11 @@ void Server::sendResponse(int response, int socket) {
 void Server::Messages(int socket) {
   if (m_command == "NICK") {
     userManagement.addUser(socket, "", "", OPERATOR);
-    userManagement.setNick(socket, m_parameters);
+    userManagement.setNick(socket, m_parameters[0]);
     // sendResponse(WELCOME, socket);
   }
   if (m_command == "USER") {
-		
+
     userManagement.print();
   }
 }
@@ -98,42 +98,42 @@ void Server::Messages(int socket) {
 void Server::parseIncomingMessage(char *buffer, int socket) {
   std::string message = buffer;
   getCommand(message);
+  message = getParameter(message);
+  // getTrial(message);
   Messages(socket);
 }
 
-size_t wordCounter(std::string message) {
-  size_t counter = 0;
-  size_t end = message.find(" ");
-  while (end != std::string::npos) {
-    end = message.find(" ");
-    message.erase(message.begin(), message.begin() + end + 1);
-    counter++;
+std::string Server::getParameter(std::string message) {
+  size_t colon = message.find(":");
+  if (colon != std::string::npos) {
+    std::string before = message.substr(0, colon);
+    std::string after = message.substr(colon + 1);
+    std::stringstream iss(before);
+    std::string token;
+    while (iss >> token) {
+      m_parameters.push_back(token);
+    }
+    return (after);
+  } else {
+    std::stringstream iss(message);
+    std::string token;
+    while (iss >> token)
+      m_parameters.push_back(token);
+    return ("");
   }
-  return counter;
 }
 
 void Server::printCommand() {
   if (!m_command.empty())
     std::cout << "Command: " << m_command << std::endl;
-  if (!this->m_parameters.empty())
-    std::cout << this->m_parameters << std::endl;
 }
 
-void Server::getCommand(std::string message) {
+void Server::getCommand(std::string &message) {
   size_t end = message.find(" ");
   this->m_command = message.substr(0, end);
   message.erase(message.begin(), message.begin() + end + 1);
-  this->m_parameters = message;
-  printCommand();
+  // printCommand();
 }
-
-// void Server::getPortAndPasswd(char **argv) {
-//   std::string str = argv[1];
-//   for (size_t i = 0; i < str.size() - 1; i++)
-//     if (isnumber(str[i]) == false)
-//       error("Bad input as Port");
-//   this->m_port = atoi(argv[1]);
-// }
 
 void Server::error(std::string str) {
   std::cerr << str << std::endl;
@@ -149,3 +149,11 @@ void Server::capabilityNegotiation(int newSocket) {
   memset(buffer1, 0, sizeof(buffer1));
   this->m_pollfds[0].revents = POLLIN;
 }
+
+// void Server::getPortAndPasswd(char **argv) {
+//   std::string str = argv[1];
+//   for (size_t i = 0; i < str.size() - 1; i++)
+//     if (isnumber(str[i]) == false)
+//       error("Bad input as Port");
+//   this->m_port = atoi(argv[1]);
+// }
