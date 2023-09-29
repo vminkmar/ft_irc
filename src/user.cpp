@@ -21,6 +21,8 @@ UserPrivilege User::getPrivilege() const { return m_privilege; }
 
 void User::setNickname(std::string nickname) { this->m_nickname = nickname; }
 
+void User::setUsername(std::string username) { this->m_username = username; }
+
 std::ostream &operator<<(std::ostream &os, const User &user) {
   os << "Nickname: " << user.getNickname()
      << ", Username: " << user.getUsername()

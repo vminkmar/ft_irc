@@ -89,8 +89,8 @@ void Server::Messages(int socket) {
     userManagement.setNick(socket, m_parameters[0]);
     // sendResponse(WELCOME, socket);
   }
-  if (m_command == "USER") {
-
+  else if (m_command == "USER") {
+    userManagement.setUser(socket, m_parameters[0]);
     userManagement.print();
   }
 }
@@ -99,7 +99,7 @@ void Server::parseIncomingMessage(char *buffer, int socket) {
   std::string message = buffer;
   getCommand(message);
   message = getParameter(message);
-  // getTrial(message);
+	m_trail = message;
   Messages(socket);
 }
 
@@ -132,7 +132,6 @@ void Server::getCommand(std::string &message) {
   size_t end = message.find(" ");
   this->m_command = message.substr(0, end);
   message.erase(message.begin(), message.begin() + end + 1);
-  // printCommand();
 }
 
 void Server::error(std::string str) {

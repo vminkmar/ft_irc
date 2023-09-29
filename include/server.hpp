@@ -32,7 +32,7 @@ private:
   int m_addrlen;
   int m_port;
 	std::string m_command;
-	// std::string m_parameters;
+	std::string m_trail;
 	std::string m_passwd;
 
 public:
