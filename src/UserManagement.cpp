@@ -7,8 +7,8 @@ int m_numberUsers = 0;
 // UserManagement::~UserManagement(){}
 
 void UserManagement::addUser(int socket_fd, std::string nickname,
-                             std::string username, UserPriviledge priviledge) {
-  User user(nickname, username, priviledge);
+                             std::string username, UserPrivilege privilege) {
+  User user(nickname, username, privilege);
   m_users[socket_fd] = user;
   m_numberUsers++;
 }

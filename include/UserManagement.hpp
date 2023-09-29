@@ -1,6 +1,6 @@
 #ifndef USERMANAGEMENT_HPP
 #define USERMANAGEMENT_HPP
-#include "enumPriviledges.hpp"
+#include "enumPrivileges.hpp"
 #include "user.hpp"
 #include <map>
 #include <string>
@@ -14,7 +14,7 @@ private:
 
 public:
   void addUser(int socket_fd, std::string nickname, std::string username,
-               UserPriviledge priviledge);
+               UserPrivilege privilege);
   void eraseUser(int socket_fd);
 	void print();
 	int getNumberUsers() const;
