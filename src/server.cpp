@@ -33,7 +33,6 @@ void Server::createSocket() {
     if (ret <= 0)
       perror("poll");
     receiveOnServer();
-
     receiveMessage();
   }
 }
@@ -66,7 +65,7 @@ void Server::receiveMessage() {
 
       char buffer[30000] = {0};
       int valread = read(m_pollfds[i].fd, buffer, sizeof(buffer));
-      valread = 0;
+      valread = 0; //error
       parseIncomingMessage(buffer, m_pollfds[i].fd);
       memset(buffer, 0, sizeof(buffer));
     }
@@ -91,7 +90,7 @@ void Server::Messages(int socket) {
     // sendResponse(WELCOME, socket);
   }
   if (m_command == "USER") {
-
+		
     userManagement.print();
   }
 }
@@ -125,7 +124,7 @@ void Server::getCommand(std::string message) {
   this->m_command = message.substr(0, end);
   message.erase(message.begin(), message.begin() + end + 1);
   this->m_parameters = message;
-  // printCommand();
+  printCommand();
 }
 
 // void Server::getPortAndPasswd(char **argv) {
