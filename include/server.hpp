@@ -51,7 +51,6 @@ public:
 	void receiveMessage();
 	std::string getParameter(std::string message);
 	void getTrial(std::string &message);
-	void setNickname();
 
 
 };

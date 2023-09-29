@@ -98,9 +98,15 @@ void Server::Messages(int socket) {
 void Server::parseIncomingMessage(char *buffer, int socket) {
   std::string message = buffer;
   getCommand(message);
+	std::cout << "Command: " << this->m_command << std::endl;
   message = getParameter(message);
+	for(std::vector<std::string>::iterator it = m_parameters.begin(); it != m_parameters.end(); it++){
+		std::cout << "param: " << *it << std::endl;
+	}
 	m_trail = message;
+	std::cout << "trail: " << m_trail << std::endl;
   Messages(socket);
+	m_parameters.clear();
 }
 
 std::string Server::getParameter(std::string message) {
