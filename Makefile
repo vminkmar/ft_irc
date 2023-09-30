@@ -7,8 +7,8 @@ RM				:=	rm -f
 INCLUDE			:= include
 
 DEBUG_FLAG      := $(shell echo $$DEBUG_FLAG)
-
-CFLAGS			:=	-g -Wall -Wextra -Werror -std=c++98 -MMD -I $(DEBUG_FLAG) $(INCLUDE)
+#-MMD
+CFLAGS			:=	-Wall -Wextra -Werror -std=c++98  -I $(INCLUDE) $(DEBUG_FLAG) 
 VPATH           :=	src/
 
 SRC_FILES		:=	main.cpp server.cpp user.cpp UserManagement.cpp
@@ -34,10 +34,11 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) test
 
 re: fclean all
 
 .PHONY: all clean fclean re test
 
 test:
-	$(CC) $(CFLAGS) test.cpp channel.cpp user.cpp
+	$(CC) $(CFLAGS) test.cpp src/channel.cpp src/user.cpp -o test
