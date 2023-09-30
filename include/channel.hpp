@@ -3,7 +3,7 @@
 # define CHANNEL_HPP
 
 #include <string>   // needed for std::string
-#include "User.hpp" // needed for User class
+#include "user.hpp" // needed for User class
 
 class Channel
 {
@@ -18,19 +18,19 @@ class Channel
 
 		std::vector<User*> m_users; /* could be an alphabetical node list */
 
-		Channel(); /* not sure if needed yet */
 
 	public:
 
-		void setName      (std::string& newName);
-		void setTopic     (std::string& new_topic);
-		void setPassword  (std::string& new_password);
+		void setName      (std::string const& newName);
+		void setTopic     (std::string const& new_topic);
+		void setPassword  (std::string const& new_password);
 		void setUserLimit (unsigned int new_limit);
 
 		std::string const& getName()      const;
 		std::string const& getTopic()     const;
 		std::string const& getPassword()  const;
 		unsigned int       getUserLimit() const;
+		std::string getUsers() const;
 		
 		void toogleInviteOnly();
 		bool isInviteOnly() const;
@@ -42,13 +42,13 @@ class Channel
 
 		void display() const; /* or an operator overload? */
 
-		Channel(std::string& name);
-
-		Channel(std::string& name,
-				std::string& password,
-				std::string& topic,
-				unsigned int user_limit,
-				bool         invite_only); /* what should be there? */
+		Channel(); /* not sure if needed yet */
+		Channel(std::string const& name);
+		Channel(std::string const& name,
+				std::string const& password,
+				std::string const& topic,
+				unsigned int       user_limit,
+				bool               invite_only); /* what should be there? */
 		~Channel();
 
 };
