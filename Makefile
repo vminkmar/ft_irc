@@ -37,4 +37,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test
+
+test:
+	$(CC) $(CFLAGS) test.cpp channel.cpp user.cpp
