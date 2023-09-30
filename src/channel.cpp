@@ -9,14 +9,18 @@
 #define YELLOW "\033[33m"
 #define RESET  "\033[0m"
 
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> non-class functions */
+
 static inline void print_log(std::string message)
 {
     if (DEBUG)
     {
-        std::cout << YELLOW << "Channel: "
+        std::cerr << YELLOW << "Channel: "
                   << message << RESET << std::endl;
     }
 }
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
 Channel::Channel()
 {
@@ -27,3 +31,5 @@ Channel::~Channel()
 {
     print_log("destructor called");
 }
+
+// -------------------------------------------------------------------------- //
