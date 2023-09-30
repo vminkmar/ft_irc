@@ -1,20 +1,27 @@
-#include "../include/channel.hpp"
+#include "include/channel.hpp"
 
-#include <vector>
-
+#include <vector>  // needed for std::vector
 #include <cstdlib> // needed for MACROS
+
+void channels_delete(std::vector<Channel*>& c)
+{
+	for (size_t i = 0; i < c.size(); ++i)
+	{
+		delete c[i];
+	}
+}
 
 int main(void)
 {
     std::vector<Channel*> channels;
     channels.push_back(new Channel());
 
-    for (size_t i = 0; i < channels.size(); ++i)
-    {
-        delete channels[i];
-    }
+	channels_delete(channels);
 
     channels.clear();
+
+	/* i guess it would be better to have also a Channels class
+	 * which contains all channels */
 
     return (EXIT_SUCCESS);
 }
