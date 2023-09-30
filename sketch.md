@@ -1,12 +1,9 @@
 # Coding Convention
-ClassNames in UpperCamelCase
-lowerCamelCase
 m_ before private members
 
 # Questions
     -MMD flag compile flag?
-    
-
+    coding style for classes/vars/function naming?
 
 # Todos
     Channel Class
