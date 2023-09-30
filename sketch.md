@@ -3,6 +3,11 @@ ClassNames in UpperCamelCase
 lowerCamelCase
 m_ before private members
 
+# Questions
+    -MMD flag compile flag?
+    
+
+
 # Todos
     Channel Class
     Commands
@@ -11,9 +16,7 @@ m_ before private members
     Create a draft
     Create testing/debugging 
 
-
 # Commands
-
 transform parameters in vector and at trail after : to a string
 
     Basics:

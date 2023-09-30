@@ -6,7 +6,9 @@ RM				:=	rm -f
 
 INCLUDE			:= include
 
-CFLAGS			:=	-g -Wall -Wextra -Werror -std=c++98 -MMD -I $(INCLUDE)
+DEBUG_FLAG      := $(shell echo $$DEBUG_FLAG)
+
+CFLAGS			:=	-g -Wall -Wextra -Werror -std=c++98 -MMD -I $(DEBUG_FLAG) $(INCLUDE)
 VPATH           :=	src/
 
 SRC_FILES		:=	main.cpp server.cpp user.cpp UserManagement.cpp
@@ -28,7 +30,7 @@ $(ODIR):
 	mkdir $(ODIR)
 
 clean:
-	$(RM) $(OBJS_O) $(OBJS_D) SCF_shrubbery
+	$(RM) $(OBJS_O) $(OBJS_D)
 
 fclean: clean
 	$(RM) $(NAME)
