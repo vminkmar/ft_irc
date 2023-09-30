@@ -1,7 +1,7 @@
-#include "include/channel.hpp"
 
-#include <vector>  // needed for std::vector
-#include <cstdlib> // needed for MACROS
+#include <vector>              // needed for std::vector
+#include <cstdlib>             // needed for MACROS
+#include "include/Channel.hpp" // needed for Channel class
 
 void channels_delete(std::vector<Channel*>& c)
 {

@@ -1,6 +1,8 @@
 
-#include "../include/channel.hpp" // needed for Channel class
+#include "../include/Channel.hpp" // needed for Channel class
 #include <iostream> // needed for std::cerr, std::cout, std::endl
+
+
 
 #ifndef DEBUG
 # define DEBUG 0
@@ -22,6 +24,11 @@ static inline void print_log(std::string message)
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
+Channel::Channel(std::string& name) m_name(name)
+{
+	print_log("name constructor called");
+}
+
 Channel::Channel()
 {
     print_log("default constructor called");
@@ -30,6 +37,16 @@ Channel::Channel()
 Channel::~Channel()
 {
     print_log("destructor called");
+}
+
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
+
+std::ostream& operator<<(std::ostream& os, Channel const & c)
+{
+	std::cout << "Channel: " << m_name << std::endl;
+
+	return os;
 }
 
 // -------------------------------------------------------------------------- //
