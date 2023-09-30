@@ -1,13 +1,17 @@
-#ifndef CHANNEL_HPP
-#define CHANNEL_HPP
 
-class Channel{
+#ifndef CHANNEL_HPP
+# define CHANNEL_HPP
+
+class Channel
+{
 	private:
 		
 	public:
+		Channel();
+		~Channel();
 };
 
-#endif
+#endif // CHANNEL_HPP
 
 // maximum no of channels?
 // in the code we just create an array/vector/list of channels?
