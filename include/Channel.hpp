@@ -22,19 +22,18 @@ class Channel
 
 	public:
 
-		void setName      (std::string const& newName);
-		void setTopic     (std::string const& newTopic);
-		void setPassword  (std::string const& newPassword);
-		void setUserLimit (unsigned int newLimit);
+		void setName         (std::string const& newName);
+		void setTopic        (std::string const& newTopic);
+		void setPassword     (std::string const& newPassword);
+		void setUserLimit    (unsigned int       newLimit);
+		void toggleInviteOnly();
 
 		std::string const& getName()      const;
 		std::string const& getTopic()     const;
 		std::string const& getPassword()  const;
 		unsigned int       getUserLimit() const;
 		std::string        getUsers()     const;
-
-		void toggleInviteOnly();
-		bool isInviteOnly() const;
+		bool               isInviteOnly() const;
 
 		/* @note add ID checks in UM for adding and removing */
 		void addUser   (User* u, UserPrivilege up); /* also set_privilege */

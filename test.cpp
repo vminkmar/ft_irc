@@ -20,8 +20,11 @@ int main(void)
 	d.toggleInviteOnly();
 
 	d.addUser(&u, OPERATOR);
-	d.addUser(&u2, USER);
-	
+	std::cout << d << std::endl;
+
+	std::cout << std::endl;
+
+	d.addUser(&u, USER);
 	std::cout << d << std::endl;
 
     return (EXIT_SUCCESS);
