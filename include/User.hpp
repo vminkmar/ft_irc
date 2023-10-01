@@ -1,12 +1,15 @@
 #ifndef USER_HPP
 #define USER_HPP
-#include "UserManagement.hpp"
-#include "enumPrivileges.hpp"
+
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
-#include "responses.hpp"
+
+//#include "UserManagement.hpp"
+
+#include "EnumPrivileges.hpp"
+#include "Responses.hpp"
 
 class User {
 private:

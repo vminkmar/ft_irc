@@ -12,8 +12,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <vector>
-#include "user.hpp"
-#include "responses.hpp"
+
+#include "UserManagement.hpp"
+#include "User.hpp"
+#include "Responses.hpp"
+
 #define PORT 6667
 //IP_ADDRESS 127.0.0.1
 

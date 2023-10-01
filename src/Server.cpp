@@ -1,6 +1,8 @@
-#include "server.hpp"
-#include "UserManagement.hpp"
-#include "user.hpp"
+
+#include "../include/Server.hpp"
+#include "../include/UserManagement.hpp"
+#include "../include/User.hpp"
+
 Server::Server() : m_maxClients(512) {}
 
 Server::~Server(){};

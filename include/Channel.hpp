@@ -3,7 +3,7 @@
 # define CHANNEL_HPP
 
 #include <string>   // needed for std::string
-#include "user.hpp" // needed for User class
+#include "User.hpp" // needed for User class
 
 class Channel
 {

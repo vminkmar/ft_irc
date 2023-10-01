@@ -1,10 +1,12 @@
 #ifndef USERMANAGEMENT_HPP
 #define USERMANAGEMENT_HPP
-#include "enumPrivileges.hpp"
-#include "user.hpp"
-#include <map>
-#include <string>
-#include "responses.hpp"
+
+#include <map>     // needed for std::map
+#include <string>  // needed for std::string
+
+#include "EnumPrivileges.hpp"
+#include "User.hpp"
+#include "Responses.hpp"
 
 class User;
 

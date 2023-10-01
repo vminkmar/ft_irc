@@ -1,4 +1,5 @@
-#include "user.hpp"
+#include "../include/User.hpp"
+
 User::User() : m_nickname(""), m_username(""), m_privilege(USER){}
 User::User(std::string nickname, std::string username,
            UserPrivilege privilege)
