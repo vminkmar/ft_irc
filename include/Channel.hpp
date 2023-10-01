@@ -1,9 +1,11 @@
+// -------------------------------------------------------------------------- //
 
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
-#include <string>   // needed for std::string
 #include "User.hpp" // needed for User class
+#include <string>   // needed for std::string
+#include <vector>   // needed for std::vector
 
 class Channel
 {
@@ -12,43 +14,36 @@ class Channel
 		std::string        m_name;
 		std::string        m_topic;
 		std::string        m_password;
-		unsigned int       m_user_limit; /* unsigned int or just an int? */
+		unsigned int       m_userLimit; /* unsigned int or just an int? */
 
-		bool               m_invite_only;
+		bool               m_inviteOnly;
 
 		std::vector<User*> m_users; /* could be an alphabetical node list */
-
 
 	public:
 
 		void setName      (std::string const& newName);
-		void setTopic     (std::string const& new_topic);
-		void setPassword  (std::string const& new_password);
-		void setUserLimit (unsigned int new_limit);
+		void setTopic     (std::string const& newTopic);
+		void setPassword  (std::string const& newPassword);
+		void setUserLimit (unsigned int newLimit);
 
 		std::string const& getName()      const;
 		std::string const& getTopic()     const;
 		std::string const& getPassword()  const;
 		unsigned int       getUserLimit() const;
-		std::string getUsers() const;
+		std::string        getUsers() const; /* returns user, user2, user3 */
 		
-		void toogleInviteOnly();
+		void toggleInviteOnly();
 		bool isInviteOnly() const;
 
-		void addUser   (User const& u);
+		void addUser   (User* u);
 		void removeUser(User const& u);
+		/* add ID checks in UM */
 
 		void sendBroadcast(std::string& message) const;
+		/* could be done in UM too */
 
-		void display() const; /* or an operator overload? */
-
-		Channel(); /* not sure if needed yet */
 		Channel(std::string const& name);
-		Channel(std::string const& name,
-				std::string const& password,
-				std::string const& topic,
-				unsigned int       user_limit,
-				bool               invite_only); /* what should be there? */
 		~Channel();
 
 };
@@ -57,14 +52,7 @@ std::ostream& operator<<(std::ostream& os, Channel const & c);
 
 #endif // CHANNEL_HPP
 
-// maximum no of channels?
-// in the code we just create an array/vector/list of channels?
+// @note maximum no of channels?
+// @note rights of users in a channel?
 
-// channel
-	// info about channel
-	// user reference
-
-// create,delete,addUser,removeUser
-// broadcast/message
-// rights of users in a channel?
-// display() for debugging
+// -------------------------------------------------------------------------- //
