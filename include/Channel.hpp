@@ -15,7 +15,9 @@ class Channel
 
 		std::string                    m_name;
 		std::string                    m_topic;
+		/* @needs to be checked in higher abstraction */
 		std::string                    m_password;
+		/* @needs to be checked in higher abstraction */
 		unsigned int                   m_userLimit;
 		bool                           m_inviteOnly;
 		std::map<User*, UserPrivilege> m_users;
@@ -25,7 +27,7 @@ class Channel
 		void setName         (std::string const& newName);
 		void setTopic        (std::string const& newTopic);
 		void setPassword     (std::string const& newPassword);
-		void setUserLimit    (unsigned int       newLimit);
+		void setUserLimit    (unsigned int       newLimit); 
 		void toggleInviteOnly();
 
 		std::string const& getName()      const;
@@ -35,7 +37,7 @@ class Channel
 		std::string        getUsers()     const;
 		bool               isInviteOnly() const;
 
-		/* @note add ID checks in UM for adding and removing */
+		/* @note add ID/password/userLimit checks in UM for add/removing */
 		void addUser   (User* u, UserPrivilege up); /* also set_privilege */
 		void removeUser(User* u);
 
