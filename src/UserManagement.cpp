@@ -2,6 +2,7 @@
 
 #include "../include/UserManagement.hpp" // needed for UserManagement class
 #include <iostream>                      // needed for std::cout, std::endl
+#include <sstream>                       // needed for stringstream
 
 #ifndef DEBUG
 # define DEBUG 0
@@ -63,8 +64,10 @@ std::string UserManagement::getNick(int socket) const
 
 std::string UserManagement::getNumberUsersAsString() const
 {
-  std::string str = std::to_string(m_numberUsers);
-  return (str);
+	std::stringstream ss;
+
+	ss << m_numberUsers;
+	return ss.str();
 }
 
 int UserManagement::getNumberUsers() const { return (m_numberUsers); }
