@@ -1,8 +1,6 @@
 
 #include "../include/Channel.hpp" // needed for Channel class
-#include <iostream> // needed for std::cerr, std::cout, std::endl
-
-
+#include <iostream>               // needed for std::cerr, std::cout, std::endl
 
 #ifndef DEBUG
 # define DEBUG 0
