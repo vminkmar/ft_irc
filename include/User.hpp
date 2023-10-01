@@ -1,35 +1,40 @@
+// -------------------------------------------------------------------------- //
+
 #ifndef USER_HPP
 #define USER_HPP
 
-#include <iostream>
-#include <map>
-#include <string>
-#include <vector>
+#include <string>            // needed for std::string
+#include "UserPrivilege.hpp" // needed for ENUM
 
-//#include "UserManagement.hpp"
+/* @note can prob remove the m_privilege + associated functions */
 
-#include "UserPrivilege.hpp"
-#include "Responses.hpp"
+class User
+{
+	private:
 
-class User {
-private:
-  std::string m_nickname;
-  std::string m_username;
-  UserPrivilege m_privilege;
+		std::string   m_nickname;
+		std::string   m_username;
+		UserPrivilege m_privilege;
 
-public:
-  User();
-  User(std::string nickname, std::string username, UserPrivilege privilege);
-  User(const User &copy);
-  ~User();
+	public:
 
-  void setNickname(std::string nickname);
-  void setUsername(std::string username);
+	  	void setNickname(std::string const& nickname);
+	  	void setUsername(std::string const& username);
 
-	std::string getNickname() const;
-	std::string getUsername() const;
-  UserPrivilege getPrivilege() const;
-  };
+		std::string const& getNickname()  const;
+		std::string const& getUsername()  const;
+		UserPrivilege      getPrivilege() const;
 
-  std::ostream &operator<<(std::ostream &os, const User &user);
-#endif
+		User();
+		User(std::string nickname,
+			 std::string username,
+			 UserPrivilege privilege);
+		User(const User &copy);
+	  	~User();
+};
+
+std::ostream &operator<<(std::ostream &os, const User &user);
+
+#endif // USER_HPP
+
+// -------------------------------------------------------------------------- //
