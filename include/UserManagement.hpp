@@ -4,7 +4,7 @@
 #include <map>     // needed for std::map
 #include <string>  // needed for std::string
 
-#include "EnumPrivileges.hpp"
+#include "UserPrivilege.hpp" // needed for Enum
 #include "User.hpp"
 #include "Responses.hpp"
 
@@ -29,4 +29,4 @@ public:
 	void setNick(int socket, std::string parameter);
 };
 
-#endif
+#endif // USERMANAGEMENT_HPP

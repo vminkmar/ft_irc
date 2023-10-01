@@ -8,7 +8,7 @@
 
 //#include "UserManagement.hpp"
 
-#include "EnumPrivileges.hpp"
+#include "UserPrivilege.hpp"
 #include "Responses.hpp"
 
 class User {
