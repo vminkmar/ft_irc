@@ -72,10 +72,10 @@ std::string UserManagement::getNumberUsersAsString() const
 
 int UserManagement::getNumberUsers() const { return (m_numberUsers); }
 
-void UserManagement::addUser(int socket_fd,
+void UserManagement::addUser(int                socket_fd,
                              std::string const& nickname,
 							 std::string const& username,
-							 UserPrivilege privilege)
+							 UserPrivilege      privilege)
 {
 	User user(nickname, username, privilege);
   	m_users[socket_fd] = user;

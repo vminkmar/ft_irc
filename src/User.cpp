@@ -42,8 +42,8 @@ User::User(std::string   nickname,
 User::User(const User &copy)
 {
 	print_log("copy constructor called");
-	this->m_nickname = copy.m_nickname;
-	this->m_username = copy.m_username;
+	this->m_nickname  = copy.m_nickname;
+	this->m_username  = copy.m_username;
 	this->m_privilege = copy.m_privilege;
 }
 
@@ -56,9 +56,9 @@ User::~User()
 
 std::ostream &operator<<(std::ostream &os, const User &user)
 {
-    os << "Nickname: " << user.getNickname()
-       << ", Username: " << user.getUsername()
-	   << ", privilege: " <<  user.getPrivilege();
+    os << "Nickname: "    << user.getNickname()
+       << ", Username: "  << user.getUsername()
+	   << ", privilege: " << user.getPrivilege();
     return os;
 }
 
