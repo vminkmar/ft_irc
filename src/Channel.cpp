@@ -132,11 +132,11 @@ void Channel::removeUser(User const& u)
 	}
 }
 
-void Channel::sendBroadcast(std::string& message) const
-{
-	(void) message;
-	return ;
-}
+//void Channel::sendBroadcast(std::string& message) const
+//{
+//	(void) message;
+//	return ;
+//}
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 

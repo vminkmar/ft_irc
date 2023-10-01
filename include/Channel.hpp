@@ -6,6 +6,10 @@
 #include "User.hpp" // needed for User class
 #include <string>   // needed for std::string
 #include <vector>   // needed for std::vector
+#include <map>
+
+// @note mb define maximum no of channels?
+// @note rights of users in a channel?
 
 class Channel
 {
@@ -18,7 +22,7 @@ class Channel
 
 		bool               m_inviteOnly;
 
-		std::vector<User*> m_users; /* could be an alphabetical node list */
+		std::vector<User*> m_users; /* mb a map instead, with access rights */
 
 	public:
 
@@ -31,8 +35,8 @@ class Channel
 		std::string const& getTopic()     const;
 		std::string const& getPassword()  const;
 		unsigned int       getUserLimit() const;
-		std::string        getUsers() const; /* returns user, user2, user3 */
-		
+		std::string        getUsers()     const;
+
 		void toggleInviteOnly();
 		bool isInviteOnly() const;
 
@@ -40,7 +44,7 @@ class Channel
 		void removeUser(User const& u);
 		/* add ID checks in UM */
 
-		void sendBroadcast(std::string& message) const;
+		/* void sendBroadcast(std::string& message) const; @needs impl. */
 		/* could be done in UM too */
 
 		Channel(std::string const& name);
@@ -51,8 +55,5 @@ class Channel
 std::ostream& operator<<(std::ostream& os, Channel const & c);
 
 #endif // CHANNEL_HPP
-
-// @note maximum no of channels?
-// @note rights of users in a channel?
 
 // -------------------------------------------------------------------------- //
