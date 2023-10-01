@@ -19,12 +19,9 @@ int main(void)
 	d.setUserLimit(3);
 	d.toggleInviteOnly();
 
-	d.addUser(&u);
-	d.addUser(&u);
-	d.addUser(&u2);
+	d.addUser(&u, OPERATOR);
+	d.addUser(&u2, USER);
 	
-	d.removeUser(u2);
-
 	std::cout << d << std::endl;
 
     return (EXIT_SUCCESS);

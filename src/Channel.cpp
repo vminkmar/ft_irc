@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------------- //
 
 #include "../include/Channel.hpp" // needed for Channel class
-								  //
+
 #include <iostream>  // needed for std::cerr, std::cout, std::endl
 #include <sstream>   // needed for std::stringstream
 
@@ -83,16 +83,21 @@ std::string Channel::getUsers() const
 {
 	if (m_users.empty() == true)
 	{
-		return "No Users!";
+		return "empty channel!";
 	}
 
 	std::stringstream ss;
-	for (std::vector<User*>::const_iterator itr = m_users.begin();
+	for (std::map<User*, UserPrivilege>::const_iterator itr = 
+			                                m_users.begin();
                                             itr != m_users.end();
 			                                ++itr)
 	{
-		ss << (*itr)->getNickname();
-		if (itr + 1 != m_users.end())
+		ss << itr->first->getNickname();
+		if (itr->second == OPERATOR) /* adds an (o) for operators */
+		{
+			ss << "(o)";
+		}
+		if (itr != --(m_users.end())) /* adds , except for the last */
 		{
 			ss << ", ";
 		}
@@ -110,26 +115,14 @@ bool Channel::isInviteOnly() const
 	return m_inviteOnly;
 }
 
-void Channel::addUser(User* u)
+void Channel::addUser(User* u, UserPrivilege up)
 {
-	m_users.push_back(u);
-	return ;
+	m_users[u] = up;
 }
 
-void Channel::removeUser(User const& u)
+void Channel::removeUser(User* u)
 {
-	for (std::vector<User*>::iterator itr = m_users.begin();
-		                              itr != m_users.end();)
-	{
-		if (&u == *itr)
-		{
-			itr = m_users.erase(itr);
-		}
-		else
-		{
-			++itr;
-		}
-	}
+	m_users.erase(u);
 }
 
 //void Channel::sendBroadcast(std::string& message) const

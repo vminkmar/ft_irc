@@ -5,24 +5,20 @@
 
 #include "User.hpp" // needed for User class
 #include <string>   // needed for std::string
-#include <vector>   // needed for std::vector
-#include <map>
+#include <map>      // needed for std::map <-- C11 would be unordered_map
 
 // @note mb define maximum no of channels?
-// @note rights of users in a channel?
 
 class Channel
 {
 	private:
 
-		std::string        m_name;
-		std::string        m_topic;
-		std::string        m_password;
-		unsigned int       m_userLimit; /* unsigned int or just an int? */
-
-		bool               m_inviteOnly;
-
-		std::vector<User*> m_users; /* mb a map instead, with access rights */
+		std::string                    m_name;
+		std::string                    m_topic;
+		std::string                    m_password;
+		unsigned int                   m_userLimit;
+		bool                           m_inviteOnly;
+		std::map<User*, UserPrivilege> m_users;
 
 	public:
 
@@ -40,12 +36,12 @@ class Channel
 		void toggleInviteOnly();
 		bool isInviteOnly() const;
 
-		void addUser   (User* u);
-		void removeUser(User const& u);
-		/* add ID checks in UM */
+		/* @note add ID checks in UM for adding and removing */
+		void addUser   (User* u, UserPrivilege up); /* also set_privilege */
+		void removeUser(User* u);
 
+		/* @note could be done in UM too */
 		/* void sendBroadcast(std::string& message) const; @needs impl. */
-		/* could be done in UM too */
 
 		Channel(std::string const& name);
 		~Channel();
