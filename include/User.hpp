@@ -13,7 +13,10 @@ class User
 	private:
 
 		std::string   m_nickname;
+
+		/* @note mb this should be const + cant be duplicates? */
 		std::string   m_username;
+
 		UserPrivilege m_privilege;
 
 	public:

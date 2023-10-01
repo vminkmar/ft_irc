@@ -28,10 +28,10 @@ Class Names uppercase
     Channels:
         "LIST"
         "JOIN"
-        "KICK"
+        "KICK"   /* operator */
         "INVITE"
-        "TOPIC"
-        "MODE"
+        "TOPIC"  /* specific operators only */
+        "MODE"   /* i, t, k, o, l */
         "PART"?
 
     Done:
