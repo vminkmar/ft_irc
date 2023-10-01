@@ -1,20 +1,18 @@
 # Coding Convention
 m_ before private members
+Class Names uppercase
 
 # Questions
-    -MMD flag compile flag?
-    coding style for classes/vars/function naming?
 
 # Todos
-    Channel Class
+    Finish Channel class
     Commands
 
 # Channel Class
-    Create a draft
-    Create testing/debugging 
+    Access rights
 
 # Commands
-transform parameters in vector and at trail after : to a string
+    transform parameters in vector and at trail after : to a string
 
     Basics:
         "NICK"
