@@ -8,7 +8,6 @@
 #include "User.hpp"          // needed for User class
 //#include "Responses.hpp" not needed right now
 
-
 class UserManagement
 {
 	private:
