@@ -8,6 +8,8 @@
 #include "User.hpp"          // needed for User class
 //#include "Responses.hpp" not needed right now
 
+/* define maximum no. of channels? */
+
 class UserManagement
 {
 	private:
