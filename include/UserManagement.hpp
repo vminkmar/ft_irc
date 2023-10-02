@@ -39,7 +39,7 @@ class UserManagement
 		//Channel const& getChannel(std::string const& name) const;
 		void listChannels() const;
 
-		/* void setUser(int socket, std::string user); not needed */
+		void setUser(int socket, std::string user);
 		void print();
 };
 

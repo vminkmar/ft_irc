@@ -91,7 +91,7 @@ void Server::Messages(int socket) {
     this->userManagement.setNick(socket, this->m_parameters[0]);
     // sendResponse(WELCOME, socket);
   } else if (m_command == "USER") {
-    //this->userManagement.setUser(socket, this->m_parameters[0]);
+    this->userManagement.setUser(socket, this->m_parameters[0]);
 	// should this be implemented? if so we need username to be non-const
   }
 }

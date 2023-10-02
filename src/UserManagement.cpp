@@ -43,6 +43,15 @@ void UserManagement::setNick(int socket, std::string parameter) {
   }
 }
 
+void UserManagement::setUser(int socket, std::string parameter){
+  for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
+       ++it) {
+    if (it->first == socket) {
+      it->second.setUsername(parameter);
+    }
+  }
+}
+
 std::string UserManagement::getNick(int socket) const {
   for (std::map<int, User>::const_iterator it = m_users.begin();
        it != m_users.end(); it++) {
