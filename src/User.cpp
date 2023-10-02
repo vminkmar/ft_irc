@@ -45,6 +45,7 @@ std::ostream &operator<<(std::ostream &os, const User &user) {
 }
 
 User& User::operator=(const User& src){
+	print_log("assignment operator called");
 	if (this != &src){
 		this->m_nickname = src.getNickname();
 		this->m_username = src.getUsername();

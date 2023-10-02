@@ -14,8 +14,8 @@ class UserManagement
 {
 	private:
 
-		std::map<int, User> m_users; /* mb User* instead ? */
-		
+		std::map<int, User> m_users;
+
 	public:
 
 		void setNick(int socket, std::string parameter);

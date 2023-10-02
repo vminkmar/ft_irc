@@ -6,8 +6,6 @@
 #include "UserPrivilege.hpp" // needed for ENUM
 #include <string>            // needed for std::string
 
-/* @note can prob remove the m_privilege + associated functions */
-
 class User {
 private:
   std::string m_nickname;
