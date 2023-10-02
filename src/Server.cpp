@@ -1,6 +1,8 @@
-#include "server.hpp"
-#include "UserManagement.hpp"
-#include "user.hpp"
+
+#include "../include/Server.hpp"
+#include "../include/UserManagement.hpp"
+#include "../include/User.hpp"
+
 Server::Server() : m_maxClients(512) {}
 
 Server::~Server(){};
@@ -45,7 +47,7 @@ void Server::receiveOnServer() {
       error("accept");
     char buffer[30000] = {0};
     int reading = read(newSocket, buffer, 30000);
-    reading = 0;
+	(void) reading;
     std::cout << buffer << std::endl;
     memset(buffer, 0, sizeof(buffer));
     for (int j = 1; j < m_maxClients; j++) {
@@ -65,7 +67,7 @@ void Server::receiveMessage() {
 
       char buffer[30000] = {0};
       int valread = read(m_pollfds[i].fd, buffer, sizeof(buffer));
-      valread = 0; //error
+	  (void) valread;
       parseIncomingMessage(buffer, m_pollfds[i].fd);
       memset(buffer, 0, sizeof(buffer));
     }

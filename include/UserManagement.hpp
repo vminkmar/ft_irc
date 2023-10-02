@@ -1,30 +1,34 @@
 #ifndef USERMANAGEMENT_HPP
 #define USERMANAGEMENT_HPP
-#include "enumPrivileges.hpp"
-#include "user.hpp"
-#include <map>
-#include <string>
-#include "responses.hpp"
 
-class User;
+#include <string>  // needed for std::string
+#include <map>     // needed for std::map
 
-class UserManagement {
-private:
-  std::map<int, User> m_users;
+#include "UserPrivilege.hpp" // needed for ENUM
+#include "User.hpp"          // needed for User class
+//#include "Responses.hpp" not needed right now
 
-public:
-  void addUser(int socket_fd, std::string nickname, std::string username,
-               UserPrivilege privilege);
-  void eraseUser(int socket_fd);
-	void print();
-	int getNumberUsers() const;
+class UserManagement
+{
+	private:
 
+		std::map<int, User> m_users; /* mb User* instead ? */
 
+	public:
 
-	std::string getNumberUsersAsString();
-	std::string getNick(int socket);
+		void setNick(int socket, std::string parameter);
 
-	void setNick(int socket, std::string parameter);
+		std::string getNick               (int socket) const;
+		std::string getNumberUsersAsString()           const;
+		int         getNumberUsers        ()           const;
+		
+		void addUser(int                socket_fd,
+                     std::string const& nickname,
+					 std::string const& username,
+					 UserPrivilege      privilege);
+		void eraseUser(int socket_fd);
+
+		void print();
 };
 
-#endif
+#endif // USERMANAGEMENT_HPP

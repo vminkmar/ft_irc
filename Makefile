@@ -1,20 +1,23 @@
-NAME			:=	irc
+NAME			:= ircserv
 
-CC				:=	c++
+CC				:= c++
 
-RM				:=	rm -f
+RM				:= rm -f
 
 INCLUDE			:= include
 
-CFLAGS			:=	-g -Wall -Wextra -Werror -std=c++98 -MMD -I $(INCLUDE)
-VPATH           :=	src/
+DEBUG_FLAG      := $(shell echo $$DEBUG_FLAG)
+#-MMD
+CFLAGS			:= -Wall -Wextra -Werror -std=c++98  -I $(INCLUDE) $(DEBUG_FLAG) 
+VPATH           := src/
 
-SRC_FILES		:=	main.cpp server.cpp user.cpp UserManagement.cpp
-ODIR			:=	obj
+SRC_FILES		:= main.cpp Server.cpp User.cpp UserManagement.cpp
 
-OBJS_O			:=	$(SRC_FILES:%.cpp=$(ODIR)/%.o)
+ODIR			:= obj
 
-OBJS_D			:=	$(SRC_FILES:%.cpp=$(ODIR)/%.d)
+OBJS_O			:= $(SRC_FILES:%.cpp=$(ODIR)/%.o)
+
+OBJS_D			:= $(SRC_FILES:%.cpp=$(ODIR)/%.d)
 
 all: $(NAME)
 
@@ -28,11 +31,15 @@ $(ODIR):
 	mkdir $(ODIR)
 
 clean:
-	$(RM) $(OBJS_O) $(OBJS_D) SCF_shrubbery
+	$(RM) $(OBJS_O) $(OBJS_D)
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) test
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test
+
+test:
+	$(CC) $(CFLAGS) test.cpp src/Channel.cpp src/User.cpp -o test
