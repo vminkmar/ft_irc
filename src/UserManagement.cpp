@@ -17,20 +17,26 @@ int m_numberUsers = 0; /* could be a static int member of the class */
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> non-class functions */
 
-/* @note not used right now */
-// static inline void print_log(std::string message)
-//{
-//     if (DEBUG)
-//     {
-//         std::cerr << YELLOW << "Channel: "
-//                   << message << RESET << std::endl;
-//     }
-// }
+static inline void print_log(std::string message)
+{
+	if (DEBUG)
+	{
+		std::cerr << YELLOW << "User Management: "
+			      << message << RESET << std::endl;
+	}
+}
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-// UserManagement::UserManagement() : m_numberUsers(0){}
-// UserManagement::~UserManagement(){}
+UserManagement::UserManagement()
+{
+	print_log("default constructor called");
+}
+
+UserManagement::~UserManagement()
+{
+	print_log("destructor called");
+}
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
@@ -44,10 +50,10 @@ bool UserManagement::checkForUser(int socket) const{
 }
 
 bool UserManagement::checkForChannel(std::string name) const{
-	for (std::vector<Channel>::const_iterator itr = m_channels.begin();
+	for (std::map<std::string, Channel>::const_iterator itr = m_channels.begin();
 			itr != m_channels.end(); ++itr)
 	{
-		if (itr->getName() == name)
+		if (itr->second.getName() == name)
 		{
 			return true;
 		}
@@ -110,15 +116,15 @@ void UserManagement::addChannel(std::string name)
 		/* @note impl error message */
 		return ;
 	}
-	m_channels.push_back(Channel(name));
+	m_channels[name] = Channel(name);
 }
 
 void UserManagement::eraseChannel(std::string name)
 {
-	for (std::vector<Channel>::iterator itr = m_channels.begin();
+	for (std::map<std::string, Channel>::iterator itr = m_channels.begin();
 			itr != m_channels.end(); ++itr)
 	{
-		if (itr->getName() == name)
+		if (itr->second.getName() == name)
 		{
 			m_channels.erase(itr);
 		}
@@ -126,19 +132,30 @@ void UserManagement::eraseChannel(std::string name)
 	/* @note impl error message */
 }
 
+Channel const& UserManagement::getChannel(std::string name)
+{
+	return m_channels[name];
+}
+
 void UserManagement::listChannels() const
 {
 	std::stringstream ss;
-	for (std::vector<Channel>::const_iterator itr = m_channels.begin();
+	for (std::map<std::string, Channel>::const_iterator itr = m_channels.begin();
 			itr != m_channels.end(); ++itr)
 	{
-		ss << itr->getName();
+		ss << itr->second.getName();
 		if (itr != --m_channels.end())
 		{
 			ss << ", ";
 		}
 	}
 	std::cout << ss.str() << std::endl;
+}
+
+void UserManagement::addUsertoChannel(int socket,
+		UserPrivilege up, std::string channelName)
+{
+	m_channels[channelName].addUser(socket, up);
 }
 
 void UserManagement::print() {

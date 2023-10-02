@@ -18,8 +18,8 @@ class UserManagement
 {
 	private:
 
-		std::map    <int, User> m_users;
-		std::vector <Channel>   m_channels; /* change to std::map */
+		std::map <int, User>              m_users;
+		std::map <std::string, Channel>   m_channels; /* change to std::map */
 
 		bool checkForUser   (int socket)       const;
 		bool checkForChannel(std::string name) const;
@@ -27,6 +27,7 @@ class UserManagement
 	public:
 
 		void setNick(int socket, std::string parameter);
+		void setUser(int socket, std::string user);
 
 		std::string getNick               (int socket) const;
 		std::string getNumberUsersAsString()           const;
@@ -39,10 +40,16 @@ class UserManagement
 
 		void addChannel(std::string name); /* add existing name check */
 		void eraseChannel(std::string name); /* add non-existing check? */
+		Channel const& getChannel(std::string name);
 		void listChannels() const;
 
-		void setUser(int socket, std::string user);
-		void print();
+		void addUsertoChannel(int socket, UserPrivilege up, std::string channelName);
+
+		
+		void print(); /* old implementation */
+
+		UserManagement();
+		~UserManagement();
 };
 
 #endif // USERMANAGEMENT_HPP
