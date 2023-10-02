@@ -9,48 +9,54 @@
 
 class Channel
 {
-	private:
+	
+        typedef std::map<int, UserPrivilege>       t_channel_users;
+        typedef t_channel_users::iterator          t_channel_users_itr;
+        typedef t_channel_users::const_iterator    t_channel_users_citr;
 
-        std::string                    m_name;
-        std::string                    m_topic;
-        std::string                    m_password;
-        unsigned int                   m_userLimit;
-        std::map<int, UserPrivilege>   m_users;
+    private:
 
-        bool                           m_inviteOnly;
-        bool                           m_topicEditable;
-        bool                           m_channelKey;
-
-	public:
-
-		void setName         (std::string const& newName);
-		void setTopic        (std::string const& newTopic);
-		void setPassword     (std::string const& newPassword);
-		void setUserLimit    (unsigned int       newLimit); 
-		
-        void toggleInviteOnly();
-		void toggleTopicEditable();
-		void toggleChannelKey();
-
-		std::string const&                  getName()         const;
-		std::string const&                  getTopic()        const;
-		std::string const&                  getPassword()     const;
-		unsigned int                        getUserLimit()    const;
-        std::map<int, UserPrivilege> const& getUserMap()      const;
-
-		bool               isInviteOnly()    const;
-		bool               isTopicEditable() const;
-		bool               isChannelKey()    const;
+        std::string     m_name;
+        std::string     m_topic;
+        std::string     m_password;
+        unsigned int    m_userLimit;
+        t_channel_users m_users;
         
-		/* also behaves like set_privilege */
-		void addUser   (int socket, UserPrivilege up); 
-		void removeUser(int socket);
+        bool            m_inviteOnly;
+        bool            m_topicEditable;
+        bool            m_channelKey;
 
-		Channel(std::string const& name);
-		Channel(Channel const& src);
-		Channel& operator=(Channel const& src);
-		Channel();
-		~Channel();
+    public:
+
+        void setName     (std::string const& newName);
+        void setTopic    (std::string const& newTopic);
+        void setPassword (std::string const& newPassword);
+        void setUserLimit(unsigned int       newLimit); 
+        
+        void toggleInviteOnly();
+        void toggleTopicEditable();
+        void toggleChannelKey();
+        
+        std::string const&     getName()         const;
+        std::string const&     getTopic()        const;
+        std::string const&     getPassword()     const;
+        unsigned int           getUserLimit()    const;
+        t_channel_users const& getUserMap()      const;
+        
+        bool isInviteOnly()    const;
+        bool isTopicEditable() const;
+        bool isChannelKey()    const;
+        
+        /* also behaves like set_privilege */
+        void addUser   (int socket, UserPrivilege up); 
+        void removeUser(int socket);
+        
+        Channel(std::string const& name);
+        Channel(Channel const& src);
+        Channel& operator=(Channel const& src);
+        Channel();
+        ~Channel();
+
 };
 
 std::ostream& operator<<(std::ostream& os, Channel const& c);
