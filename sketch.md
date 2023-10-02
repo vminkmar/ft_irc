@@ -6,10 +6,22 @@ Class Names uppercase
 
 # Todos
 	
+    Draw Structure 
+
+    Restructure server loop
+
 	UserManagement
-     --> implement and test creating Channels
+    --> adapt overall structure
+     --> change m_channels to std::map
+
+    User class
+    --> change std::map with int/fd as unique key
+     --> implement Buffer class
+
+    Buffer class
 
 	Commands
+    --> try to fully implement one or two commands ("full stack")
 
 	Error Handling (Exceptions/Messages)
 
