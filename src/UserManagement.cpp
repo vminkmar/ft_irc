@@ -34,6 +34,27 @@ int m_numberUsers = 0; /* could be a static int member of the class */
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
+bool UserManagement::checkForUser(int socket) const{
+  for (std::map<int, User>::const_iterator it = this->m_users.begin();
+       it != this->m_users.end(); it++) {
+    if (it->first == socket)
+      return true;
+  }
+  return false;
+}
+
+bool UserManagement::checkForChannel(std::string name) const{
+	for (std::vector<Channel>::const_iterator itr = m_channels.begin();
+			itr != m_channels.end(); ++itr)
+	{
+		if (itr->getName() == name)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void UserManagement::setNick(int socket, std::string parameter) {
   for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
        ++it) {
@@ -84,6 +105,11 @@ void UserManagement::eraseUser(int socket_fd) {
 
 void UserManagement::addChannel(std::string name)
 {
+	if (checkForChannel(name) == true)
+	{
+		/* @note impl error message */
+		return ;
+	}
 	m_channels.push_back(Channel(name));
 }
 
@@ -97,17 +123,8 @@ void UserManagement::eraseChannel(std::string name)
 			m_channels.erase(itr);
 		}
 	}
+	/* @note impl error message */
 }
-
-//Channel const& UserManagement::getChannel(std::string const& name) const
-//{
-//	for (std::vector<Channel>::const_iterator itr = m_channels.begin();
-//			itr != m_channels.end(); ++itr)
-//	{
-//
-//	}
-//	return NULL;
-//}
 
 void UserManagement::listChannels() const
 {
@@ -130,11 +147,4 @@ void UserManagement::print() {
     std::cout << it->first << "	" << it->second << std::endl;
 }
 
-bool UserManagement::checkForUser(int socket) {
-  for (std::map<int, User>::iterator it = this->m_users.begin();
-       it != this->m_users.end(); it++) {
-    if (it->first == socket)
-      return true;
-  }
-  return false;
-}
+// -------------------------------------------------------------------------- //

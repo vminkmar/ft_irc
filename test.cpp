@@ -16,6 +16,7 @@ int main(void)
 	um.addChannel("Test");
 	um.addChannel("Moin");
 	um.addChannel("Hamburg");
+	um.addChannel("Hamburg");
 	um.addChannel("Heilbronn");
 	um.addChannel("Kuhdamm");
 	um.listChannels();

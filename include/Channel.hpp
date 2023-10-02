@@ -18,7 +18,7 @@ class Channel
 		bool                           m_inviteOnly;
 		bool                           m_topicEditable; /* new */
 		bool                           m_channelKey; /* new */
-		std::map<User*, UserPrivilege> m_users;
+		std::map<User*, UserPrivilege> m_users; /* Ptr ?! */
 
 	public:
 

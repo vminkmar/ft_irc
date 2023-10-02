@@ -1,3 +1,5 @@
+// -------------------------------------------------------------------------- //
+
 #ifndef USERMANAGEMENT_HPP
 #define USERMANAGEMENT_HPP
 
@@ -17,7 +19,10 @@ class UserManagement
 	private:
 
 		std::map    <int, User> m_users;
-		std::vector <Channel>   m_channels;
+		std::vector <Channel>   m_channels; /* change to std::map */
+
+		bool checkForUser   (int socket)       const;
+		bool checkForChannel(std::string name) const;
 
 	public:
 
@@ -31,12 +36,9 @@ class UserManagement
                      std::string const& nickname,
 					 std::string const& username);
 		void eraseUser(int socket_fd);
-		bool checkForUser(int socket);
 
 		void addChannel(std::string name); /* add existing name check */
 		void eraseChannel(std::string name); /* add non-existing check? */
-
-		//Channel const& getChannel(std::string const& name) const;
 		void listChannels() const;
 
 		void setUser(int socket, std::string user);
@@ -44,3 +46,5 @@ class UserManagement
 };
 
 #endif // USERMANAGEMENT_HPP
+
+// -------------------------------------------------------------------------- //
