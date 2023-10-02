@@ -86,12 +86,11 @@ void Server::sendResponse(int response, int socket) {
 void Server::Messages(int socket) {
   if (m_command == "NICK") {
     if (this->userManagement.checkForUser(socket) == false)
-      this->userManagement.addUser(socket, "", "", OPERATOR);
+      this->userManagement.addUser(socket, "", "");
     this->userManagement.setNick(socket, this->m_parameters[0]);
     // sendResponse(WELCOME, socket);
   } else if (m_command == "USER") {
     this->userManagement.setUser(socket, this->m_parameters[0]);
-    this->userManagement.print();
   }
 }
 
@@ -107,6 +106,7 @@ void Server::parseIncomingMessage(char *buffer, int socket) {
   this->m_trail = message;
   std::cout << "trail: " << this->m_trail << std::endl;
   Messages(socket);
+  // this->userManagement.print();
   this->m_parameters.clear();
 }
 

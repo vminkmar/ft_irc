@@ -23,11 +23,11 @@
 
 class Server {
 private:
-  std::vector<int> m_clients;
   struct pollfd m_pollfds[512];
 	struct sockaddr_in address;
-	std::vector<std::string> m_parameters;
 	UserManagement userManagement;
+  std::vector<int> m_clients;
+	std::vector<std::string> m_parameters;
   // char buffer[1024];
   int m_maxClients;
   int m_server_fd;

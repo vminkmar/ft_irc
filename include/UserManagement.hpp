@@ -26,8 +26,7 @@ class UserManagement
 		
 		void addUser(int                socket_fd,
                      std::string const& nickname,
-					 std::string const& username,
-					 UserPrivilege      privilege);
+					 std::string const& username);
 		void eraseUser(int socket_fd);
 		bool checkForUser(int socket);
 		void setUser(int socket, std::string user);

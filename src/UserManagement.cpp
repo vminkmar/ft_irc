@@ -63,9 +63,8 @@ std::string UserManagement::getNumberUsersAsString() const {
 int UserManagement::getNumberUsers() const { return (m_numberUsers); }
 
 void UserManagement::addUser(int socket_fd, std::string const &nickname,
-                             std::string const &username,
-                             UserPrivilege privilege) {
-  User user(nickname, username, privilege);
+                             std::string const &username) {
+  User user(nickname, username);
   this->m_users[socket_fd] = user;
 }
 
@@ -75,23 +74,22 @@ void UserManagement::eraseUser(int socket_fd) {
 }
 
 void UserManagement::print() {
-  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
-       it++)
+  for (std::map<int, User>::iterator it = this->m_users.begin();
+       it != this->m_users.end(); it++)
     std::cout << it->first << "	" << it->second << std::endl;
 }
 
-
 void UserManagement::setUser(int socket, std::string parameter) {
-  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
-       it++) {
+  for (std::map<int, User>::iterator it = this->m_users.begin();
+       it != this->m_users.end(); it++) {
     if (it->first == socket)
       it->second.setUsername(parameter);
   }
 }
 
 bool UserManagement::checkForUser(int socket) {
-  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
-       it++) {
+  for (std::map<int, User>::iterator it = this->m_users.begin();
+       it != this->m_users.end(); it++) {
     if (it->first == socket)
       return true;
   }
