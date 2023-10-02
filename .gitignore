@@ -4,3 +4,4 @@ obj/
 *.d
 ircserv
 test
+test.cpp

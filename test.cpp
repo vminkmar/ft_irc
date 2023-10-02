@@ -24,6 +24,7 @@ int main(void)
 	std::cout << std::endl;
 
 	d.addUser(&u, USER);
+	d.addUser(&u2, USER);
 	std::cout << d << std::endl;
 
     return (EXIT_SUCCESS);
