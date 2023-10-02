@@ -7,8 +7,6 @@
 #include <string>   // needed for std::string
 #include <map>      // needed for std::map <-- C11 would be unordered_map
 
-// @note mb define maximum no of channels?
-
 class Channel
 {
 	private:
@@ -52,7 +50,7 @@ class Channel
 
 };
 
-std::ostream& operator<<(std::ostream& os, Channel const & c);
+std::ostream& operator<<(std::ostream& os, Channel const& c);
 
 #endif // CHANNEL_HPP
 
