@@ -42,4 +42,4 @@ re: fclean all
 .PHONY: all clean fclean re test
 
 test:
-	$(CC) $(CFLAGS) test.cpp src/Channel.cpp src/User.cpp -o test
+	$(CC) $(CFLAGS) test.cpp src/UserManagement.cpp src/Channel.cpp src/User.cpp -o test

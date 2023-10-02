@@ -32,6 +32,13 @@ class UserManagement
 					 std::string const& username);
 		void eraseUser(int socket_fd);
 		bool checkForUser(int socket);
+
+		void addChannel(std::string name); /* add existing name check */
+		void eraseChannel(std::string name); /* add non-existing check? */
+
+		//Channel const& getChannel(std::string const& name) const;
+		void listChannels() const;
+
 		/* void setUser(int socket, std::string user); not needed */
 		void print();
 };

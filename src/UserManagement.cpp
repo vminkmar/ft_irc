@@ -73,6 +73,48 @@ void UserManagement::eraseUser(int socket_fd) {
   this->m_users.erase(it);
 }
 
+void UserManagement::addChannel(std::string name)
+{
+	m_channels.push_back(Channel(name));
+}
+
+void UserManagement::eraseChannel(std::string name)
+{
+	for (std::vector<Channel>::iterator itr = m_channels.begin();
+			itr != m_channels.end(); ++itr)
+	{
+		if (itr->getName() == name)
+		{
+			m_channels.erase(itr);
+		}
+	}
+}
+
+//Channel const& UserManagement::getChannel(std::string const& name) const
+//{
+//	for (std::vector<Channel>::const_iterator itr = m_channels.begin();
+//			itr != m_channels.end(); ++itr)
+//	{
+//
+//	}
+//	return NULL;
+//}
+
+void UserManagement::listChannels() const
+{
+	std::stringstream ss;
+	for (std::vector<Channel>::const_iterator itr = m_channels.begin();
+			itr != m_channels.end(); ++itr)
+	{
+		ss << itr->getName();
+		if (itr != --m_channels.end())
+		{
+			ss << ", ";
+		}
+	}
+	std::cout << ss.str() << std::endl;
+}
+
 void UserManagement::print() {
   for (std::map<int, User>::iterator it = this->m_users.begin();
        it != this->m_users.end(); it++)
