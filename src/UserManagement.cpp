@@ -137,7 +137,6 @@ Channel const& UserManagement::getChannel(std::string name)
 	return m_channels[name];
 }
 
-
 std::string UserManagement::getChannelUsers(std::string channelName) 
 {
     std::stringstream ss;
