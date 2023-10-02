@@ -27,7 +27,10 @@ static inline void print_log(std::string message)
 
 Channel::Channel(std::string const& name) : m_name(name),
                                             m_userLimit(10),
-                                            m_inviteOnly(false)
+                                            m_inviteOnly(false),
+											m_topicEditable(true),
+											m_channelKey(false)
+																
 {
 	print_log("name constructor called");
 }
@@ -57,6 +60,21 @@ void Channel::setPassword  (std::string const& newPassword)
 void Channel::setUserLimit (unsigned int newLimit)
 {
 	m_userLimit = newLimit;
+}
+
+void Channel::toggleInviteOnly()
+{
+	m_inviteOnly = !m_inviteOnly;
+}
+
+void Channel::toggleTopicEditable()
+{
+	m_topicEditable = !m_topicEditable;
+}
+
+void Channel::toggleChannelKey()
+{
+	m_channelKey = !m_channelKey;
 }
 
 std::string const& Channel::getName() const
@@ -105,14 +123,19 @@ std::string Channel::getUsers() const
 	return ss.str();
 }
 
-void Channel::toggleInviteOnly()
-{
-	m_inviteOnly = !m_inviteOnly;
-}
-
 bool Channel::isInviteOnly() const
 {
 	return m_inviteOnly;
+}
+
+bool Channel::isTopicEditable() const
+{
+	return m_topicEditable;
+}
+
+bool Channel::isChannelKey() const
+{
+	return m_channelKey;
 }
 
 void Channel::addUser(User* u, UserPrivilege up)
@@ -133,11 +156,27 @@ void Channel::removeUser(User* u)
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 
+static inline void print_bool(std::ostream& os, bool is, bool nl)
+{
+	if (is == true)
+	{
+		os << "true";
+	}
+	else
+	{
+		os <<"false";
+	}
+	if (nl == true)
+	{
+		os << "\n";
+	}
+}
+
 std::ostream& operator<<(std::ostream& os, Channel const & c)
 {
-	std::cout << "Channel:      " << c.getName() << "\n";
+	std::cout << "Channel:         " << c.getName() << "\n";
 	
-	std::cout << "Topic:        ";
+	std::cout << "Topic:           ";
 	if (c.getTopic().empty() == true)
 	{
 		std::cout << "not set\n";
@@ -147,7 +186,7 @@ std::ostream& operator<<(std::ostream& os, Channel const & c)
 		std::cout << c.getTopic() << "\n";
 	}
 
-	std::cout << "Password:     ";
+	std::cout << "Password:        ";
 	if (c.getPassword().empty() == true)
 	{
 		std::cout << "not set\n";
@@ -157,19 +196,18 @@ std::ostream& operator<<(std::ostream& os, Channel const & c)
 		std::cout << c.getPassword() << "\n";
 	}
 
-	std::cout << "User limit:   " << c.getUserLimit() << "\n";
+	std::cout << "User limit:      " << c.getUserLimit() << "\n";
 
-	std::cout << "isInviteOnly: ";
-	if (c.isInviteOnly() == true)
-	{
-		std::cout << "true\n";
-	}
-	else
-	{
-		std::cout << "false\n";
-	}
+	std::cout << "isInviteOnly:    ";
+	print_bool(std::cout, c.isInviteOnly(), true);
 
-	std::cout << "Users:        " << c.getUsers();
+	std::cout << "isTopicEditable: ";
+	print_bool(std::cout, c.isTopicEditable(), true);
+
+	std::cout << "isChannelKey:    ";
+	print_bool(std::cout, c.isChannelKey(), true);
+
+	std::cout << "Users:           " << c.getUsers();
 	return os;
 }
 

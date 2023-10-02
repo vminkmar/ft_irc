@@ -15,11 +15,11 @@ class Channel
 
 		std::string                    m_name;
 		std::string                    m_topic;
-		/* @needs to be checked in higher abstraction */
 		std::string                    m_password;
-		/* @needs to be checked in higher abstraction */
 		unsigned int                   m_userLimit;
 		bool                           m_inviteOnly;
+		bool                           m_topicEditable; /* new */
+		bool                           m_channelKey; /* new */
 		std::map<User*, UserPrivilege> m_users;
 
 	public:
@@ -29,19 +29,22 @@ class Channel
 		void setPassword     (std::string const& newPassword);
 		void setUserLimit    (unsigned int       newLimit); 
 		void toggleInviteOnly();
+		void toggleTopicEditable(); /* new */
+		void toggleChannelKey(); /* new */
 
-		std::string const& getName()      const;
-		std::string const& getTopic()     const;
-		std::string const& getPassword()  const;
-		unsigned int       getUserLimit() const;
-		std::string        getUsers()     const;
-		bool               isInviteOnly() const;
-
-		/* @note add ID/password/userLimit checks in UM for add/removing */
-		void addUser   (User* u, UserPrivilege up); /* also set_privilege */
+		std::string const& getName()         const;
+		std::string const& getTopic()        const;
+		std::string const& getPassword()     const;
+		unsigned int       getUserLimit()    const;
+		std::string        getUsers()        const;
+		bool               isInviteOnly()    const;
+		bool               isTopicEditable() const; /* new */
+		bool               isChannelKey()    const; /* new */
+        
+		/* also behaves like set_privilege */
+		void addUser   (User* u, UserPrivilege up); 
 		void removeUser(User* u);
 
-		/* @note could be done in UM too */
 		/* void sendBroadcast(std::string& message) const; @needs impl. */
 
 		Channel(std::string const& name);
