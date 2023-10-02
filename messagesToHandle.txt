@@ -18,7 +18,7 @@ Channels:
 "MODE"
 "PART"?
 
-Done:
+Works:
 "USER"
 "NICK"
 

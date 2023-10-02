@@ -52,7 +52,6 @@ public:
 	std::string getParameter(std::string message);
 	void getTrial(std::string &message);
 
-
 };
 
 #endif

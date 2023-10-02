@@ -17,9 +17,10 @@ public:
                UserPrivilege privilege);
   void eraseUser(int socket_fd);
 	void print();
-	int getNumberUsers() const;
+	bool checkForUser(int socket);
 
 
+	int getNumberUsers() const; //?
 	std::string getNumberUsersAsString();
 	std::string getNick(int socket);
 

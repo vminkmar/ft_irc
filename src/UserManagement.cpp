@@ -44,7 +44,7 @@ void UserManagement::setNick(int socket, std::string parameter) {
   for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
        it++) {
     if (it->first == socket)
-			it->second.setNickname(parameter);
+      it->second.setNickname(parameter);
   }
 }
 
@@ -52,6 +52,15 @@ void UserManagement::setUser(int socket, std::string parameter) {
   for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
        it++) {
     if (it->first == socket)
-			it->second.setUsername(parameter);
+      it->second.setUsername(parameter);
   }
+}
+
+bool UserManagement::checkForUser(int socket) {
+  for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
+       it++) {
+    if (it->first == socket)
+      return true;
+  }
+  return false;
 }

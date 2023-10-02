@@ -8,28 +8,28 @@ Server::~Server(){};
 void Server::createSocket() {
   // create the socket for the server
 
-  this->m_addrlen = sizeof(address);
+  this->m_addrlen = sizeof(this->address);
   if ((this->m_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     error("In socket");
   int reuseaddr = 1;
   if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr,
                  sizeof(reuseaddr)) == -1)
     error("socketopt");
-  address.sin_family = AF_INET;
-  address.sin_addr.s_addr = INADDR_ANY;
-  address.sin_port = htons(PORT);
-  memset(address.sin_zero, '\0', sizeof(address.sin_zero));
+ this->address.sin_family = AF_INET;
+ this->address.sin_addr.s_addr = INADDR_ANY;
+ this->address.sin_port = htons(PORT);
+  memset(this->address.sin_zero, '\0', sizeof(this->address.sin_zero));
   // bind the descriptor to a address family(AF_INET)
-  if (bind(m_server_fd, reinterpret_cast<struct sockaddr *>(&address),
-           sizeof(address)) < 0)
+  if (bind(this->m_server_fd, reinterpret_cast<struct sockaddr *>(&address),
+           sizeof(this->address)) < 0)
     error("In bind");
   // listen to client to accept it
-  if (listen(m_server_fd, 10) < 0)
+  if (listen(this->m_server_fd, 10) < 0)
     error("listen");
   this->m_pollfds[0].fd = m_server_fd;
   this->m_pollfds->revents = POLLIN;
   while (1) {
-    int ret = poll(m_pollfds, m_maxClients, -1);
+    int ret = poll(this->m_pollfds, this->m_maxClients, -1);
     if (ret <= 0)
       perror("poll");
     receiveOnServer();
@@ -38,9 +38,9 @@ void Server::createSocket() {
 }
 
 void Server::receiveOnServer() {
-  if (m_pollfds[0].revents & POLLIN) {
+  if (this->m_pollfds[0].revents & POLLIN) {
     int newSocket;
-    if ((newSocket = accept(m_server_fd, (struct sockaddr *)&address,
+    if ((newSocket = accept(this->m_server_fd, (struct sockaddr *)&address,
                             (socklen_t *)&m_addrlen)) < 0)
       error("accept");
     char buffer[30000] = {0};
@@ -49,9 +49,9 @@ void Server::receiveOnServer() {
     std::cout << buffer << std::endl;
     memset(buffer, 0, sizeof(buffer));
     for (int j = 1; j < m_maxClients; j++) {
-      if (m_pollfds[j].fd == -1) {
-        m_pollfds[j].fd = newSocket;
-        m_pollfds[j].revents = POLLIN;
+      if (this->m_pollfds[j].fd == -1) {
+        this->m_pollfds[j].fd = newSocket;
+        this->m_pollfds[j].revents = POLLIN;
         break;
       }
     }
@@ -64,9 +64,9 @@ void Server::receiveMessage() {
     if (this->m_pollfds[i].revents & POLLIN) {
 
       char buffer[30000] = {0};
-      int valread = read(m_pollfds[i].fd, buffer, sizeof(buffer));
+      int valread = read(this->m_pollfds[i].fd, buffer, sizeof(buffer));
       valread = 0; // error
-      parseIncomingMessage(buffer, m_pollfds[i].fd);
+      parseIncomingMessage(buffer, this->m_pollfds[i].fd);
       memset(buffer, 0, sizeof(buffer));
     }
   }
@@ -76,7 +76,7 @@ void Server::sendResponse(int response, int socket) {
 
   this->m_pollfds[0].revents = POLLOUT;
   if (response == WELCOME) {
-    std::string str = "001" + userManagement.getNick(socket) +
+    std::string str = "001" + this->userManagement.getNick(socket) +
                       ":Welcome to the Internet Relay Network vminkmar";
     send(socket, str.c_str(), str.length(), 0);
   }
@@ -85,28 +85,29 @@ void Server::sendResponse(int response, int socket) {
 
 void Server::Messages(int socket) {
   if (m_command == "NICK") {
-    userManagement.addUser(socket, "", "", OPERATOR);
-    userManagement.setNick(socket, m_parameters[0]);
+    if (this->userManagement.checkForUser(socket) == false)
+      this->userManagement.addUser(socket, "", "", OPERATOR);
+    this->userManagement.setNick(socket, this->m_parameters[0]);
     // sendResponse(WELCOME, socket);
-  }
-  else if (m_command == "USER") {
-    userManagement.setUser(socket, m_parameters[0]);
-    userManagement.print();
+  } else if (m_command == "USER") {
+    this->userManagement.setUser(socket, this->m_parameters[0]);
+    this->userManagement.print();
   }
 }
 
 void Server::parseIncomingMessage(char *buffer, int socket) {
   std::string message = buffer;
   getCommand(message);
-	std::cout << "Command: " << this->m_command << std::endl;
+  std::cout << "Command: " << this->m_command << std::endl;
   message = getParameter(message);
-	for(std::vector<std::string>::iterator it = m_parameters.begin(); it != m_parameters.end(); it++){
-		std::cout << "param: " << *it << std::endl;
-	}
-	m_trail = message;
-	std::cout << "trail: " << m_trail << std::endl;
+  for (std::vector<std::string>::iterator it = this->m_parameters.begin();
+       it != this->m_parameters.end(); it++) {
+    std::cout << "param: " << *it << std::endl;
+  }
+  this->m_trail = message;
+  std::cout << "trail: " << this->m_trail << std::endl;
   Messages(socket);
-	m_parameters.clear();
+  this->m_parameters.clear();
 }
 
 std::string Server::getParameter(std::string message) {
@@ -124,14 +125,14 @@ std::string Server::getParameter(std::string message) {
     std::stringstream iss(message);
     std::string token;
     while (iss >> token)
-      m_parameters.push_back(token);
+      this->m_parameters.push_back(token);
     return ("");
   }
 }
 
 void Server::printCommand() {
-  if (!m_command.empty())
-    std::cout << "Command: " << m_command << std::endl;
+  if (!this->m_command.empty())
+    std::cout << "Command: " << this->m_command << std::endl;
 }
 
 void Server::getCommand(std::string &message) {
