@@ -16,9 +16,9 @@ class Channel
 		std::string                    m_password;
 		unsigned int                   m_userLimit;
 		bool                           m_inviteOnly;
-		bool                           m_topicEditable; /* new */
-		bool                           m_channelKey; /* new */
-		std::map<User*, UserPrivilege> m_users; /* Ptr ?! */
+		bool                           m_topicEditable;
+		bool                           m_channelKey;
+		std::map <int, UserPrivilege>  m_users; /* @note needs testing */
 
 	public:
 
@@ -27,29 +27,29 @@ class Channel
 		void setPassword     (std::string const& newPassword);
 		void setUserLimit    (unsigned int       newLimit); 
 		void toggleInviteOnly();
-		void toggleTopicEditable(); /* new */
-		void toggleChannelKey(); /* new */
+		void toggleTopicEditable();
+		void toggleChannelKey();
 
 		std::string const& getName()         const;
 		std::string const& getTopic()        const;
 		std::string const& getPassword()     const;
 		unsigned int       getUserLimit()    const;
-		std::string        getUsers()        const;
 		bool               isInviteOnly()    const;
-		bool               isTopicEditable() const; /* new */
-		bool               isChannelKey()    const; /* new */
+		bool               isTopicEditable() const;
+		bool               isChannelKey()    const;
         
 		/* also behaves like set_privilege */
-		void addUser   (User* u, UserPrivilege up); 
-		void removeUser(User* u);
-
-		/* void sendBroadcast(std::string& message) const; @needs impl. */
+		void addUser   (int socket, UserPrivilege up); 
+		void removeUser(int socket);
 
 		Channel(std::string const& name);
 		Channel(Channel const& src);
 		Channel& operator=(Channel const& src);
 		Channel();
 		~Channel();
+
+		/* @note needs implementation: */
+		//std::string        getUsers()        const;
 
 };
 

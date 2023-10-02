@@ -10,19 +10,11 @@
 
 int main(void)
 {
-	
-	UserManagement um;
+	Channel c("Test");
 
-	um.addChannel("Test");
-	um.addChannel("Moin");
-	um.addChannel("Hamburg");
-	um.addChannel("Hamburg");
-	um.addChannel("Heilbronn");
-	um.addChannel("Kuhdamm");
-	um.listChannels();
-
-	um.eraseChannel("Heilbronn");
-	um.listChannels();
+	std::cout << c;
+	c.addUser(1, USER);
+	c.addUser(2, OPERATOR);
 }
 
 // -------------------------------------------------------------------------- //

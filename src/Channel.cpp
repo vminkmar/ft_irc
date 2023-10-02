@@ -139,31 +139,31 @@ unsigned int Channel::getUserLimit() const
 	return m_userLimit;
 }
 
-std::string Channel::getUsers() const
-{
-	if (m_users.empty() == true)
-	{
-		return "empty channel!";
-	}
-
-	std::stringstream ss;
-	for (std::map<User*, UserPrivilege>::const_iterator itr = 
-			                                m_users.begin();
-                                            itr != m_users.end();
-			                                ++itr)
-	{
-		ss << itr->first->getNickname();
-		if (itr->second == OPERATOR) /* adds an (o) for operators */
-		{
-			ss << "(o)";
-		}
-		if (itr != --(m_users.end())) /* adds , except for the last */
-		{
-			ss << ", ";
-		}
-	}
-	return ss.str();
-}
+//std::string Channel::getUsers() const
+//{
+//	if (m_users.empty() == true)
+//	{
+//		return "empty channel!";
+//	}
+//
+//	std::stringstream ss;
+//	for (std::map<User*, UserPrivilege>::const_iterator itr = 
+//			                                m_users.begin();
+//                                            itr != m_users.end();
+//			                                ++itr)
+//	{
+//		ss << itr->first->getNickname();
+//		if (itr->second == OPERATOR) /* adds an (o) for operators */
+//		{
+//			ss << "(o)";
+//		}
+//		if (itr != --(m_users.end())) /* adds , except for the last */
+//		{
+//			ss << ", ";
+//		}
+//	}
+//	return ss.str();
+//}
 
 bool Channel::isInviteOnly() const
 {
@@ -180,21 +180,15 @@ bool Channel::isChannelKey() const
 	return m_channelKey;
 }
 
-void Channel::addUser(User* u, UserPrivilege up)
+void Channel::addUser(int socket, UserPrivilege up)
 {
-	m_users[u] = up;
+	m_users[socket] = up;
 }
 
-void Channel::removeUser(User* u)
+void Channel::removeUser(int socket)
 {
-	m_users.erase(u);
+	m_users.erase(socket);
 }
-
-//void Channel::sendBroadcast(std::string& message) const
-//{
-//	(void) message;
-//	return ;
-//}
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 
@@ -235,7 +229,8 @@ std::ostream& operator<<(std::ostream& os, Channel const & c)
 	std::cout << "isChannelKey:    ";
 	print_bool(std::cout, c.isChannelKey(), true);
 
-	std::cout << "Users:           " << c.getUsers();
+	/* @note */
+	//std::cout << "Users:           " << c.getUsers();
 	return os;
 }
 
