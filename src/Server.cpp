@@ -46,6 +46,7 @@ void Server::receiveOnServer() {
       error("accept");
     char buffer[30000] = {0};
     int reading = read(newSocket, buffer, 30000);
+	(void) reading; /* for linux compilation (unused var) */
     reading = 0;
     std::cout << buffer << std::endl;
     memset(buffer, 0, sizeof(buffer));
@@ -66,7 +67,8 @@ void Server::receiveMessage() {
 
       char buffer[30000] = {0};
       int valread = read(this->m_pollfds[i].fd, buffer, sizeof(buffer));
-      valread = 0; // error
+      (void) valread; /* for linux compilation! (unused var) */
+	  valread = 0; // error
       parseIncomingMessage(buffer, this->m_pollfds[i].fd);
       memset(buffer, 0, sizeof(buffer));
     }
@@ -86,8 +88,8 @@ void Server::sendResponse(int response, int socket) {
 
 void Server::Messages(int socket) {
   if (m_command == "NICK") {
-    if (this->userManagement.checkForUser(socket) == false)
-      this->userManagement.addUser(socket, "", "");
+    //if (this->userManagement.checkForUser(socket) == false)
+    this->userManagement.addUser(socket, "", "");
     this->userManagement.setNick(socket, this->m_parameters[0]);
     // sendResponse(WELCOME, socket);
   } else if (m_command == "USER") {
