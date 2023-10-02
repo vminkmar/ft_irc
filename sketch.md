@@ -5,25 +5,28 @@ Class Names uppercase
 # Questions
 
 # Todos
-	
-    Draw Structure 
 
-    Restructure server loop
+    Draw Structure on Whiteboard
 
-	UserManagement
-    --> adapt overall structure
-     --> change m_channels to std::map
+    Restructure Server Main loop
+    
+    Buffer class
 
     User class
-    --> change std::map with int/fd as unique key
      --> implement Buffer class
-
-    Buffer class
 
 	Commands
     --> try to fully implement one or two commands ("full stack")
-
+	
 	Error Handling (Exceptions/Messages)
+
+    UserManagement
+    --> Clean Up!
+    
+    Clean Code
+    --> typdefs for iterators
+     --> use const identifier when possible
+      --> return/pass const& when possible
 
 # Commands
     transform parameters in vector and at trail after : to a string
