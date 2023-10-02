@@ -33,24 +33,29 @@ class UserManagement
 		std::string getNumberUsersAsString()           const;
 		int         getNumberUsers        ()           const;
 		
-		void addUser(int                socket_fd,
+        void addUser(int                socket_fd,
                      std::string const& nickname,
-					 std::string const& username);
+                     std::string const& username);
 		void eraseUser(int socket_fd);
 
 		void addChannel(std::string name); /* add existing name check */
 		void eraseChannel(std::string name); /* add non-existing check? */
-		Channel const& getChannel(std::string name);
+		Channel const& getChannel(std::string name); /* add name check */
+        std::string getChannelUsers(std::string channelName);
+        void printChannelInfo(std::string channelName);/* add name check */
 		void listChannels() const;
 
-		void addUsertoChannel(int socket, UserPrivilege up, std::string channelName);
-
+        void addUserToChannel(int socket,
+                              UserPrivilege up,
+                              std::string channelName);
 		
 		void print(); /* old implementation */
 
 		UserManagement();
 		~UserManagement();
 };
+
+
 
 #endif // USERMANAGEMENT_HPP
 

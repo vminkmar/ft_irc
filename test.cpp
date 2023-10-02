@@ -11,13 +11,16 @@ int main(void)
 	UserManagement um;
 
 	um.addUser(1, "Hans", "Dieter");
+	um.addUser(2, "Walter", "Albert");
 	um.addChannel("Test");
 	um.addChannel("Hamburg");
+
 	um.listChannels();
-	um.addUsertoChannel(1, USER, "Test");
+	
+	um.addUserToChannel(1, USER, "Test");
+	um.addUserToChannel(2, OPERATOR, "Test");
 
-	//um.printChannel("Test");
-
+    um.printChannelInfo("Test");
 }
 
 // -------------------------------------------------------------------------- //

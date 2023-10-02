@@ -137,6 +137,45 @@ Channel const& UserManagement::getChannel(std::string name)
 	return m_channels[name];
 }
 
+
+std::string UserManagement::getChannelUsers(std::string channelName) 
+{
+    std::stringstream ss;
+
+    std::map<int, UserPrivilege>::const_iterator begin = m_channels[channelName].m_users.begin();
+
+    std::map<int, UserPrivilege>::const_iterator end = m_channels[channelName].m_users.end();
+
+
+    for (std::map<int, User>::const_iterator itr = m_users.begin();
+                                             itr != m_users.end();
+                                             ++itr)
+    {
+        for (std::map<int, UserPrivilege>::const_iterator it = begin;
+                                                          it != end;
+                                                          ++it)
+        {
+            if (itr->first == it->first)
+            {
+                ss << itr->second.getUsername();
+                if (itr != --m_users.end())
+                {
+                    ss << ", ";
+                }
+            }
+        }
+    }
+    return ss.str();
+}
+
+void UserManagement::printChannelInfo(std::string channelName)
+{
+    std::cout << m_channels[channelName]
+              << "List of Users:   "
+              << getChannelUsers(channelName)
+              << std::endl;
+}
+
 void UserManagement::listChannels() const
 {
 	std::stringstream ss;
@@ -152,7 +191,7 @@ void UserManagement::listChannels() const
 	std::cout << ss.str() << std::endl;
 }
 
-void UserManagement::addUsertoChannel(int socket,
+void UserManagement::addUserToChannel(int socket,
 		UserPrivilege up, std::string channelName)
 {
 	m_channels[channelName].addUser(socket, up);
