@@ -7,7 +7,6 @@ Server::~Server(){};
 
 void Server::createSocket() {
   // create the socket for the server
-
   this->m_addrlen = sizeof(this->address);
   if ((this->m_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     error("In socket");
