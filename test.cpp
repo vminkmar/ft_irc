@@ -9,25 +9,13 @@
 
 int main(void)
 {
-	Channel d("Main");
 
-	User u("Hans", "HansAlbert", USER);
-	User u2("Dieter", "DieterKohl", USER);
+	User u("Hans", "Dieter");
+	User u2(u);
 
-	d.setName("Hamburg");
-	d.setUserLimit(3);
-	d.toggleInviteOnly();
+	std::cout << u << std::endl;
+	std::cout << u2 << std::endl;
 
-	d.addUser(&u, OPERATOR);
-	std::cout << d << std::endl;
-
-	std::cout << std::endl;
-
-	d.addUser(&u, USER);
-	d.addUser(&u2, USER);
-	std::cout << d << std::endl;
-
-    return (EXIT_SUCCESS);
 }
 
 // -------------------------------------------------------------------------- //

@@ -12,7 +12,7 @@
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> non-class functions */
 
-static inline void print_log(std::string message) {
+static inline void print_log(std::string const& message) {
   if (DEBUG) {
     std::cerr << YELLOW << "User: " << message << RESET << std::endl;
   }
@@ -20,19 +20,18 @@ static inline void print_log(std::string message) {
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-User::User() : m_nickname(""), m_username("") {
-  print_log("default constructor called");
-}
-
-User::User(std::string nickname, std::string username)
+User::User(std::string const& nickname, std::string const& username)
     : m_nickname(nickname), m_username(username) {
   print_log("main constructor called");
 }
 
-User::User(const User &copy) {
+User::User(){
+  print_log("default constructor called");
+}
+
+User::User(const User &copy) : m_nickname(copy.m_nickname),
+                               m_username(copy.m_username){
   print_log("copy constructor called");
-  this->m_nickname = copy.m_nickname;
-  this->m_username = copy.m_username;
 }
 
 User::~User() { print_log("destructor called"); }
@@ -45,11 +44,17 @@ std::ostream &operator<<(std::ostream &os, const User &user) {
   return os;
 }
 
+User& User::operator=(const User& src){
+	if (this != &src){
+		this->m_nickname = src.getNickname();
+		this->m_username = src.getUsername();
+	}
+	return *this;
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
-void User::setNickname(std::string const &nickname) { m_nickname = nickname; }
-
-void User::setUsername(std::string const &username) { m_username = username; }
+void User::setNickname(std::string const& nickname) { m_nickname = nickname; }
 
 std::string const &User::getNickname() const { return m_nickname; }
 std::string const &User::getUsername() const { return m_username; }

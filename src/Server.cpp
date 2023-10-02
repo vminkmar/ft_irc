@@ -1,6 +1,7 @@
-#include "Server.hpp"
-#include "UserManagement.hpp"
-#include "User.hpp"
+#include "../include/Server.hpp"
+#include "../include/UserManagement.hpp"
+#include "../include/User.hpp"
+
 Server::Server() : m_maxClients(512) {}
 
 Server::~Server(){};
@@ -89,7 +90,8 @@ void Server::Messages(int socket) {
     this->userManagement.setNick(socket, this->m_parameters[0]);
     // sendResponse(WELCOME, socket);
   } else if (m_command == "USER") {
-    this->userManagement.setUser(socket, this->m_parameters[0]);
+    //this->userManagement.setUser(socket, this->m_parameters[0]);
+	// should this be implemented? if so we need username to be non-const
   }
 }
 

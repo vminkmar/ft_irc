@@ -79,14 +79,6 @@ void UserManagement::print() {
     std::cout << it->first << "	" << it->second << std::endl;
 }
 
-void UserManagement::setUser(int socket, std::string parameter) {
-  for (std::map<int, User>::iterator it = this->m_users.begin();
-       it != this->m_users.end(); it++) {
-    if (it->first == socket)
-      it->second.setUsername(parameter);
-  }
-}
-
 bool UserManagement::checkForUser(int socket) {
   for (std::map<int, User>::iterator it = this->m_users.begin();
        it != this->m_users.end(); it++) {

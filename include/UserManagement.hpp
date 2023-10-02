@@ -29,7 +29,7 @@ class UserManagement
 					 std::string const& username);
 		void eraseUser(int socket_fd);
 		bool checkForUser(int socket);
-		void setUser(int socket, std::string user);
+		/* void setUser(int socket, std::string user); not needed */
 		void print();
 };
 
