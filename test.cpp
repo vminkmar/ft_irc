@@ -15,8 +15,6 @@ int main(void)
 	User u2("Dieter", "DieterKohl", USER);
 
 	d.setName("Hamburg");
-	d.setTopic("Moinsen allerseits");
-	d.setPassword("moin");
 	d.setUserLimit(3);
 	d.toggleInviteOnly();
 

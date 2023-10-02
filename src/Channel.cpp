@@ -23,6 +23,38 @@ static inline void print_log(std::string message)
     }
 }
 
+static inline void print_bool(std::ostream& os, bool is, bool nl)
+{
+	if (is == true)
+	{
+		os << "true";
+	}
+	else
+	{
+		os << "false";
+	}
+	if (nl == true)
+	{
+		os << "\n";
+	}
+}
+
+static inline void print_stdstr(std::ostream& os, std::string str, bool nl)
+{
+	if (str.empty() == true)
+	{
+		os << "not set";
+	}
+	else
+	{
+		os << str;
+	}
+	if (nl == true)
+	{
+		os << "\n";
+	}
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
 Channel::Channel(std::string const& name) : m_name(name),
@@ -156,45 +188,15 @@ void Channel::removeUser(User* u)
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 
-static inline void print_bool(std::ostream& os, bool is, bool nl)
-{
-	if (is == true)
-	{
-		os << "true";
-	}
-	else
-	{
-		os <<"false";
-	}
-	if (nl == true)
-	{
-		os << "\n";
-	}
-}
-
 std::ostream& operator<<(std::ostream& os, Channel const & c)
 {
 	std::cout << "Channel:         " << c.getName() << "\n";
 	
 	std::cout << "Topic:           ";
-	if (c.getTopic().empty() == true)
-	{
-		std::cout << "not set\n";
-	}
-	else
-	{
-		std::cout << c.getTopic() << "\n";
-	}
+	print_stdstr(std::cout, c.getTopic(), true);
 
 	std::cout << "Password:        ";
-	if (c.getPassword().empty() == true)
-	{
-		std::cout << "not set\n";
-	}
-	else
-	{
-		std::cout << c.getPassword() << "\n";
-	}
+	print_stdstr(std::cout, c.getPassword(), true);
 
 	std::cout << "User limit:      " << c.getUserLimit() << "\n";
 
