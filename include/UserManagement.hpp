@@ -19,7 +19,7 @@ class UserManagement
 	private:
 
 		std::map <int, User>              m_users;
-		std::map <std::string, Channel>   m_channels; /* change to std::map */
+		std::map <std::string, Channel>   m_channels;
 
 		bool checkForUser   (int socket)       const;
 		bool checkForChannel(std::string name) const;
@@ -54,8 +54,6 @@ class UserManagement
 		UserManagement();
 		~UserManagement();
 };
-
-
 
 #endif // USERMANAGEMENT_HPP
 

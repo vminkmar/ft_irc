@@ -139,31 +139,10 @@ unsigned int Channel::getUserLimit() const
 	return m_userLimit;
 }
 
-//std::string Channel::getUsers() const
-//{
-//	if (m_users.empty() == true)
-//	{
-//		return "empty channel!";
-//	}
-//
-//	std::stringstream ss;
-//	for (std::map<User*, UserPrivilege>::const_iterator itr = 
-//			                                m_users.begin();
-//                                            itr != m_users.end();
-//			                                ++itr)
-//	{
-//		ss << itr->first->getNickname();
-//		if (itr->second == OPERATOR) /* adds an (o) for operators */
-//		{
-//			ss << "(o)";
-//		}
-//		if (itr != --(m_users.end())) /* adds , except for the last */
-//		{
-//			ss << ", ";
-//		}
-//	}
-//	return ss.str();
-//}
+std::map<int, UserPrivilege> const& Channel::getUserMap() const
+{
+    return m_users;
+}
 
 bool Channel::isInviteOnly() const
 {
@@ -229,8 +208,6 @@ std::ostream& operator<<(std::ostream& os, Channel const & c)
 	std::cout << "isChannelKey:    ";
 	print_bool(std::cout, c.isChannelKey(), true);
 
-	/* @note */
-	//std::cout << "Users:           " << c.getUsers();
 	return os;
 }
 

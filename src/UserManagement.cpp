@@ -142,17 +142,14 @@ std::string UserManagement::getChannelUsers(std::string channelName)
 {
     std::stringstream ss;
 
-    std::map<int, UserPrivilege>::const_iterator begin = m_channels[channelName].m_users.begin();
-
-    std::map<int, UserPrivilege>::const_iterator end = m_channels[channelName].m_users.end();
-
+    std::map<int, UserPrivilege> UserMap = m_channels[channelName].getUserMap();
 
     for (std::map<int, User>::const_iterator itr = m_users.begin();
                                              itr != m_users.end();
                                              ++itr)
     {
-        for (std::map<int, UserPrivilege>::const_iterator it = begin;
-                                                          it != end;
+        for (std::map<int, UserPrivilege>::const_iterator it = UserMap.begin();
+                                                          it != UserMap.end();
                                                           ++it)
         {
             if (itr->first == it->first)

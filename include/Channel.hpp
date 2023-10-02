@@ -11,30 +11,33 @@ class Channel
 {
 	private:
 
-		std::string                    m_name;
-		std::string                    m_topic;
-		std::string                    m_password;
-		unsigned int                   m_userLimit;
-		bool                           m_inviteOnly;
-		bool                           m_topicEditable;
-		bool                           m_channelKey;
+        std::string                    m_name;
+        std::string                    m_topic;
+        std::string                    m_password;
+        unsigned int                   m_userLimit;
+        std::map<int, UserPrivilege>   m_users;
+
+        bool                           m_inviteOnly;
+        bool                           m_topicEditable;
+        bool                           m_channelKey;
 
 	public:
-
-		std::map <int, UserPrivilege>  m_users; /* @note needs testing */
 
 		void setName         (std::string const& newName);
 		void setTopic        (std::string const& newTopic);
 		void setPassword     (std::string const& newPassword);
 		void setUserLimit    (unsigned int       newLimit); 
-		void toggleInviteOnly();
+		
+        void toggleInviteOnly();
 		void toggleTopicEditable();
 		void toggleChannelKey();
 
-		std::string const& getName()         const;
-		std::string const& getTopic()        const;
-		std::string const& getPassword()     const;
-		unsigned int       getUserLimit()    const;
+		std::string const&                  getName()         const;
+		std::string const&                  getTopic()        const;
+		std::string const&                  getPassword()     const;
+		unsigned int                        getUserLimit()    const;
+        std::map<int, UserPrivilege> const& getUserMap()      const;
+
 		bool               isInviteOnly()    const;
 		bool               isTopicEditable() const;
 		bool               isChannelKey()    const;
@@ -48,10 +51,6 @@ class Channel
 		Channel& operator=(Channel const& src);
 		Channel();
 		~Channel();
-
-		/* @note needs implementation: */
-		//std::string        getUsers()        const;
-
 };
 
 std::ostream& operator<<(std::ostream& os, Channel const& c);
