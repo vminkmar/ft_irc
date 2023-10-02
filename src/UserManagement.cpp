@@ -9,17 +9,16 @@ int m_numberUsers = 0;
 void UserManagement::addUser(int socket_fd, std::string nickname,
                              std::string username, UserPrivilege privilege) {
   User user(nickname, username, privilege);
-  m_users[socket_fd] = user;
-  m_numberUsers++;
+  this->m_users[socket_fd] = user;
 }
 
 void UserManagement::eraseUser(int socket_fd) {
-  std::map<int, User>::iterator it = m_users.find(socket_fd);
-  m_users.erase(it);
+  std::map<int, User>::iterator it = this->m_users.find(socket_fd);
+  this->m_users.erase(it);
 }
 
 void UserManagement::print() {
-  for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
+  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
        it++)
     std::cout << it->first << "	" << it->second << std::endl;
 }
@@ -32,7 +31,7 @@ std::string UserManagement::getNumberUsersAsString() {
 }
 
 std::string UserManagement::getNick(int socket) {
-  for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
+  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
        it++) {
     if (it->first == socket)
       return it->second.getNickname();
@@ -41,7 +40,7 @@ std::string UserManagement::getNick(int socket) {
 }
 
 void UserManagement::setNick(int socket, std::string parameter) {
-  for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
+  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
        it++) {
     if (it->first == socket)
       it->second.setNickname(parameter);
@@ -49,7 +48,7 @@ void UserManagement::setNick(int socket, std::string parameter) {
 }
 
 void UserManagement::setUser(int socket, std::string parameter) {
-  for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
+  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
        it++) {
     if (it->first == socket)
       it->second.setUsername(parameter);
@@ -57,7 +56,7 @@ void UserManagement::setUser(int socket, std::string parameter) {
 }
 
 bool UserManagement::checkForUser(int socket) {
-  for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
+  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
        it++) {
     if (it->first == socket)
       return true;
