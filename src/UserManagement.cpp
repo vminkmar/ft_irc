@@ -80,29 +80,6 @@ void UserManagement::print() {
     std::cout << it->first << "	" << it->second << std::endl;
 }
 
-int UserManagement::getNumberUsers() const { return (m_numberUsers); }
-
-std::string UserManagement::getNumberUsersAsString() {
-  std::string str = std::to_string(m_numberUsers);
-  return (str);
-}
-
-std::string UserManagement::getNick(int socket) {
-  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
-       it++) {
-    if (it->first == socket)
-      return it->second.getNickname();
-  }
-  return "";
-}
-
-void UserManagement::setNick(int socket, std::string parameter) {
-  for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();
-       it++) {
-    if (it->first == socket)
-      it->second.setNickname(parameter);
-  }
-}
 
 void UserManagement::setUser(int socket, std::string parameter) {
   for (std::map<int, User>::iterator it = this->m_users.begin(); it != this->m_users.end();

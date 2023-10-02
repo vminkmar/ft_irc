@@ -29,7 +29,8 @@ class UserManagement
 					 std::string const& username,
 					 UserPrivilege      privilege);
 		void eraseUser(int socket_fd);
-
+		bool checkForUser(int socket);
+		void setUser(int socket, std::string user);
 		void print();
 };
 
