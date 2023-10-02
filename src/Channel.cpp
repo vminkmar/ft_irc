@@ -67,6 +67,16 @@ Channel::Channel(std::string const& name) : m_name(name),
 	print_log("name constructor called");
 }
 
+Channel::Channel()
+{
+	print_log("default constructor called");
+}
+
+Channel::Channel(Channel const& src){
+	print_log("copy constructor called");
+	this->m_name = src.getName();
+}
+
 Channel::~Channel()
 {
     print_log("destructor called");
@@ -187,6 +197,22 @@ void Channel::removeUser(User* u)
 //}
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
+
+Channel& Channel::operator=(Channel const& src)
+{
+	print_log("assignment operator called");
+	if (this != &src)
+	{
+		m_name = src.getName();
+		m_topic = src.getTopic();	
+		m_password = src.getPassword();
+		m_userLimit = src.getUserLimit();
+		m_inviteOnly = src.isInviteOnly();
+		m_topicEditable = src.isTopicEditable();
+		m_channelKey = src.isChannelKey();
+	}
+	return *this;
+}
 
 std::ostream& operator<<(std::ostream& os, Channel const & c)
 {

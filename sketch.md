@@ -6,12 +6,9 @@ Class Names uppercase
 
 # Todos
 	
-	Adjust Channel/User/UserManagement class design
-	 --> Where to check for things like passw, userlimit and so on
-	 --> implement user_id in user class  or force a unique username 
-	      so one can use that to check for correct adding, erasing,
-		   changing permissions
-	
+	UserManagement
+     --> implement and test creating Channels
+
 	Commands
 
 	Error Handling (Exceptions/Messages)

@@ -46,6 +46,9 @@ class Channel
 		/* void sendBroadcast(std::string& message) const; @needs impl. */
 
 		Channel(std::string const& name);
+		Channel(Channel const& src);
+		Channel& operator=(Channel const& src);
+		Channel();
 		~Channel();
 
 };

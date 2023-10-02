@@ -11,7 +11,7 @@ DEBUG_FLAG      := $(shell echo $$DEBUG_FLAG)
 CFLAGS			:= -Wall -Wextra -Werror -std=c++98  -I $(INCLUDE) $(DEBUG_FLAG) 
 VPATH           := src/
 
-SRC_FILES		:= main.cpp Server.cpp User.cpp UserManagement.cpp
+SRC_FILES		:= main.cpp Channel.cpp Server.cpp User.cpp UserManagement.cpp
 
 ODIR			:= obj
 

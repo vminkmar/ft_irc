@@ -3,7 +3,9 @@
 
 #include <string>  // needed for std::string
 #include <map>     // needed for std::map
+#include <vector>  // needed for std::vector
 
+#include "Channel.hpp"       // needed for Channel class
 #include "UserPrivilege.hpp" // needed for ENUM
 #include "User.hpp"          // needed for User class
 //#include "Responses.hpp" not needed right now
@@ -14,7 +16,8 @@ class UserManagement
 {
 	private:
 
-		std::map<int, User> m_users;
+		std::map    <int, User> m_users;
+		std::vector <Channel>   m_channels;
 
 	public:
 
