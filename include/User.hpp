@@ -12,7 +12,8 @@ private:
   std::string m_username;
 
 public:
-  void setNickname(std::string const &nickname);
+  void setNickname(std::string const& nickname);
+  void setUsername(std::string const& username);
 
   std::string const &getNickname() const;
   std::string const &getUsername() const;
