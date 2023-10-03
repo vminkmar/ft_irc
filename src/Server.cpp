@@ -125,15 +125,16 @@ void Server::parseIncomingMessage(char *buffer, int socket) {
     this->m_parameters.clear();
     pos = message.find("\r\n");
   }
-	if(checkMessage(message) == false){
+	checkMessage(message);
+	if(!message.empty()){
 		userManagement.appendToBuffer(message, socket, INPUT);
+		std::cout << "InputBuffer: " << userManagement.getBuffer(1, INPUT) << std::endl;
 	}
 }
 
-bool Server::checkMessage(std::string message){
-	if (message.length() <= 1)
-		return true;
-	return false;
+void Server::checkMessage(std::string &message){
+	if(message.at(0) == '\n')
+		message.erase(0,1);	
 }
 
 std::string Server::getParameter(std::string message) {

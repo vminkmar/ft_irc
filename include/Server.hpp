@@ -57,7 +57,7 @@ public:
 	void cleanUpSockets();
 	std::string getParameter(std::string message);
 	void getTrial(std::string &message);
-	bool checkMessage(std::string message);
+	void checkMessage(std::string &message);
 };
 
 #endif // SERVER_HPP

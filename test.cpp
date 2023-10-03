@@ -5,7 +5,7 @@
 #include <iostream>                   // needed for std::cout, std::endl
 
 #include "include/UserManagement.hpp" // needed for UserManagement class
-
+#include "include/Server.hpp"
 #define GREEN "\033[32m"
 #define RESET "\033[0m"
 
@@ -18,10 +18,16 @@ int main(void)
 {
     log("Testing UserManagement");
     UserManagement um;
+		Server s;
 
     log("Adding users to server");
 	um.addUser(1, "Hans", "Dieter");
 	um.addUser(2, "Walter", "Albert");
+
+		log("Testing Parser");
+		std::string tmp = "NICK vminkmar\r\nUSER vminkmar bla :bla";
+		char *test = strdup(tmp.c_str());
+		s.parseIncomingMessage(test, 1);
 
     log("Getting Usernames from server");
     std::cout << um.getUsernames() << std::endl;
