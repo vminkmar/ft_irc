@@ -97,9 +97,9 @@ std::string UserManagement::getNumberUsersAsString() const{
 
 int UserManagement::getNumberUsers() const { return (m_numberUsers); }
 
-std::string UserManagement::getUsernames(){
+std::string UserManagement::getUsernames() const{
     std::stringstream ss;
-    for (t_um_users_it itr = m_users.begin(); itr != m_users.end(); ++itr){
+    for (t_um_users_cit itr = m_users.begin(); itr != m_users.end(); ++itr){
         ss << itr->second.getUsername();
         if (itr != --m_users.end()){
             ss << ", ";
@@ -138,14 +138,27 @@ void UserManagement::eraseChannel(std::string name){
 	}
 }
 
-Channel const& UserManagement::getChannel(std::string name){
-	return m_channels[name];
+Channel const& UserManagement::getChannel(std::string name) const{
+	return m_channels.find(name)->second;
 }
 
-std::string UserManagement::getChannelUsernames(std::string channelName){
+std::string UserManagement::getChannelNames() const{ 
+	std::stringstream ss;
+	for (t_um_channels_cit it = m_channels.begin();	
+                           it != m_channels.end();
+                           ++it){
+		ss << it->second.getName();
+		if (it != --m_channels.end()){
+			ss << ", ";
+		}
+	}
+    return ss.str();
+}
+
+std::string UserManagement::getChannelUsernames(std::string channelName) const {
     std::stringstream ss;
-    Channel::t_channel_users UserMap = m_channels[channelName].getUserMap();
-    for (t_um_users_it itr = m_users.begin(); itr != m_users.end(); ++itr){
+    Channel::t_channel_users UserMap = getChannel(channelName).getUserMap();
+    for (t_um_users_cit itr = m_users.begin(); itr != m_users.end(); ++itr){
         for (Channel::t_channel_users_cit it = UserMap.begin();
                                           it != UserMap.end();
                                           ++it){
@@ -163,24 +176,15 @@ std::string UserManagement::getChannelUsernames(std::string channelName){
     return ss.str();
 }
 
-void UserManagement::printChannelInfo(std::string channelName){
-    std::cout << m_channels[channelName]
+void UserManagement::printChannelInfo(std::string channelName) const{
+    std::cout << m_channels.find(channelName)->second
               << "List of Users:   "
               << getChannelUsernames(channelName)
               << std::endl;
 }
 
 void UserManagement::listChannels() const{
-	std::stringstream ss;
-	for (t_um_channels_cit it = m_channels.begin();	
-                           it != m_channels.end();
-                           ++it){
-		ss << it->second.getName();
-		if (it != --m_channels.end()){
-			ss << ", ";
-		}
-	}
-	std::cout << ss.str() << std::endl;
+	std::cout << getChannelNames() << std::endl;
 }
 
 void UserManagement::addUserToChannel(int socket,
