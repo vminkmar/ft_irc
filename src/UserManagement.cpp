@@ -196,6 +196,11 @@ void UserManagement::addUserToChannel(int socket,
 	m_channels[channelName].addUser(socket, up);
 }
 
+void UserManagement::eraseUserFromChannel(int socket, std::string channelName)
+{
+    m_channels[channelName].eraseUser(socket);
+}
+
 //void UserManagement::print() {
 //  for (std::map<int, User>::iterator it = this->m_users.begin();
 //       it != this->m_users.end(); it++)

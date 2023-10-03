@@ -49,7 +49,7 @@ class Channel
         
         /* also behaves like set_privilege */
         void addUser   (int socket, UserPrivilege up); 
-        void removeUser(int socket);
+        void eraseUser(int socket);
         
         Channel(std::string const& name);
         Channel(Channel const& src);

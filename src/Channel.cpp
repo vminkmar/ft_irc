@@ -164,7 +164,7 @@ void Channel::addUser(int socket, UserPrivilege up)
 	m_users[socket] = up;
 }
 
-void Channel::removeUser(int socket)
+void Channel::eraseUser(int socket)
 {
 	m_users.erase(socket);
 }
