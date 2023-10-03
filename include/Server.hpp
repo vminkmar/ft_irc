@@ -49,11 +49,15 @@ public:
 	void printCommand();
 	void Messages(int socket);
 	void sendResponse(int repsonse, int socket);
-	void receiveOnServer();
-	void receiveMessage();
+	void acceptClients();
+	void runServer();
+	void socketClosed(int i);
+	void sendMessages(int i);
+	void receiveMessages(int i);
+	void cleanUpSockets();
 	std::string getParameter(std::string message);
 	void getTrial(std::string &message);
-
+	bool checkMessage(std::string message);
 };
 
 #endif // SERVER_HPP
