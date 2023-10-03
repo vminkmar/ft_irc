@@ -3,6 +3,7 @@
 
 enum Responses{
 	WELCOME,
+	CAP,
 };
 
 #endif // RESPONSES_HPP

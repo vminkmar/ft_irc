@@ -57,7 +57,7 @@ void Server::acceptClients() {
         break;
       }
     }
-    capabilityNegotiation(newSocket);
+    // capabilityNegotiation(newSocket);
   }
 }
 
@@ -94,20 +94,24 @@ void Server::receiveMessages(int socket) {
 }
 
 void Server::writeToOutputBuffer(int response, int socket) {
-
-  this->m_pollfds[0].revents = POLLOUT;
-  if (response == WELCOME) {
+	if(response == CAP){
+		std::string str = "CAP * LS :cap reply...\r\n";
+		userManagement.appendToBuffer(str, socket, OUTPUT);
+	}
+  else if (response == WELCOME) {
     std::string str = "001 " + userManagement.getNick(socket) +
                       " :Welcome to the ft_irc network " +
                       userManagement.getNick(socket) + "!" +
                       userManagement.getUser(socket) + "@" + HOST + "\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
   }
-  this->m_pollfds[0].revents = POLLIN;
 }
 
 void Server::Messages(int socket) {
-  if (m_command == "NICK") {
+  if(m_command == "CAP"){
+		writeToOutputBuffer(CAP, socket);
+	}
+	else if (m_command == "NICK") {
     this->userManagement.addUser(socket, "", "");
     this->userManagement.setNick(socket, this->m_parameters[0]);
   } else if (m_command == "USER") {
