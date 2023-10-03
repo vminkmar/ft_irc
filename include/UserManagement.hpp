@@ -45,7 +45,6 @@ class UserManagement
                                            std::string const& nickname,
                                            std::string const& username);
         void        eraseUser             (int socket);
-        /* erase from channels too! */
 
         /* <------ channel operations-----> */
 
