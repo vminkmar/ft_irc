@@ -57,7 +57,7 @@ void Server::acceptClients() {
         break;
       }
     }
-    // capabilityNegotiation(newSocket);
+    capabilityNegotiation(newSocket);
   }
 }
 
@@ -127,6 +127,7 @@ void Server::parseIncomingMessage(char *str, int socket) {
     buffer.append(message);
     message = buffer;
   }
+	std::cout << "message : " << message << std::endl;
   size_t pos = message.find("\r\n");
   while (pos != std::string::npos) {
     std::string tmp = message;
