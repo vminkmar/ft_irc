@@ -156,6 +156,10 @@ std::string UserManagement::getChannelUsers(std::string channelName)
             if (itr->first == it->first)
             {
                 ss << itr->second.getUsername();
+                if (it->second == OPERATOR)
+                {
+                    ss << "(o)";
+                }
                 if (itr != --m_users.end())
                 {
                     ss << ", ";
