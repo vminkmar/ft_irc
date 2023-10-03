@@ -41,20 +41,21 @@ UserManagement::~UserManagement()
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> private member functions */
 
 bool UserManagement::checkForUser(int socket) const{
-  for (std::map<int, User>::const_iterator it = this->m_users.begin();
-       it != this->m_users.end(); it++) {
-    if (it->first == socket)
+  for (t_um_users_cit it = m_users.begin();
+                      it != m_users.end();
+                      it++) {
+    if (it->first == socket){
       return true;
+    }
   }
   return false;
 }
 
 bool UserManagement::checkForChannel(std::string name) const{
-	for (std::map<std::string, Channel>::const_iterator itr = m_channels.begin();
-			itr != m_channels.end(); ++itr)
-	{
-		if (itr->second.getName() == name)
-		{
+	for (t_um_channels_cit it = m_channels.begin();
+                           it != m_channels.end();
+                           ++it){
+		if (it->second.getName() == name){
 			return true;
 		}
 	}
@@ -64,8 +65,7 @@ bool UserManagement::checkForChannel(std::string name) const{
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> public member functions */
 
 void UserManagement::setNick(int socket, std::string parameter) {
-  for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
-       ++it) {
+  for (t_um_users_it it = m_users.begin(); it != m_users.end(); ++it) {
     if (it->first == socket) {
       it->second.setNickname(parameter);
     }
@@ -73,116 +73,88 @@ void UserManagement::setNick(int socket, std::string parameter) {
 }
 
 void UserManagement::setUser(int socket, std::string parameter){
-  for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
-       ++it) {
+  for (t_um_users_it it = m_users.begin(); it != m_users.end(); ++it) {
     if (it->first == socket) {
       it->second.setUsername(parameter);
     }
   }
 }
 
-std::string UserManagement::getNick(int socket) const {
-  for (std::map<int, User>::const_iterator it = m_users.begin();
-       it != m_users.end(); it++) {
-    if (it->first == socket) {
+std::string UserManagement::getNick(int socket) const{
+  for (t_um_users_cit it = m_users.begin(); it != m_users.end(); it++){
+    if (it->first == socket){
       return it->second.getNickname();
     }
   }
   return "";
 }
 
-std::string UserManagement::getNumberUsersAsString() const {
+std::string UserManagement::getNumberUsersAsString() const{
   std::stringstream ss;
-
   ss << m_numberUsers;
   return ss.str();
 }
 
 int UserManagement::getNumberUsers() const { return (m_numberUsers); }
 
-std::string UserManagement::getUsernames()
-{
+std::string UserManagement::getUsernames(){
     std::stringstream ss;
-
-    for (t_um_users_it itr = m_users.begin(); itr != m_users.end(); ++itr)
-    {
+    for (t_um_users_it itr = m_users.begin(); itr != m_users.end(); ++itr){
         ss << itr->second.getUsername();
-        if (itr != --m_users.end())
-        {
+        if (itr != --m_users.end()){
             ss << ", ";
         }
     }
     return ss.str();
 }
 
-void UserManagement::addUser(int socket, std::string const &nickname,
-                             std::string const &username) {
+void UserManagement::addUser(int socket,
+                             std::string const &nickname,
+                             std::string const &username){
   User user(nickname, username);
-  this->m_users[socket] = user;
+  m_users[socket] = user;
 }
 
-void UserManagement::eraseUser(int socket) {
+void UserManagement::eraseUser(int socket){
     for (t_um_channels_it itr = m_channels.begin();
                           itr != m_channels.end();
-                          ++itr)
-    {
+                          ++itr){
         eraseUserFromChannel(socket, itr->first);
     }
-    std::map<int, User>::iterator it = this->m_users.find(socket);
-    this->m_users.erase(it);
+    m_users.erase(m_users.find(socket));
 }
 
-void UserManagement::addChannel(std::string name)
-{
-	if (checkForChannel(name) == true)
-	{
-		/* @note impl error message */
-		return ;
-	}
+void UserManagement::addChannel(std::string name){
 	m_channels[name] = Channel(name);
 }
 
-void UserManagement::eraseChannel(std::string name)
-{
-	for (std::map<std::string, Channel>::iterator itr = m_channels.begin();
-			itr != m_channels.end(); ++itr)
-	{
-		if (itr->second.getName() == name)
-		{
-			m_channels.erase(itr);
+void UserManagement::eraseChannel(std::string name){
+	for (t_um_channels_it it = m_channels.begin();
+                          it != m_channels.end();
+                          ++it){
+		if (it->second.getName() == name){
+			m_channels.erase(it);
 		}
 	}
-	/* @note impl error message */
 }
 
-Channel const& UserManagement::getChannel(std::string name)
-{
+Channel const& UserManagement::getChannel(std::string name){
 	return m_channels[name];
 }
 
-std::string UserManagement::getChannelUsernames(std::string channelName) 
-{
+std::string UserManagement::getChannelUsernames(std::string channelName){
     std::stringstream ss;
-
-    std::map<int, UserPrivilege> UserMap = m_channels[channelName].getUserMap();
-
-    for (std::map<int, User>::const_iterator itr = m_users.begin();
-                                             itr != m_users.end();
-                                             ++itr)
-    {
-        for (std::map<int, UserPrivilege>::const_iterator it = UserMap.begin();
-                                                          it != UserMap.end();
-                                                          ++it)
-        {
-            if (itr->first == it->first)
-            {
+    Channel::t_channel_users UserMap = m_channels[channelName].getUserMap();
+    for (t_um_users_it itr = m_users.begin(); itr != m_users.end(); ++itr){
+        for (Channel::t_channel_users_cit it = UserMap.begin();
+                                          it != UserMap.end();
+                                          ++it){
+            if (itr->first == it->first){
                 ss << itr->second.getUsername();
-                if (it->second == OPERATOR)
-                {
+                if (it->second == OPERATOR){
                     ss << "(o)";
                 }
-                if (itr != --m_users.end())
-                {
+                if (itr != --m_users.end()){
                     ss << ", ";
                 }
             }
@@ -191,23 +163,20 @@ std::string UserManagement::getChannelUsernames(std::string channelName)
     return ss.str();
 }
 
-void UserManagement::printChannelInfo(std::string channelName)
-{
+void UserManagement::printChannelInfo(std::string channelName){
     std::cout << m_channels[channelName]
               << "List of Users:   "
               << getChannelUsernames(channelName)
               << std::endl;
 }
 
-void UserManagement::listChannels() const
-{
+void UserManagement::listChannels() const{
 	std::stringstream ss;
-	for (std::map<std::string, Channel>::const_iterator itr = m_channels.begin();
-			itr != m_channels.end(); ++itr)
-	{
-		ss << itr->second.getName();
-		if (itr != --m_channels.end())
-		{
+	for (t_um_channels_cit it = m_channels.begin();	
+                           it != m_channels.end();
+                           ++it){
+		ss << it->second.getName();
+		if (it != --m_channels.end()){
 			ss << ", ";
 		}
 	}
@@ -216,13 +185,11 @@ void UserManagement::listChannels() const
 
 void UserManagement::addUserToChannel(int socket,
                                       UserPrivilege up,
-                                      std::string channelName)
-{
+                                      std::string channelName){
 	m_channels[channelName].addUser(socket, up);
 }
 
-void UserManagement::eraseUserFromChannel(int socket, std::string channelName)
-{
+void UserManagement::eraseUserFromChannel(int socket, std::string channelName){
     m_channels[channelName].eraseUser(socket);
 }
 

@@ -9,7 +9,9 @@
 
 class Channel
 {
-	
+
+    public:
+
         typedef std::map<int, UserPrivilege>       t_channel_users;
         typedef t_channel_users::iterator          t_channel_users_it;
         typedef t_channel_users::const_iterator    t_channel_users_cit;

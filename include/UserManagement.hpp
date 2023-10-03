@@ -16,6 +16,8 @@
 
 class UserManagement
 {
+    public:
+
         typedef std::map<int, User>            t_um_users;
         typedef t_um_users::iterator           t_um_users_it;
         typedef t_um_users::const_iterator     t_um_users_cit;
