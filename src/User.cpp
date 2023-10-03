@@ -55,6 +55,17 @@ User& User::operator=(const User& src){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
+void User::appendOutputBuffer(std::string message){
+	m_outputBuffer.append(message);
+}
+
+void User::appendInputBuffer(std::string message){
+	m_outputBuffer.append(message);
+}
+
+
+
+
 void User::setNickname(std::string const& nickname) { m_nickname = nickname; }
 void User::setUsername(std::string const& username) { m_username = username; }
 

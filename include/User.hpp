@@ -10,8 +10,19 @@ class User {
 private:
   std::string m_nickname;
   std::string m_username;
+	std::string m_inputBuffer;
+	std::string m_outputBuffer;
+
 
 public:
+	//append
+	//searchMessage
+	
+
+
+	void appendOutputBuffer(std::string message);
+	void appendInputBuffer(std::string message);
+	void searchMessage(std::string buffer);
   void setNickname(std::string const& nickname);
   void setUsername(std::string const& username);
 

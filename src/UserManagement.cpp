@@ -17,26 +17,17 @@ int m_numberUsers = 0; /* could be a static int member of the class */
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> non-class functions */
 
-static inline void print_log(std::string message)
-{
-	if (DEBUG)
-	{
-		std::cerr << YELLOW << "User Management: "
-			      << message << RESET << std::endl;
-	}
+static inline void print_log(std::string message) {
+  if (DEBUG) {
+    std::cerr << YELLOW << "User Management: " << message << RESET << std::endl;
+  }
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-UserManagement::UserManagement()
-{
-	print_log("default constructor called");
-}
+UserManagement::UserManagement() { print_log("default constructor called"); }
 
-UserManagement::~UserManagement()
-{
-	print_log("destructor called");
-}
+UserManagement::~UserManagement() { print_log("destructor called"); }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> private member functions */
 
@@ -124,8 +115,21 @@ void UserManagement::eraseUser(int socket){
     m_users.erase(m_users.find(socket));
 }
 
-void UserManagement::addChannel(std::string name){
-	m_channels[name] = Channel(name);
+void UserManagement::appendToBuffer(std::string message, int socket, int flag) {
+  for (t_um_users_it it = m_users.begin(); it != m_users.end(); ++it) {
+    if (socket == it->first && flag == INPUT)
+      it->second.appendInputBuffer(message);
+    else if (socket == it->first && flag == OUTPUT)
+      it->second.appendOutputBuffer(message);
+  }
+}
+
+void UserManagement::addChannel(std::string name) {
+  if (checkForChannel(name) == true) {
+    /* @note impl error message */
+    return;
+  }
+  m_channels[name] = Channel(name);
 }
 
 void UserManagement::eraseChannel(std::string name){
@@ -197,10 +201,10 @@ void UserManagement::eraseUserFromChannel(int socket, std::string channelName){
     m_channels[channelName].eraseUser(socket);
 }
 
-//void UserManagement::print() {
-//  for (std::map<int, User>::iterator it = this->m_users.begin();
-//       it != this->m_users.end(); it++)
-//    std::cout << it->first << "	" << it->second << std::endl;
-//}
+// void UserManagement::print() {
+//   for (std::map<int, User>::iterator it = this->m_users.begin();
+//        it != this->m_users.end(); it++)
+//     std::cout << it->first << "	" << it->second << std::endl;
+// }
 
 // -------------------------------------------------------------------------- //

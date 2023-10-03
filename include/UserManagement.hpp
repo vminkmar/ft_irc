@@ -14,6 +14,9 @@
 
 /* define maximum no. of channels? */
 
+#define INPUT 1
+#define OUTPUT 2
+
 class UserManagement
 {
     public:
@@ -31,8 +34,8 @@ class UserManagement
         t_um_users    m_users;
         t_um_channels m_channels;
 		
-        bool checkForUser   (int socket)       const;
-        bool checkForChannel(std::string name) const;
+        bool				checkForUser   (int socket)       const;
+        bool				checkForChannel(std::string name) const;
 	
     public:
 
@@ -48,6 +51,8 @@ class UserManagement
                                            std::string const& nickname,
                                            std::string const& username);
         void        eraseUser             (int socket);
+				void				appendToBuffer(std::string message, int socket, int flag);
+        /* erase from channels too! */
 
         /* <------ channel operations-----> */
 
