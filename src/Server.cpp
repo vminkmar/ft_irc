@@ -80,6 +80,8 @@ void Server::sendMessages(int socket) {
                    userManagement.getBuffer(socket, OUTPUT).size(), 0);
     if (sending < 0)
       std::cout << "sending" << std::endl;
+		size_t end = userManagement.getBuffer(socket, OUTPUT).find("\r\n");
+		userManagement.eraseBuffer(socket, OUTPUT, 0, end);
   }
   // clearBuffer();
 }
@@ -94,11 +96,11 @@ void Server::receiveMessages(int socket) {
 }
 
 void Server::writeToOutputBuffer(int response, int socket) {
-	if(response == CAP){
-		std::string str = "CAP * LS :cap reply...\r\n";
-		userManagement.appendToBuffer(str, socket, OUTPUT);
-	}
-  else if (response == WELCOME) {
+  // if (response == CAP) {
+  //   std::string str = "CAP * LS :cap reply...\r\n";
+  //   userManagement.appendToBuffer(str, socket, OUTPUT);
+  // }
+	if (response == WELCOME) {
     std::string str = "001 " + userManagement.getNick(socket) +
                       " :Welcome to the ft_irc network " +
                       userManagement.getNick(socket) + "!" +
@@ -108,10 +110,9 @@ void Server::writeToOutputBuffer(int response, int socket) {
 }
 
 void Server::Messages(int socket) {
-  if(m_command == "CAP"){
-		writeToOutputBuffer(CAP, socket);
-	}
-	else if (m_command == "NICK") {
+  if (m_command == "CAP") {
+    writeToOutputBuffer(CAP, socket);
+  } else if (m_command == "NICK") {
     this->userManagement.addUser(socket, "", "");
     this->userManagement.setNick(socket, this->m_parameters[0]);
   } else if (m_command == "USER") {
@@ -121,13 +122,12 @@ void Server::Messages(int socket) {
 }
 
 void Server::parseIncomingMessage(char *str, int socket) {
-	std::string message = str;
+  std::string message = str;
   if (!userManagement.getBuffer(socket, INPUT).empty()) {
     std::string buffer = userManagement.getBuffer(socket, INPUT);
     buffer.append(message);
     message = buffer;
   }
-	std::cout << "message : " << message << std::endl;
   size_t pos = message.find("\r\n");
   while (pos != std::string::npos) {
     std::string tmp = message;
@@ -142,7 +142,8 @@ void Server::parseIncomingMessage(char *str, int socket) {
     this->m_trail = tmp;
     std::cout << "trail: " << this->m_trail << std::endl;
     message.erase(message.begin(), message.begin() + pos + 1);
-    userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
+		if(!userManagement.getBuffer(socket, INPUT).empty())
+    	userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
     Messages(socket);
     this->m_parameters.clear();
     pos = message.find("\r\n");
@@ -153,6 +154,8 @@ void Server::parseIncomingMessage(char *str, int socket) {
   }
   std::cout << "INPUTBUFFER: " << userManagement.getBuffer(socket, INPUT)
             << "	" << userManagement.getBuffer(socket, INPUT).length()
+            << std::endl;
+  std::cout << "OUTPUTBUFFER: " << userManagement.getBuffer(socket, OUTPUT)
             << std::endl;
 }
 
