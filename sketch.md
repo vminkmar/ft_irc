@@ -10,23 +10,13 @@ Class Names uppercase
 
     Restructure Server Main loop
     
-    Buffer class
-
     User class
-     --> implement Buffer class
+     --> implement Buffer
 
 	Commands
     --> try to fully implement one or two commands ("full stack")
 	
 	Error Handling (Exceptions/Messages)
-
-    UserManagement
-    --> Clean Up!
-    
-    Clean Code
-    --> typdefs for iterators
-     --> use const identifier when possible
-      --> return/pass const& when possible
 
 # Commands
     transform parameters in vector and at trail after : to a string
