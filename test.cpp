@@ -24,6 +24,9 @@ int main(void)
 	um.addUser(1, "Hans", "Dieter");
 	um.addUser(2, "Walter", "Albert");
 
+    log("Getting Usernames from server");
+    std::cout << um.getUsernames() << std::endl;
+
     log("Adding channels to server");
 	um.addChannel("Test");
 	um.addChannel("Hamburg");

@@ -41,6 +41,7 @@ class UserManagement
         std::string getNick               (int socket) const;
         std::string getNumberUsersAsString()           const;
         int         getNumberUsers        ()           const;
+        std::string getUsernames          ();
         void        addUser               (int socket,
                                            std::string const& nickname,
                                            std::string const& username);
@@ -51,7 +52,7 @@ class UserManagement
         void           addChannel          (std::string name);
         void           eraseChannel        (std::string name);
         Channel const& getChannel          (std::string name);
-        std::string    getChannelUsers     (std::string channelName);
+        std::string    getChannelUsernames (std::string channelName);
         void           printChannelInfo    (std::string channelName);
         void           listChannels        () const;
         void           addUserToChannel    (int socket,

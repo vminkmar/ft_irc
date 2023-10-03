@@ -100,6 +100,21 @@ std::string UserManagement::getNumberUsersAsString() const {
 
 int UserManagement::getNumberUsers() const { return (m_numberUsers); }
 
+std::string UserManagement::getUsernames()
+{
+    std::stringstream ss;
+
+    for (t_um_users_it itr = m_users.begin(); itr != m_users.end(); ++itr)
+    {
+        ss << itr->second.getUsername();
+        if (itr != --m_users.end())
+        {
+            ss << ", ";
+        }
+    }
+    return ss.str();
+}
+
 void UserManagement::addUser(int socket, std::string const &nickname,
                              std::string const &username) {
   User user(nickname, username);
@@ -145,7 +160,7 @@ Channel const& UserManagement::getChannel(std::string name)
 	return m_channels[name];
 }
 
-std::string UserManagement::getChannelUsers(std::string channelName) 
+std::string UserManagement::getChannelUsernames(std::string channelName) 
 {
     std::stringstream ss;
 
@@ -180,7 +195,7 @@ void UserManagement::printChannelInfo(std::string channelName)
 {
     std::cout << m_channels[channelName]
               << "List of Users:   "
-              << getChannelUsers(channelName)
+              << getChannelUsernames(channelName)
               << std::endl;
 }
 
