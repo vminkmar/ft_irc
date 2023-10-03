@@ -33,6 +33,9 @@ class User{
         void appendInputBuffer (std::string const& message);
         void appendOutputBuffer(std::string const& message);
 
+        void eraseOutputBuffer(int start, int end);
+        void eraseInputBuffer(int start, int end);
+
         /* @note not implemented */
         //void searchMessage     (std::string const& buffer) const;
 

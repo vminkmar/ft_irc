@@ -59,6 +59,16 @@ void UserManagement::setUser(int socket, std::string newUsername){
     }
 }
 
+void UserManagement::eraseBuffer(int socket, int flag, int start, int end){
+	if (flag == INPUT)
+    {
+        m_users.find(socket)->second.eraseInputBuffer(start, end);
+    }else if (flag == OUTPUT){
+        m_users.find(socket)->second.eraseOutputBuffer(start, end);
+    }
+    /* throw exception ? */
+}
+
 std::string UserManagement::getNick(int socket) const{
     t_um_users_cit it = m_users.find(socket);
     if (it != m_users.end()){

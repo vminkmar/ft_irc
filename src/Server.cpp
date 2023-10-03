@@ -105,8 +105,14 @@ void Server::Messages(int socket) {
   }
 }
 
-void Server::parseIncomingMessage(char *buffer, int socket) {
-  std::string message = buffer;
+void Server::parseIncomingMessage(char *str, int socket) {
+  std::string message = str;
+	if(!userManagement.getBuffer(socket, INPUT).empty())
+	{
+		std::string buffer = userManagement.getBuffer(socket, INPUT);
+		buffer.append(message);
+		message = buffer;
+	}
   size_t pos = message.find("\r\n");
   while (pos != std::string::npos) {
     std::string tmp = message;
@@ -121,6 +127,7 @@ void Server::parseIncomingMessage(char *buffer, int socket) {
     this->m_trail = tmp;
     std::cout << "trail: " << this->m_trail << std::endl;
     message.erase(message.begin(), message.begin() + pos + 1);
+		userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
     Messages(socket);
     this->m_parameters.clear();
     pos = message.find("\r\n");
@@ -128,8 +135,8 @@ void Server::parseIncomingMessage(char *buffer, int socket) {
 	checkMessage(message);
 	if(!message.empty()){
 		userManagement.appendToBuffer(message, socket, INPUT);
-		std::cout << "InputBuffer: " << userManagement.getBuffer(1, INPUT) << std::endl;
 	}
+	std::cout << "INPUTBUFFER: " << userManagement.getBuffer(socket, INPUT) << "	" << userManagement.getBuffer(socket, INPUT).length() << std::endl;
 }
 
 void Server::checkMessage(std::string &message){

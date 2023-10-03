@@ -22,17 +22,17 @@ int main(void)
     log("Adding users to server");
 	s.userManagement.addUser(1, "Hans", "Dieter");
 	s.userManagement.addUser(2, "Walter", "Albert");
-    /* @note: doesnt work on fd 1,2? */
+
+	log("Testing Parser");
+	std::string tmp = "NICK vminkmar\r\nUSER vminkmar bla";
+	char *test = strdup(tmp.c_str());
+	s.parseIncomingMessage(test, 1);
+	std::string tmp1 = ":vminkmar\r\n";
+	char *test1 = strdup(tmp1.c_str());
+	s.parseIncomingMessage(test1, 1);
 
     log("Getting Usernames from server");
     std::cout << s.userManagement.getUsernames() << std::endl;
-
-    log("Testing Parser");
-    std::string tmp = "NICK vminkmar\r\nUSER vminkmar bla :bla";
-    char *test = strdup(tmp.c_str());
-    s.parseIncomingMessage(test, 1);
-    s.parseIncomingMessage(test, 2);
-
 
 //    log("Appending some content to UserBuffer");
 //    s.userManagement.appendToBuffer("some content", 3, INPUT);
