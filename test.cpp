@@ -31,7 +31,7 @@ int main(void)
     log("Listing Channels");
 	um.listChannels();
 	
-    log("Erasing channel");
+    log("Erasing and listing channel");
     um.eraseChannel("Hamburg");
     um.listChannels();
 
@@ -47,6 +47,9 @@ int main(void)
     um.eraseUserFromChannel(1, "Test");
     um.printChannelInfo("Test");
 
+    log("Erasing User from Server who is part of a Channel");
+    um.eraseUser(2);
+    um.printChannelInfo("Test");
 }
 
 // -------------------------------------------------------------------------- //

@@ -107,8 +107,14 @@ void UserManagement::addUser(int socket, std::string const &nickname,
 }
 
 void UserManagement::eraseUser(int socket) {
-  std::map<int, User>::iterator it = this->m_users.find(socket);
-  this->m_users.erase(it);
+    for (t_um_channels_it itr = m_channels.begin();
+                          itr != m_channels.end();
+                          ++itr)
+    {
+        eraseUserFromChannel(socket, itr->first);
+    }
+    std::map<int, User>::iterator it = this->m_users.find(socket);
+    this->m_users.erase(it);
 }
 
 void UserManagement::addChannel(std::string name)
