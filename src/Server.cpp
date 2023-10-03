@@ -1,7 +1,7 @@
 
 #include "../include/Server.hpp"
 #include "../include/UserManagement.hpp"
-//#include "../include/User.hpp"
+// #include "../include/User.hpp"
 
 Server::Server() : m_maxClients(512) {}
 
@@ -16,9 +16,9 @@ void Server::createSocket() {
   if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr,
                  sizeof(reuseaddr)) == -1)
     error("socketopt");
- this->address.sin_family = AF_INET;
- this->address.sin_addr.s_addr = INADDR_ANY;
- this->address.sin_port = htons(PORT);
+  this->address.sin_family = AF_INET;
+  this->address.sin_addr.s_addr = INADDR_ANY;
+  this->address.sin_port = htons(PORT);
   memset(this->address.sin_zero, '\0', sizeof(this->address.sin_zero));
   // bind the descriptor to a address family(AF_INET)
   if (bind(this->m_server_fd, reinterpret_cast<struct sockaddr *>(&address),
@@ -33,12 +33,12 @@ void Server::createSocket() {
     int ret = poll(this->m_pollfds, this->m_maxClients, -1);
     if (ret <= 0)
       perror("poll");
-    receiveOnServer();
-    receiveMessage();
+    acceptClients();
+    runServer();
   }
 }
 
-void Server::receiveOnServer() {
+void Server::acceptClients() {
   if (this->m_pollfds[0].revents & POLLIN) {
     int newSocket;
     if ((newSocket = accept(this->m_server_fd, (struct sockaddr *)&address,
@@ -46,7 +46,7 @@ void Server::receiveOnServer() {
       error("accept");
     char buffer[30000] = {0};
     int reading = read(newSocket, buffer, 30000);
-	(void) reading; /* for linux compilation (unused var) */
+    (void)reading; /* for linux compilation (unused var) */
     reading = 0;
     std::cout << buffer << std::endl;
     memset(buffer, 0, sizeof(buffer));
@@ -61,18 +61,25 @@ void Server::receiveOnServer() {
   }
 }
 
-void Server::receiveMessage() {
+void Server::runServer() {
   for (int i = 1; i < this->m_maxClients; i++) {
-    if (this->m_pollfds[i].revents & POLLIN) {
-
-      char buffer[30000] = {0};
-      int valread = read(this->m_pollfds[i].fd, buffer, sizeof(buffer));
-      (void) valread; /* for linux compilation! (unused var) */
-	  valread = 0; // error
-      parseIncomingMessage(buffer, this->m_pollfds[i].fd);
-      memset(buffer, 0, sizeof(buffer));
-    }
+    if (this->m_pollfds[i].revents & POLLIN)
+      receiveMessages(i);
+    // if (this->m_pollfds[i].revents & POLLOUT)
+    //   sendMessages(i);
+    // if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
+    //   socketClosed(i);
   }
+  // cleanUpSockets();
+}
+
+void Server::receiveMessages(int i) {
+  char buffer[30000] = {0};
+  int valread = read(this->m_pollfds[i].fd, buffer, sizeof(buffer));
+  (void)valread; /* for linux compilation! (unused var) */
+  valread = 0;   // error
+  parseIncomingMessage(buffer, this->m_pollfds[i].fd);
+  memset(buffer, 0, sizeof(buffer));
 }
 
 void Server::sendResponse(int response, int socket) {
@@ -88,30 +95,45 @@ void Server::sendResponse(int response, int socket) {
 
 void Server::Messages(int socket) {
   if (m_command == "NICK") {
-    //if (this->userManagement.checkForUser(socket) == false)
+    // if (this->userManagement.checkForUser(socket) == false)
     this->userManagement.addUser(socket, "", "");
     this->userManagement.setNick(socket, this->m_parameters[0]);
     // sendResponse(WELCOME, socket);
   } else if (m_command == "USER") {
     this->userManagement.setUser(socket, this->m_parameters[0]);
-	// should this be implemented? if so we need username to be non-const
+    // should this be implemented? if so we need username to be non-const
   }
 }
 
 void Server::parseIncomingMessage(char *buffer, int socket) {
   std::string message = buffer;
-  getCommand(message);
-  std::cout << "Command: " << this->m_command << std::endl;
-  message = getParameter(message);
-  for (std::vector<std::string>::iterator it = this->m_parameters.begin();
-       it != this->m_parameters.end(); it++) {
-    std::cout << "param: " << *it << std::endl;
+  size_t pos = message.find("\r\n");
+  while (pos != std::string::npos) {
+    std::string tmp = message;
+    tmp = message.substr(0, pos);
+    getCommand(tmp);
+    std::cout << "Command: " << this->m_command << std::endl;
+    tmp = getParameter(tmp);
+    for (std::vector<std::string>::iterator it = this->m_parameters.begin();
+         it != this->m_parameters.end(); it++) {
+      std::cout << "param: " << *it << std::endl;
+    }
+    this->m_trail = tmp;
+    std::cout << "trail: " << this->m_trail << std::endl;
+    message.erase(message.begin(), message.begin() + pos + 1);
+    Messages(socket);
+    this->m_parameters.clear();
+    pos = message.find("\r\n");
   }
-  this->m_trail = message;
-  std::cout << "trail: " << this->m_trail << std::endl;
-  Messages(socket);
-  // this->userManagement.print();
-  this->m_parameters.clear();
+	if(checkMessage(message) == false){
+		userManagement.appendToBuffer(message, socket, INPUT);
+	}
+}
+
+bool Server::checkMessage(std::string message){
+	if (message.length() <= 1)
+		return true;
+	return false;
 }
 
 std::string Server::getParameter(std::string message) {
