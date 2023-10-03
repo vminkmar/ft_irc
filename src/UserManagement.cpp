@@ -38,7 +38,7 @@ UserManagement::~UserManagement()
 	print_log("destructor called");
 }
 
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> private member functions */
 
 bool UserManagement::checkForUser(int socket) const{
   for (std::map<int, User>::const_iterator it = this->m_users.begin();
@@ -60,6 +60,8 @@ bool UserManagement::checkForChannel(std::string name) const{
 	}
 	return false;
 }
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> public member functions */
 
 void UserManagement::setNick(int socket, std::string parameter) {
   for (std::map<int, User>::iterator it = m_users.begin(); it != m_users.end();
@@ -98,14 +100,14 @@ std::string UserManagement::getNumberUsersAsString() const {
 
 int UserManagement::getNumberUsers() const { return (m_numberUsers); }
 
-void UserManagement::addUser(int socket_fd, std::string const &nickname,
+void UserManagement::addUser(int socket, std::string const &nickname,
                              std::string const &username) {
   User user(nickname, username);
-  this->m_users[socket_fd] = user;
+  this->m_users[socket] = user;
 }
 
-void UserManagement::eraseUser(int socket_fd) {
-  std::map<int, User>::iterator it = this->m_users.find(socket_fd);
+void UserManagement::eraseUser(int socket) {
+  std::map<int, User>::iterator it = this->m_users.find(socket);
   this->m_users.erase(it);
 }
 
@@ -188,15 +190,16 @@ void UserManagement::listChannels() const
 }
 
 void UserManagement::addUserToChannel(int socket,
-		UserPrivilege up, std::string channelName)
+                                      UserPrivilege up,
+                                      std::string channelName)
 {
 	m_channels[channelName].addUser(socket, up);
 }
 
-void UserManagement::print() {
-  for (std::map<int, User>::iterator it = this->m_users.begin();
-       it != this->m_users.end(); it++)
-    std::cout << it->first << "	" << it->second << std::endl;
-}
+//void UserManagement::print() {
+//  for (std::map<int, User>::iterator it = this->m_users.begin();
+//       it != this->m_users.end(); it++)
+//    std::cout << it->first << "	" << it->second << std::endl;
+//}
 
 // -------------------------------------------------------------------------- //

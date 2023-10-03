@@ -16,51 +16,55 @@
 
 class UserManagement
 {
-        typedef std::map<int, User>         t_um_users;
-        typedef t_um_users::iterator        t_um_users_it;
-        typedef t_um_users::const_iterator  t_um_users_cit;
+        typedef std::map<int, User>            t_um_users;
+        typedef t_um_users::iterator           t_um_users_it;
+        typedef t_um_users::const_iterator     t_um_users_cit;
 
         typedef std::map<std::string, Channel> t_um_channels;
         typedef t_um_channels::iterator        t_um_channels_it;
         typedef t_um_channels::const_iterator  t_um_channels_cit;
 
-	private:
-
-		t_um_users    m_users;
-		t_um_channels m_channels;
-
-		bool checkForUser   (int socket)       const;
-		bool checkForChannel(std::string name) const;
-
-	public:
-
-		void setNick(int socket, std::string parameter);
-		void setUser(int socket, std::string user);
-
-		std::string getNick               (int socket) const;
-		std::string getNumberUsersAsString()           const;
-		int         getNumberUsers        ()           const;
+    private:
 		
-        void addUser(int                socket_fd,
-                     std::string const& nickname,
-                     std::string const& username);
-		void eraseUser(int socket_fd);
-
-		void addChannel(std::string name); /* add existing name check */
-		void eraseChannel(std::string name); /* add non-existing check? */
-		Channel const& getChannel(std::string name); /* add name check */
-        std::string getChannelUsers(std::string channelName);
-        void printChannelInfo(std::string channelName);/* add name check */
-		void listChannels() const;
-
-        void addUserToChannel(int socket,
-                              UserPrivilege up,
-                              std::string channelName);
+        t_um_users    m_users;
+        t_um_channels m_channels;
 		
-		void print(); /* old implementation */
+        bool checkForUser   (int socket)       const;
+        bool checkForChannel(std::string name) const;
+	
+    public:
 
-		UserManagement();
-		~UserManagement();
+        /* <------ user operations-----> */
+
+        void        setNick               (int socket, std::string parameter);
+        void        setUser               (int socket, std::string user);
+        std::string getNick               (int socket) const;
+        std::string getNumberUsersAsString()           const;
+        int         getNumberUsers        ()           const;
+        void        addUser               (int socket,
+                                           std::string const& nickname,
+                                           std::string const& username);
+        void        eraseUser             (int socket);
+        /* erase from channels too! */
+
+        /* <------ channel operations-----> */
+
+        void           addChannel          (std::string name);
+        void           eraseChannel        (std::string name);
+        Channel const& getChannel          (std::string name);
+        std::string    getChannelUsers     (std::string channelName);
+        void           printChannelInfo    (std::string channelName);
+        void           listChannels        () const;
+        void           addUserToChannel    (int socket,
+                                            UserPrivilege up,
+                                            std::string channelName);
+        void           eraseUserFromChannel(int socket,
+                                            std::string channelName);
+
+        //void print(); /* old implementation */
+
+        UserManagement();
+        ~UserManagement();
 };
 
 #endif // USERMANAGEMENT_HPP
