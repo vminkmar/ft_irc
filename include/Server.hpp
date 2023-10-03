@@ -19,7 +19,7 @@
 #include "Responses.hpp"
 #define PORT 6667
 //IP_ADDRESS 127.0.0.1
-
+#define HOST "localhost"
 
 class Server {
 private:
@@ -48,7 +48,7 @@ public:
 	void getCommand(std::string &message);
 	void printCommand();
 	void Messages(int socket);
-	void sendResponse(int repsonse, int socket);
+	void writeToOutputBuffer(int repsonse, int socket);
 	void acceptClients();
 	void runServer();
 	void socketClosed(int i);

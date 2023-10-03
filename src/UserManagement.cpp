@@ -77,6 +77,15 @@ std::string UserManagement::getNick(int socket) const{
     return "";
 }
 
+std::string UserManagement::getUser(int socket) const{
+  for (t_um_users_cit it = m_users.begin(); it != m_users.end(); it++){
+    if (it->first == socket){
+      return it->second.getUsername();
+    }
+  }
+  return "";
+}
+
 std::string UserManagement::getNumberUsersAsString() const{
   std::stringstream ss;
   ss << m_numberUsers;

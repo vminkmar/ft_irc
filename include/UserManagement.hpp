@@ -44,6 +44,7 @@ class UserManagement
         void        setNick               (int socket, std::string newNickname);
         void        setUser               (int socket, std::string newUsername);
         std::string getNick               (int socket) const;
+        std::string getUser               (int socket) const;
         std::string getNumberUsersAsString()           const;
         int         getNumberUsers        ()           const;
         std::string getUsernames          ()           const;

@@ -64,7 +64,7 @@ void Server::acceptClients() {
 void Server::runServer() {
   for (int i = 1; i < this->m_maxClients; i++) {
     if (this->m_pollfds[i].revents & POLLIN)
-      receiveMessages(i);
+      receiveMessages(this->m_pollfds[i].fd);
     // if (this->m_pollfds[i].revents & POLLOUT)
     //   sendMessages(i);
     // if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
@@ -73,46 +73,56 @@ void Server::runServer() {
   // cleanUpSockets();
 }
 
-void Server::receiveMessages(int i) {
+void Server::sendMessages(int socket) {
+  int sending;
+  if (!userManagement.getBuffer(socket, OUTPUT).empty()) {
+    sending = send(socket, userManagement.getBuffer(socket, OUTPUT).c_str(),
+                   userManagement.getBuffer(socket, OUTPUT).size(), 0);
+    if (sending < 0)
+      std::cout << "sending" << std::endl;
+  }
+  // clearBuffer();
+}
+
+void Server::receiveMessages(int socket) {
   char buffer[30000] = {0};
-  int valread = read(this->m_pollfds[i].fd, buffer, sizeof(buffer));
+  int valread = read(socket, buffer, sizeof(buffer));
   (void)valread; /* for linux compilation! (unused var) */
   valread = 0;   // error
-  parseIncomingMessage(buffer, this->m_pollfds[i].fd);
+  parseIncomingMessage(buffer, socket);
   memset(buffer, 0, sizeof(buffer));
 }
 
-void Server::sendResponse(int response, int socket) {
+void Server::writeToOutputBuffer(int response, int socket) {
 
   this->m_pollfds[0].revents = POLLOUT;
   if (response == WELCOME) {
-    std::string str = "001" + this->userManagement.getNick(socket) +
-                      ":Welcome to the Internet Relay Network vminkmar";
-    send(socket, str.c_str(), str.length(), 0);
+    std::string str = "001 " + userManagement.getNick(socket) +
+                      " :Welcome to the ft_irc network " +
+                      userManagement.getNick(socket) + "!" +
+                      userManagement.getUser(socket) + "@" + HOST + "\r\n";
+    userManagement.appendToBuffer(str, socket, OUTPUT);
   }
   this->m_pollfds[0].revents = POLLIN;
 }
 
 void Server::Messages(int socket) {
   if (m_command == "NICK") {
-    // if (this->userManagement.checkForUser(socket) == false)
     this->userManagement.addUser(socket, "", "");
     this->userManagement.setNick(socket, this->m_parameters[0]);
-    // sendResponse(WELCOME, socket);
   } else if (m_command == "USER") {
     this->userManagement.setUser(socket, this->m_parameters[0]);
-    // should this be implemented? if so we need username to be non-const
+    writeToOutputBuffer(WELCOME, socket);
   }
 }
 
 void Server::parseIncomingMessage(char *str, int socket) {
-  std::string message = str;
-	if(!userManagement.getBuffer(socket, INPUT).empty())
-	{
-		std::string buffer = userManagement.getBuffer(socket, INPUT);
-		buffer.append(message);
-		message = buffer;
-	}
+	std::string message = str;
+  if (!userManagement.getBuffer(socket, INPUT).empty()) {
+    std::string buffer = userManagement.getBuffer(socket, INPUT);
+    buffer.append(message);
+    message = buffer;
+  }
   size_t pos = message.find("\r\n");
   while (pos != std::string::npos) {
     std::string tmp = message;
@@ -127,21 +137,23 @@ void Server::parseIncomingMessage(char *str, int socket) {
     this->m_trail = tmp;
     std::cout << "trail: " << this->m_trail << std::endl;
     message.erase(message.begin(), message.begin() + pos + 1);
-		userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
+    userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
     Messages(socket);
     this->m_parameters.clear();
     pos = message.find("\r\n");
   }
-	checkMessage(message);
-	if(!message.empty()){
-		userManagement.appendToBuffer(message, socket, INPUT);
-	}
-	std::cout << "INPUTBUFFER: " << userManagement.getBuffer(socket, INPUT) << "	" << userManagement.getBuffer(socket, INPUT).length() << std::endl;
+  checkMessage(message);
+  if (!message.empty()) {
+    userManagement.appendToBuffer(message, socket, INPUT);
+  }
+  std::cout << "INPUTBUFFER: " << userManagement.getBuffer(socket, INPUT)
+            << "	" << userManagement.getBuffer(socket, INPUT).length()
+            << std::endl;
 }
 
-void Server::checkMessage(std::string &message){
-	if(message.at(0) == '\n')
-		message.erase(0,1);	
+void Server::checkMessage(std::string &message) {
+  if (message.at(0) == '\n')
+    message.erase(0, 1);
 }
 
 std::string Server::getParameter(std::string message) {
@@ -182,7 +194,7 @@ void Server::error(std::string str) {
 
 void Server::capabilityNegotiation(int newSocket) {
   this->m_pollfds[0].revents = POLLOUT;
-  char buffer1[100] = "CAP * LS :\r\n";
+  char buffer1[100] = "CAP * LS :cap reply...\r\n";
   int sending = send(newSocket, buffer1, sizeof(buffer1), 0);
   if (sending == -1)
     error("sending");
