@@ -17,7 +17,6 @@ static inline void log(std::string const& message)
 int main(void)
 {
     log("Testing UserManagement");
-	
     UserManagement um;
 
     log("Adding users to server");
@@ -26,6 +25,10 @@ int main(void)
 
     log("Getting Usernames from server");
     std::cout << um.getUsernames() << std::endl;
+
+    log("Appending some content to UserBuffer");
+    um.appendToBuffer("some content", 1, INPUT);
+    std::cout << um.getBuffer(1, INPUT) << std::endl;
 
     log("Adding channels to server");
 	um.addChannel("Test");
@@ -53,6 +56,7 @@ int main(void)
     log("Erasing User from Server who is part of a Channel");
     um.eraseUser(2);
     um.printChannelInfo("Test");
+
 }
 
 // -------------------------------------------------------------------------- //

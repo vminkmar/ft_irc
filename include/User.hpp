@@ -28,6 +28,9 @@ public:
 
   std::string const &getNickname() const;
   std::string const &getUsername() const;
+
+  std::string getInputBuffer() const;
+  std::string getOutputBuffer() const;
   
   User(std::string const& nickname, std::string const& username);
   User();

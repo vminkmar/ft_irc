@@ -51,7 +51,9 @@ class UserManagement
                                            std::string const& nickname,
                                            std::string const& username);
         void        eraseUser             (int socket);
-				void				appendToBuffer(std::string message, int socket, int flag);
+		void	    appendToBuffer(std::string message, int socket, int flag);
+        std::string getBuffer(int socket, int flag);
+
         /* erase from channels too! */
 
         /* <------ channel operations-----> */

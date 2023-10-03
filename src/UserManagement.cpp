@@ -115,13 +115,24 @@ void UserManagement::eraseUser(int socket){
     m_users.erase(m_users.find(socket));
 }
 
-void UserManagement::appendToBuffer(std::string message, int socket, int flag) {
-  for (t_um_users_it it = m_users.begin(); it != m_users.end(); ++it) {
-    if (socket == it->first && flag == INPUT)
-      it->second.appendInputBuffer(message);
-    else if (socket == it->first && flag == OUTPUT)
-      it->second.appendOutputBuffer(message);
-  }
+void UserManagement::appendToBuffer(std::string message, int socket, int flag){
+    if (flag == INPUT){
+        m_users.find(socket)->second.appendInputBuffer(message);
+    }
+    else if (flag == OUTPUT){
+        m_users.find(socket)->second.appendOutputBuffer(message);
+            }
+}
+
+std::string UserManagement::getBuffer(int socket, int flag)
+{
+    if (flag == INPUT){
+        return m_users.find(socket)->second.getInputBuffer();
+    }
+    else if (flag == OUTPUT){
+        return m_users.find(socket)->second.getOutputBuffer();
+    }
+    return "empty";
 }
 
 void UserManagement::addChannel(std::string name) {

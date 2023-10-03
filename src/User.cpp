@@ -21,7 +21,7 @@ static inline void print_log(std::string const& message) {
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
 User::User(std::string const& nickname, std::string const& username)
-    : m_nickname(nickname), m_username(username) {
+    : m_nickname(nickname), m_username(username), m_inputBuffer(""), m_outputBuffer("") {
   print_log("main constructor called");
 }
 
@@ -30,7 +30,8 @@ User::User(){
 }
 
 User::User(const User &copy) : m_nickname(copy.m_nickname),
-                               m_username(copy.m_username){
+                               m_username(copy.m_username),
+m_inputBuffer(copy.getInputBuffer()), m_outputBuffer(copy.getOutputBuffer()){
   print_log("copy constructor called");
 }
 
@@ -49,6 +50,8 @@ User& User::operator=(const User& src){
 	if (this != &src){
 		this->m_nickname = src.getNickname();
 		this->m_username = src.getUsername();
+        this->m_inputBuffer = src.getInputBuffer();
+        this->m_outputBuffer = src.getOutputBuffer();
 	}
 	return *this;
 }
@@ -60,16 +63,23 @@ void User::appendOutputBuffer(std::string message){
 }
 
 void User::appendInputBuffer(std::string message){
-	m_outputBuffer.append(message);
+	m_inputBuffer.append(message);
 }
-
-
-
 
 void User::setNickname(std::string const& nickname) { m_nickname = nickname; }
 void User::setUsername(std::string const& username) { m_username = username; }
 
 std::string const &User::getNickname() const { return m_nickname; }
 std::string const &User::getUsername() const { return m_username; }
+
+std::string User::getInputBuffer() const
+{
+    return m_inputBuffer;
+}
+
+std::string User::getOutputBuffer() const
+{
+	return m_outputBuffer;
+}
 
 // -------------------------------------------------------------------------- //
