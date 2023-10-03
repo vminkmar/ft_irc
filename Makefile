@@ -39,7 +39,11 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re test test_build
 
-test:
+test_build:
 	$(CC) $(CFLAGS) test.cpp src/UserManagement.cpp src/Channel.cpp src/User.cpp -o test
+
+test: test_build
+	@clear
+	@./test
