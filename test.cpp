@@ -24,10 +24,10 @@ int main(void)
 	um.addUser(1, "Hans", "Dieter");
 	um.addUser(2, "Walter", "Albert");
 
-		log("Testing Parser");
-		std::string tmp = "NICK vminkmar\r\nUSER vminkmar bla :bla";
-		char *test = strdup(tmp.c_str());
-		s.parseIncomingMessage(test, 1);
+//		log("Testing Parser");
+//		std::string tmp = "NICK vminkmar\r\nUSER vminkmar bla :bla";
+//		char *test = strdup(tmp.c_str());
+//		s.parseIncomingMessage(test, 1);
 
     log("Getting Usernames from server");
     std::cout << um.getUsernames() << std::endl;
