@@ -58,7 +58,7 @@ static inline void print_stdstr(std::ostream& os, std::string str, bool nl)
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
 Channel::Channel(std::string const& name) : m_name(name),
-                                            m_userLimit(10),
+                                            m_userLimit(USER_LIMIT),
                                             m_inviteOnly(false),
 											m_topicEditable(true),
 											m_channelKey(false)

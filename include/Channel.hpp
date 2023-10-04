@@ -7,6 +7,8 @@
 #include <string>   // needed for std::string
 #include <map>      // needed for std::map <-- C11 would be unordered_map
 
+#define USER_LIMIT 10
+
 class Channel
 {
 
