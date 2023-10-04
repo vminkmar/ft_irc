@@ -42,10 +42,14 @@ int main(void)
     
     log("Listing Channels");
 	um.listChannels();
-	
+
     log("Erasing and listing channel");
     um.eraseChannel("Hamburg");
     um.listChannels();
+
+    log("Searching for erased Channel");
+    um.getChannel("Hamburg");
+    um.getChannel("some other");
 
     log("ChannelInfo");
     um.printChannelInfo("Test");

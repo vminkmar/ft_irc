@@ -142,6 +142,9 @@ void UserManagement::eraseChannel(std::string channelName){
 Channel const& UserManagement::getChannel(std::string channelName) const{
 	
     t_um_channels_cit it = m_channels.find(channelName);
+    if (it == m_channels.end()){
+        std::cout << "Channel not found: " << channelName << std::endl;
+    }
     return it->second;
     /* impl error handling! */
 }
