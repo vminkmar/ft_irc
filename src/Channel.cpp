@@ -2,7 +2,7 @@
 
 #include "../include/Channel.hpp" // needed for Channel class
 
-#include <iostream>  // needed for std::cerr, std::cout, std::endl
+#include <iostream>  // needed for std::cerr, std::endl
 #include <sstream>   // needed for std::stringstream
 
 #ifndef DEBUG
@@ -189,24 +189,24 @@ Channel& Channel::operator=(Channel const& src)
 
 std::ostream& operator<<(std::ostream& os, Channel const & c)
 {
-	std::cout << "Channel:         " << c.getName() << "\n";
+	os << "Channel:         " << c.getName() << "\n";
 	
-	std::cout << "Topic:           ";
-	print_stdstr(std::cout, c.getTopic(), true);
+	os << "Topic:           ";
+	print_stdstr(os, c.getTopic(), true);
 
-	std::cout << "Password:        ";
-	print_stdstr(std::cout, c.getPassword(), true);
+	os << "Password:        ";
+	print_stdstr(os, c.getPassword(), true);
 
-	std::cout << "User limit:      " << c.getUserLimit() << "\n";
+	os << "User limit:      " << c.getUserLimit() << "\n";
 
-	std::cout << "isInviteOnly:    ";
-	print_bool(std::cout, c.isInviteOnly(), true);
+	os << "isInviteOnly:    ";
+	print_bool(os, c.isInviteOnly(), true);
 
-	std::cout << "isTopicEditable: ";
-	print_bool(std::cout, c.isTopicEditable(), true);
+	os << "isTopicEditable: ";
+	print_bool(os, c.isTopicEditable(), true);
 
-	std::cout << "isChannelKey:    ";
-	print_bool(std::cout, c.isChannelKey(), true);
+	os << "isChannelKey:    ";
+	print_bool(os, c.isChannelKey(), true);
 
 	return os;
 }
