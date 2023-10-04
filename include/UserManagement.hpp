@@ -34,15 +34,15 @@ class UserManagement
         t_um_users    m_users;
         t_um_channels m_channels;
 		
-        bool				checkForUser   (int socket)       const;
-        bool				checkForChannel(std::string name) const;
+        bool checkForUser   (int socket)              const;
+        bool checkForChannel(std::string channelName) const;
 	
     public:
 
         /* <------ user operations-----> */
 
-        void        setNick               (int socket, std::string parameter);
-        void        setUser               (int socket, std::string user);
+        void        setNick               (int socket, std::string newNickname);
+        void        setUser               (int socket, std::string newUsername);
         std::string getNick               (int socket) const;
         std::string getNumberUsersAsString()           const;
         int         getNumberUsers        ()           const;
@@ -54,13 +54,11 @@ class UserManagement
 		void	    appendToBuffer(std::string message, int socket, int flag);
         std::string getBuffer(int socket, int flag);
 
-        /* erase from channels too! */
-
         /* <------ channel operations-----> */
 
-        void           addChannel          (std::string name);
-        void           eraseChannel        (std::string name);
-        Channel const& getChannel          (std::string name)        const;
+        void           addChannel          (std::string channelName);
+        void           eraseChannel        (std::string channelName);
+        Channel const& getChannel          (std::string channelName) const;
         std::string    getChannelNames     ()                        const;
         std::string    getChannelUsernames (std::string channelName) const;
         void           printChannelInfo    (std::string channelName) const;
@@ -70,8 +68,6 @@ class UserManagement
                                             std::string channelName);
         void           eraseUserFromChannel(int socket,
                                             std::string channelName);
-
-        //void print(); /* old implementation */
 
         UserManagement();
         ~UserManagement();
