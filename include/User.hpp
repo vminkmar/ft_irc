@@ -6,37 +6,36 @@
 #include "UserPrivilege.hpp" // needed for ENUM
 #include <string>            // needed for std::string
 
-class User {
-private:
-  std::string m_nickname;
-  std::string m_username;
-	std::string m_inputBuffer;
-	std::string m_outputBuffer;
+class User{
 
+    private:
+    
+        std::string m_nickname;
+        std::string m_username;
+        std::string m_inputBuffer;
+        std::string m_outputBuffer;
 
-public:
-	//append
-	//searchMessage
-	
+    public:
+    
+        User(std::string const& nickname, std::string const& username);
+        User();
+        User& operator=(const User& src);
+        User(const User &copy);
+        ~User();
 
+        std::string const& getNickname()     const;
+        std::string const& getUsername()     const;
+        std::string const& getInputBuffer()  const;
+        std::string const& getOutputBuffer() const;
 
-	void appendOutputBuffer(std::string message);
-	void appendInputBuffer(std::string message);
-	void searchMessage(std::string buffer);
-  void setNickname(std::string const& nickname);
-  void setUsername(std::string const& username);
+        void setNickname       (std::string const& nickname);
+        void setUsername       (std::string const& username);
+        void appendInputBuffer (std::string const& message);
+        void appendOutputBuffer(std::string const& message);
 
-  std::string const &getNickname() const;
-  std::string const &getUsername() const;
+        /* @note not implemented */
+        //void searchMessage     (std::string const& buffer) const;
 
-  std::string getInputBuffer() const;
-  std::string getOutputBuffer() const;
-  
-  User(std::string const& nickname, std::string const& username);
-  User();
-  User& operator=(const User& src);
-  User(const User &copy);
-  ~User();
 };
 
 std::ostream& operator<<(std::ostream &os, const User &user);
