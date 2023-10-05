@@ -25,7 +25,6 @@ class Server {
 private:
   struct pollfd m_pollfds[512];
 	struct sockaddr_in address;
-	UserManagement userManagement;
   std::vector<int> m_clients;
 	std::vector<std::string> m_parameters;
   // char buffer[1024];
@@ -38,6 +37,7 @@ private:
 	std::string m_passwd;
 
 public:
+    UserManagement userManagement;
   Server();
   ~Server();
   void error(std::string str);
