@@ -17,17 +17,21 @@ int m_numberUsers = 0; /* could be a static int member of the class */
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> non-class functions */
 
-static inline void print_log(std::string message) {
-  if (DEBUG) {
+static inline void print_log(std::string message){
+  if (DEBUG){ 
     std::cerr << YELLOW << "User Management: " << message << RESET << std::endl;
   }
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-UserManagement::UserManagement() { print_log("default constructor called"); }
+UserManagement::UserManagement(){
+    print_log("default constructor called");
+}
 
-UserManagement::~UserManagement() { print_log("destructor called"); }
+UserManagement::~UserManagement(){
+    print_log("destructor called");
+}
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> private member functions */
 
@@ -41,12 +45,11 @@ bool UserManagement::checkForChannel(std::string channelName) const{
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> public member functions */
 
-void UserManagement::setNick(int socket, std::string newNickname) {
+void UserManagement::setNick(int socket, std::string newNickname){
     t_um_users_it it = m_users.find(socket);
     if (it != m_users.end()){
         it->second.setNickname(newNickname);
     }
-
 }
 
 void UserManagement::setUser(int socket, std::string newUsername){
@@ -70,7 +73,9 @@ std::string UserManagement::getNumberUsersAsString() const{
   return ss.str();
 }
 
-int UserManagement::getNumberUsers() const { return (m_numberUsers); }
+int UserManagement::getNumberUsers() const{
+    return (m_numberUsers);
+}
 
 std::string UserManagement::getUsernames() const{
     if (m_users.empty()){
@@ -90,7 +95,7 @@ std::string UserManagement::getUsernames() const{
 void UserManagement::addUser(int socket,
                              std::string const &nickname,
                              std::string const &username){
-  m_users[socket] = User(nickname, username);
+  m_users[socket] = User(nickname, username); /* c11 std::map.emplace */
 }
 
 void UserManagement::eraseUser(int socket){
@@ -124,7 +129,7 @@ std::string UserManagement::getBuffer(int socket, int flag){
     return "";
 }
 
-void UserManagement::addChannel(std::string channelName) {
+void UserManagement::addChannel(std::string channelName){
   m_channels[channelName] = Channel(channelName);
 }
 
@@ -166,7 +171,7 @@ std::string UserManagement::getChannelNames() const{
     return ss.str();
 }
 
-std::string UserManagement::getChannelUsernames(std::string channelName) const {
+std::string UserManagement::getChannelUsernames(std::string channelName) const{
     std::stringstream ss;
     Channel::t_channel_users UserMap = getChannel(channelName).getUserMap();
     
