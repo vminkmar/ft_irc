@@ -34,41 +34,39 @@ int main(void)
     log("Getting Usernames from server");
     std::cout << s.userManagement.getUsernames() << std::endl;
 
-//    log("Appending some content to UserBuffer");
-//    s.userManagement.appendToBuffer("some content", 3, INPUT);
-//    std::cout << s.userManagement.getBuffer(3, INPUT) << std::endl;
-//
-//    log("Adding channels to server");
-//	s.userManagement.addChannel("Test");
-//	s.userManagement.addChannel("Hamburg");
-//    
-//    log("Listing Channels");
-//	s.userManagement.listChannels();
-//
-//    log("Erasing and listing channel");
-//    s.userManagement.eraseChannel("Hamburg");
-//    s.userManagement.listChannels();
-//
-//    log("Searching for erased Channel");
-//    s.userManagement.getChannel("Hamburg");
-//    s.userManagement.getChannel("some other");
-//
-//    log("ChannelInfo");
-//    s.userManagement.printChannelInfo("Test");
-//
-//    log("Adding Users to channel");
-//	s.userManagement.addUserToChannel(3, USER, "Test");
-//	s.userManagement.addUserToChannel(4, OPERATOR, "Test");
-//    s.userManagement.printChannelInfo("Test");
-//
-//    log("Erasing User from Channel");
-//    s.userManagement.eraseUserFromChannel(3, "Test");
-//    s.userManagement.printChannelInfo("Test");
-//
-//    log("Erasing User from Server who is part of a Channel");
-//    s.userManagement.eraseUser(4);
-//    s.userManagement.printChannelInfo("Test");
-//
+    // log("Getting Usernames from server");
+    // std::cout << um.getUsernames() << std::endl;
+
+    // log("Appending some content to UserBuffer");
+    // um.appendToBuffer("some content", 1, INPUT);
+    // std::cout << um.getBuffer(1, INPUT) << std::endl;
+
+    // log("Adding channels to server");
+	// um.addChannel("Test");
+	// um.addChannel("Hamburg");
+    
+    // log("Listing Channels");
+	// um.listChannels();
+	
+    // log("Erasing and listing channel");
+    // um.eraseChannel("Hamburg");
+    // um.listChannels();
+
+    // log("ChannelInfo");
+    // um.printChannelInfo("Test");
+
+    // log("Adding Users to channel");
+	// um.addUserToChannel(1, USER, "Test");
+	// um.addUserToChannel(2, OPERATOR, "Test");
+    // um.printChannelInfo("Test");
+
+    // log("Erasing User from Channel");
+    // um.eraseUserFromChannel(1, "Test");
+    // um.printChannelInfo("Test");
+
+    // log("Erasing User from Server who is part of a Channel");
+    // um.eraseUser(2);
+    // um.printChannelInfo("Test");
 
 }
 

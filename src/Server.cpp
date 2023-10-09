@@ -122,21 +122,50 @@ void Server::Messages(int socket) {
   }
 }
 
-void Server::parseIncomingMessage(std::string message, int socket){
-  userManagement.appendToBuffer(message, socket, INPUT);
-  checkCompleteMessage(socket);
+// void Server::parseIncomingMessage(std::string message, int socket){
+//   userManagement.appendToBuffer(message, socket, INPUT);
+//   std::cout << "Buffer: "<< userManagement.getBuffer(socket, INPUT) << std::endl;
+//   checkCompleteMessage(socket);
   
-}
+// }
 
-void Server::checkCompleteMessage(int socket){
-  std::string buffer = userManagement.getBuffer(socket, INPUT);
-  size_t pos = buffer.find("\r\n");
+// void Server::checkCompleteMessage(int socket){
+//   std::string buffer = userManagement.getBuffer(socket, INPUT);
+//   size_t pos = buffer.find("\r\n");
+//   while (pos != std::string::npos) {
+//     std::string tmp = buffer;
+//     tmp = buffer.substr(0, pos);
+//     getCommand(tmp);
+//     std::cout << "Command: " << this->m_command << std::endl;
+//     tmp = getParameter(tmp);
+//     for (std::vector<std::string>::iterator it = this->m_parameters.begin();
+//          it != this->m_parameters.end(); it++) {
+//       std::cout << "param: " << *it << std::endl;
+//     }
+//     this->m_trail = tmp;
+//     std::cout << "trail: " << this->m_trail << std::endl;
+//     buffer.erase(buffer.begin(), buffer.begin() + pos + 1);
+// 		if(!(userManagement.getBuffer(socket, INPUT).empty()))
+//     	userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
+//     Messages(socket);
+//     this->m_parameters.clear();
+//     pos = buffer.find("\r\n");
+// }
+//   std::cout << "Buffer: "<< userManagement.getBuffer(socket, INPUT) << std::endl;
+// }
+
+void Server::parseIncomingMessage(std::string message, int socket) {
+  if (!userManagement.getBuffer(socket, INPUT).empty()) {
+    std::string buffer = userManagement.getBuffer(socket, INPUT);
+    buffer.append(message);
+    message = buffer;
+  }
+  size_t pos = message.find("\r\n");
   while (pos != std::string::npos) {
-    std::string tmp = buffer;
-    tmp = buffer.substr(0, pos);
+    std::string tmp = message;
+    tmp = message.substr(0, pos);
     getCommand(tmp);
     std::cout << "Command: " << this->m_command << std::endl;
-    std::cout << "Message: " << tmp << std::endl;
     tmp = getParameter(tmp);
     for (std::vector<std::string>::iterator it = this->m_parameters.begin();
          it != this->m_parameters.end(); it++) {
@@ -144,52 +173,23 @@ void Server::checkCompleteMessage(int socket){
     }
     this->m_trail = tmp;
     std::cout << "trail: " << this->m_trail << std::endl;
-    buffer.erase(buffer.begin(), buffer.begin() + pos + 1);
+    message.erase(message.begin(), message.begin() + pos + 1);
 		if(!(userManagement.getBuffer(socket, INPUT).empty()))
     	userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
     Messages(socket);
     this->m_parameters.clear();
-    pos = buffer.find("\r\n");
+    pos = message.find("\r\n");
+  }
+  checkMessage(message);
+  if (!message.empty()) {
+    userManagement.appendToBuffer(message, socket, INPUT);
+  }
+  std::cout << "INPUTBUFFER: " << userManagement.getBuffer(socket, INPUT)
+            << "	" << userManagement.getBuffer(socket, INPUT).length()
+            << std::endl;
+  std::cout << "OUTPUTBUFFER: " << userManagement.getBuffer(socket, OUTPUT)
+            << std::endl;
 }
-}
-// void Server::parseIncomingMessage(char *str, int socket) {
-//   std::string message = str;
-//   if (!userManagement.getBuffer(socket, INPUT).empty()) {
-//     std::string buffer = userManagement.getBuffer(socket, INPUT);
-//     buffer.append(message);
-//     message = buffer;
-//   }
-  // size_t pos = message.find("\r\n");
-  // while (pos != std::string::npos) {
-  //   std::string tmp = message;
-  //   tmp = message.substr(0, pos);
-  //   getCommand(tmp);
-  //   std::cout << "Command: " << this->m_command << std::endl;
-  //   tmp = getParameter(tmp);
-  //   for (std::vector<std::string>::iterator it = this->m_parameters.begin();
-  //        it != this->m_parameters.end(); it++) {
-  //     std::cout << "param: " << *it << std::endl;
-  //   }
-  //   this->m_trail = tmp;
-  //   std::cout << "trail: " << this->m_trail << std::endl;
-  //   message.erase(message.begin(), message.begin() + pos + 1);
-  //   std::cout << "Here: " << userManagement.getBuffer(socket, INPUT) << std::endl;
-	// 	if(!(userManagement.getBuffer(socket, INPUT).empty()))
-  //   	userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
-  //   Messages(socket);
-  //   this->m_parameters.clear();
-  //   pos = message.find("\r\n");
-//   }
-//   checkMessage(message);
-//   if (!message.empty()) {
-//     userManagement.appendToBuffer(message, socket, INPUT);
-//   }
-//   std::cout << "INPUTBUFFER: " << userManagement.getBuffer(socket, INPUT)
-//             << "	" << userManagement.getBuffer(socket, INPUT).length()
-//             << std::endl;
-//   std::cout << "OUTPUTBUFFER: " << userManagement.getBuffer(socket, OUTPUT)
-//             << std::endl;
-// }
 
 void Server::checkMessage(std::string &message) {
   if (message[0] == '\n')

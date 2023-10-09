@@ -37,7 +37,9 @@ private:
 	std::string m_passwd;
 
 public:
+	
     UserManagement userManagement;
+
   Server();
   ~Server();
   void error(std::string str);
