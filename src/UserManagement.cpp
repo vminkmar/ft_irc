@@ -59,16 +59,6 @@ void UserManagement::setUser(int socket, std::string newUsername){
     }
 }
 
-void UserManagement::eraseBuffer(int socket, int flag, int start, int end){
-	if (flag == INPUT)
-    {
-        m_users.find(socket)->second.eraseInputBuffer(start, end);
-    }else if (flag == OUTPUT){
-        m_users.find(socket)->second.eraseOutputBuffer(start, end);
-    }
-    /* throw exception ? */
-}
-
 std::string UserManagement::getNick(int socket) const{
     t_um_users_cit it = m_users.find(socket);
     if (it != m_users.end()){
@@ -77,16 +67,15 @@ std::string UserManagement::getNick(int socket) const{
     return "";
 }
 
-std::string UserManagement::getUser(int socket) const{
-  for (t_um_users_cit it = m_users.begin(); it != m_users.end(); it++){
-    if (it->first == socket){
-      return it->second.getUsername();
+std::string UserManagement::getUser(int socket) const {
+    t_um_users_cit it = m_users.find(socket);
+    if (it != m_users.end()){
+        return it->second.getUsername();
     }
-  }
   return "";
 }
 
-std::string UserManagement::getNumberUsersAsString() const{
+std::string UserManagement::getNumberUsersAsString() const {
   std::stringstream ss;
   ss << m_numberUsers;
   return ss.str();
@@ -108,7 +97,7 @@ std::string UserManagement::getUsernames() const{
             ss << ", ";
         }
     }
-    return ss.str();
+  return ss.str();
 }
 
 void UserManagement::addUser(int socket,
@@ -138,6 +127,15 @@ void UserManagement::appendToBuffer(std::string message, int socket, int flag){
     }
 }
 
+void UserManagement::eraseBuffer(int socket, int flag, int start, int end){
+	if (flag == INPUT)
+    {
+        m_users.find(socket)->second.eraseInputBuffer(start, end);
+    }else if (flag == OUTPUT){
+        m_users.find(socket)->second.eraseOutputBuffer(start, end);
+    }
+}
+
 std::string UserManagement::getBuffer(int socket, int flag){
     if (flag == INPUT){
         return m_users.find(socket)->second.getInputBuffer();
@@ -146,6 +144,9 @@ std::string UserManagement::getBuffer(int socket, int flag){
         return m_users.find(socket)->second.getOutputBuffer();
     }
     return "";
+}
+int UserManagement::getSize() const{
+	return m_users.size();
 }
 
 void UserManagement::addChannel(std::string channelName){
@@ -225,8 +226,8 @@ void UserManagement::printChannelInfo(std::string channelName) const{
     }
 }
 
-void UserManagement::listChannels() const{
-	std::cout << getChannelNames() << std::endl;
+void UserManagement::listChannels() const {
+  std::cout << getChannelNames() << std::endl;
 }
 
 void UserManagement::addUserToChannel(int socket,
