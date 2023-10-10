@@ -103,7 +103,7 @@ std::string UserManagement::getUsernames() const{
 void UserManagement::addUser(int socket,
                              std::string const &nickname,
                              std::string const &username){
-  m_users[socket] = User(nickname, username); /* c11 std::map.emplace */
+  m_users[socket] = User(); /* c11 std::map.emplace */
 }
 
 void UserManagement::eraseUser(int socket){
