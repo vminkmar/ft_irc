@@ -16,7 +16,7 @@
 
 #include "UserManagement.hpp"
 #include "User.hpp"
-#include "Responses.hpp"
+#include "ServerResponses.hpp"
 #define PORT 6667
 //IP_ADDRESS 127.0.0.1
 #define HOST "localhost"

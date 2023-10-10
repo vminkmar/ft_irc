@@ -3,14 +3,14 @@
 #ifndef USERMANAGEMENT_HPP
 #define USERMANAGEMENT_HPP
 
-#include <string>  // needed for std::string
-#include <map>     // needed for std::map
-#include <vector>  // needed for std::vector
+#include <map>    // needed for std::map
+#include <string> // needed for std::string
+#include <vector> // needed for std::vector
 
 #include "Channel.hpp"       // needed for Channel class
-#include "UserPrivilege.hpp" // needed for ENUM
 #include "User.hpp"          // needed for User class
-//#include "Responses.hpp" not needed right now
+#include "UserPrivilege.hpp" // needed for ENUM
+// #include "Responses.hpp" not needed right now
 
 /* define maximum no. of channels? */
 
@@ -74,6 +74,7 @@ class UserManagement
 
         UserManagement();
         ~UserManagement();
+
 };
 
 #endif // USERMANAGEMENT_HPP
