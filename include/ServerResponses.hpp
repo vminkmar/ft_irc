@@ -8,6 +8,8 @@
 enum Responses {
   WELCOME,
   CAP,
+	PING,
+	QUIT,
 };
 
 namespace irc {

@@ -54,7 +54,7 @@ void Server::acceptClients() {
         break;
       }
     }
-		userManagement.addUser(newSocket);
+    userManagement.addUser(newSocket);
     // capabilityNegotiation(newSocket);
   }
 }
@@ -75,17 +75,16 @@ void Server::runServer() {
 }
 
 void Server::sendMessages(int socket) {
-  int sending;
   if (!userManagement.getBuffer(socket, OUTPUT).empty()) {
     std::string temp = userManagement.getBuffer(socket, OUTPUT);
     const char *message = temp.c_str();
-    sending = send(socket, message, sizeof(message), 0);
+    int sending = send(socket, message, sizeof(message), 0);
     if (sending < 0)
       std::cout << "sending" << std::endl;
     std::string tmp = userManagement.getBuffer(socket, OUTPUT);
     size_t end = tmp.find("\r\n");
     if (end != std::string::npos)
-      userManagement.eraseBuffer(socket, OUTPUT, 0, end);
+      userManagement.eraseBuffer(socket, OUTPUT, 0, end + 2);
   }
   // clearBuffer();
 }
@@ -107,24 +106,39 @@ void Server::writeToOutputBuffer(int response, int socket) {
     userManagement.appendToBuffer(str, socket, OUTPUT);
   }
   if (response == WELCOME) {
+    std::cout << "Welcome message written to Buffer" << std::endl;
     std::string str = "001 " + userManagement.getNick(socket) +
                       " :Welcome to the ft_irc network " +
                       userManagement.getNick(socket) + "!" +
                       userManagement.getUser(socket) + "@" + HOST + "\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
+    std::cout << "BUFFER: " << userManagement.getBuffer(socket, OUTPUT)
+              << std::endl;
+  }
+  if (response == PING) {
+    std::string str = " PONG :" + m_parameters[0] + "\r\n";
+    userManagement.appendToBuffer(str, socket, OUTPUT);
+    if (response == QUIT) {
+      std::string str = userManagement.getNick(socket) + "!" +
+                        userManagement.getUser(socket) + "@" + "localhost" +
+                        " QUIT :Goodbye!\r\n";
+      userManagement.appendToBuffer(str, socket, OUTPUT);
+    }
   }
 }
-
 
 void Server::Messages(int socket) {
   if (m_command == "CAP") {
     writeToOutputBuffer(CAP, socket);
   } else if (m_command == "NICK") {
-    this->userManagement.setNick(socket, this->m_parameters[0]);
+    	this->userManagement.setNick(socket, this->m_parameters[0]);
   } else if (m_command == "USER") {
-    this->userManagement.setUser(socket, this->m_parameters[0]);
-    writeToOutputBuffer(WELCOME, socket);
-  }
+    	this->userManagement.setUser(socket, this->m_parameters[0]);
+    	writeToOutputBuffer(WELCOME, socket);
+  } else if (m_command == "PING") {
+    	writeToOutputBuffer(PING, socket);
+  } else if (m_command == "QUIT")
+    	writeToOutputBuffer(QUIT, socket);
 }
 
 void Server::parseIncomingMessage(std::string message, int socket) {
@@ -146,14 +160,14 @@ void Server::parseIncomingMessage(std::string message, int socket) {
     }
     this->m_trail = tmp;
     std::cout << "trail: " << this->m_trail << std::endl;
-    message.erase(message.begin(), message.begin() + pos + 1);
+    message.erase(message.begin(), message.begin() + pos + 2);
     if (!(userManagement.getBuffer(socket, INPUT).empty()))
-      userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
+      userManagement.eraseBuffer(socket, INPUT, 0, pos + 2);
     Messages(socket);
     this->m_parameters.clear();
     pos = message.find("\r\n");
   }
-  checkMessage(message);
+  // checkMessage(message);
   if (!message.empty()) {
     userManagement.appendToBuffer(message, socket, INPUT);
   }
@@ -206,6 +220,7 @@ void Server::capabilityNegotiation(int newSocket) {
   this->m_pollfds[0].revents = POLLOUT;
   char buffer1[100] = "CAP * LS :cap reply...\r\n";
   int sending = send(newSocket, buffer1, sizeof(buffer1), 0);
+	std::cout << "sended: " << sending << std::endl;
   if (sending == -1)
     error("sending");
   memset(buffer1, 0, sizeof(buffer1));
