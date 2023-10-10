@@ -3,7 +3,7 @@
 #include "../include/UserManagement.hpp"
 // #include "../include/User.hpp"
 
-Server::Server() : m_maxClients(512) {}
+Server::Server() : m_maxClients(512), m_command(""), m_trail("") {}
 
 Server::~Server(){};
 
@@ -57,20 +57,20 @@ void Server::acceptClients() {
         break;
       }
     }
-    capabilityNegotiation(newSocket);
+		userManagement.addUser(newSocket);
+    // capabilityNegotiation(newSocket);
   }
 }
 
 void Server::runServer() {
   for (int i = 1; i < this->m_maxClients; i++) {
-		if (this->m_pollfds[i].revents == 0)
-			continue;
-    	if (this->m_pollfds[i].revents & POLLIN)
-    	  receiveMessages(this->m_pollfds[i].fd);
-		if(this->userManagement.getSize() > 0){
-			if (this->m_pollfds[i].revents & POLLOUT)
-				sendMessages(m_pollfds[i].fd);
-		}
+    if (this->m_pollfds[i].revents == 0)
+      continue;
+    if (this->m_pollfds[i].revents & POLLIN)
+      receiveMessages(this->m_pollfds[i].fd);
+    if (this->m_pollfds[i].revents & POLLOUT)
+      sendMessages(m_pollfds[i].fd);
+    // }
     // if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
     //   socketClosed(i);
   }
@@ -80,20 +80,22 @@ void Server::runServer() {
 void Server::sendMessages(int socket) {
   int sending;
   if (!userManagement.getBuffer(socket, OUTPUT).empty()) {
-    sending = send(socket, userManagement.getBuffer(socket, OUTPUT).c_str(),
-                   userManagement.getBuffer(socket, OUTPUT).size(), 0);
+    std::string temp = userManagement.getBuffer(socket, OUTPUT);
+    const char *message = temp.c_str();
+    sending = send(socket, message, sizeof(message), 0);
     if (sending < 0)
       std::cout << "sending" << std::endl;
-		std::string tmp = userManagement.getBuffer(socket, OUTPUT);
-		size_t end = tmp.find("\r\n");
-		if (end != std::string::npos)
-			userManagement.eraseBuffer(socket, OUTPUT, 0, end);
+    std::string tmp = userManagement.getBuffer(socket, OUTPUT);
+    size_t end = tmp.find("\r\n");
+    if (end != std::string::npos)
+      userManagement.eraseBuffer(socket, OUTPUT, 0, end);
   }
   // clearBuffer();
 }
 
 void Server::receiveMessages(int socket) {
-  char buffer[30000] = {0};
+  char buffer[30000];
+  memset(buffer, 0, sizeof(buffer));
   int valread = read(socket, buffer, sizeof(buffer));
   (void)valread; /* for linux compilation! (unused var) */
   valread = 0;   // error
@@ -103,11 +105,11 @@ void Server::receiveMessages(int socket) {
 }
 
 void Server::writeToOutputBuffer(int response, int socket) {
-  // if (response == CAP) {
-  //   std::string str = "CAP * LS :cap reply...\r\n";`
-  //   userManagement.appendToBuffer(str, socket, OUTPUT);
-  // }
-	if (response == WELCOME) {
+  if (response == CAP && m_parameters[0] == "LS") {
+    std::string str = "CAP * LS :cap reply...\r\n";
+    userManagement.appendToBuffer(str, socket, OUTPUT);
+  }
+  if (response == WELCOME) {
     std::string str = "001 " + userManagement.getNick(socket) +
                       " :Welcome to the ft_irc network " +
                       userManagement.getNick(socket) + "!" +
@@ -116,11 +118,11 @@ void Server::writeToOutputBuffer(int response, int socket) {
   }
 }
 
+
 void Server::Messages(int socket) {
   if (m_command == "CAP") {
     writeToOutputBuffer(CAP, socket);
   } else if (m_command == "NICK") {
-    this->userManagement.addUser(socket, "", "");
     this->userManagement.setNick(socket, this->m_parameters[0]);
   } else if (m_command == "USER") {
     this->userManagement.setUser(socket, this->m_parameters[0]);
@@ -130,9 +132,9 @@ void Server::Messages(int socket) {
 
 // void Server::parseIncomingMessage(std::string message, int socket){
 //   userManagement.appendToBuffer(message, socket, INPUT);
-//   std::cout << "Buffer: "<< userManagement.getBuffer(socket, INPUT) << std::endl;
-//   checkCompleteMessage(socket);
-  
+//   std::cout << "Buffer: "<< userManagement.getBuffer(socket, INPUT) <<
+//   std::endl; checkCompleteMessage(socket);
+
 // }
 
 // void Server::checkCompleteMessage(int socket){
@@ -157,7 +159,8 @@ void Server::Messages(int socket) {
 //     this->m_parameters.clear();
 //     pos = buffer.find("\r\n");
 // }
-//   std::cout << "Buffer: "<< userManagement.getBuffer(socket, INPUT) << std::endl;
+//   std::cout << "Buffer: "<< userManagement.getBuffer(socket, INPUT) <<
+//   std::endl;
 // }
 
 void Server::parseIncomingMessage(std::string message, int socket) {
@@ -180,21 +183,18 @@ void Server::parseIncomingMessage(std::string message, int socket) {
     this->m_trail = tmp;
     std::cout << "trail: " << this->m_trail << std::endl;
     message.erase(message.begin(), message.begin() + pos + 1);
-		if(!(userManagement.getBuffer(socket, INPUT).empty()))
-    	userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
+    if (!(userManagement.getBuffer(socket, INPUT).empty()))
+      userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
     Messages(socket);
     this->m_parameters.clear();
+    this->m_trail = "";
+    this->m_command = "";
     pos = message.find("\r\n");
   }
   checkMessage(message);
   if (!message.empty()) {
     userManagement.appendToBuffer(message, socket, INPUT);
   }
-  std::cout << "INPUTBUFFER: " << userManagement.getBuffer(socket, INPUT)
-            << "	" << userManagement.getBuffer(socket, INPUT).length()
-            << std::endl;
-  std::cout << "OUTPUTBUFFER: " << userManagement.getBuffer(socket, OUTPUT)
-            << std::endl;
 }
 
 void Server::checkMessage(std::string &message) {
@@ -216,7 +216,7 @@ std::string Server::getParameter(std::string message) {
   } else {
     std::stringstream iss(message);
     std::string token;
-    while (iss >> token){
+    while (iss >> token) {
       std::cout << token << std::endl;
       this->m_parameters.push_back(token);
     }
