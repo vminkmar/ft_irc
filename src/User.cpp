@@ -20,12 +20,6 @@ static inline void print_log(std::string const& message){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-User::User(std::string const& nickname,
-           std::string const& username) : m_nickname(nickname),
-                                          m_username(username){
-  print_log("main constructor called");
-}
-
 User::User(){
   print_log("default constructor called");
 }
