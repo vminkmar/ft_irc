@@ -8,7 +8,6 @@ Server::Server() : m_maxClients(512), m_command(""), m_trail("") {}
 Server::~Server(){};
 
 void Server::createSocket() {
-  // create the socket for the server
   this->m_addrlen = sizeof(this->address);
   if ((this->m_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     error("In socket");
@@ -20,11 +19,9 @@ void Server::createSocket() {
   this->address.sin_addr.s_addr = INADDR_ANY;
   this->address.sin_port = htons(PORT);
   memset(this->address.sin_zero, '\0', sizeof(this->address.sin_zero));
-  // bind the descriptor to a address family(AF_INET)
   if (bind(this->m_server_fd, reinterpret_cast<struct sockaddr *>(&address),
            sizeof(this->address)) < 0)
     error("In bind");
-  // listen to client to accept it
   if (listen(this->m_server_fd, 10) < 0)
     error("listen");
   this->m_pollfds[0].fd = m_server_fd;
@@ -154,8 +151,6 @@ void Server::parseIncomingMessage(std::string message, int socket) {
       userManagement.eraseBuffer(socket, INPUT, 0, pos + 1);
     Messages(socket);
     this->m_parameters.clear();
-    this->m_trail = "";
-    this->m_command = "";
     pos = message.find("\r\n");
   }
   checkMessage(message);
