@@ -66,7 +66,7 @@ void Server::runServer() {
     if (this->m_pollfds[i].revents & POLLIN)
       receiveMessages(this->m_pollfds[i].fd);
     // if (this->m_pollfds[i].revents & POLLOUT)
-    //   sendMessages(i);
+    //   sendMessages(m_pollfds[i].fd);
     // if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
     //   socketClosed(i);
   }
@@ -160,7 +160,7 @@ void Server::parseIncomingMessage(char *str, int socket) {
 }
 
 void Server::checkMessage(std::string &message) {
-  if (message.at(0) == '\n')
+  if (message[0] == '\n')
     message.erase(0, 1);
 }
 
