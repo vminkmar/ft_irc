@@ -30,13 +30,13 @@ void Server::createSocket() {
     int ret = poll(this->m_pollfds, this->m_maxClients, -1);
     if (ret <= 0)
       perror("poll");
-    acceptClients();
+    if (this->m_pollfds[0].revents & POLLIN)
+			acceptClients();
     runServer();
   }
 }
 
 void Server::acceptClients() {
-  if (this->m_pollfds[0].revents & POLLIN) {
     int newSocket;
     if ((newSocket = accept(this->m_server_fd, (struct sockaddr *)&address,
                             (socklen_t *)&m_addrlen)) < 0)
@@ -56,7 +56,6 @@ void Server::acceptClients() {
     }
     userManagement.addUser(newSocket);
     // capabilityNegotiation(newSocket);
-  }
 }
 
 void Server::runServer() {
@@ -65,20 +64,20 @@ void Server::runServer() {
       continue;
     if (this->m_pollfds[i].revents & POLLIN)
       receiveMessages(this->m_pollfds[i].fd);
-    if (this->m_pollfds[i].revents & POLLOUT)
-      sendMessages(m_pollfds[i].fd);
-    // }
+    	if (this->m_pollfds[i].revents & POLLOUT)
+    	  sendMessages(m_pollfds[i].fd);
     // if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
     //   socketClosed(i);
+		this->m_pollfds[i].revents = -1;
   }
   // cleanUpSockets();
 }
 
 void Server::sendMessages(int socket) {
   if (!userManagement.getBuffer(socket, OUTPUT).empty()) {
-    std::string temp = userManagement.getBuffer(socket, OUTPUT);
-    const char *message = temp.c_str();
-    int sending = send(socket, message, sizeof(message), 0);
+    std::string message = userManagement.getBuffer(socket, OUTPUT);
+    int sending = send(socket, message.data(), message.length(), 0);
+		std::cout << "sended: " << message << "with length "<< sending << std::endl;
     if (sending < 0)
       std::cout << "sending" << std::endl;
     std::string tmp = userManagement.getBuffer(socket, OUTPUT);
@@ -216,16 +215,15 @@ void Server::error(std::string str) {
   exit(1);
 }
 
-void Server::capabilityNegotiation(int newSocket) {
-  this->m_pollfds[0].revents = POLLOUT;
-  char buffer1[100] = "CAP * LS :cap reply...\r\n";
-  int sending = send(newSocket, buffer1, sizeof(buffer1), 0);
-	std::cout << "sended: " << sending << std::endl;
-  if (sending == -1)
-    error("sending");
-  memset(buffer1, 0, sizeof(buffer1));
-  this->m_pollfds[0].revents = POLLIN;
-}
+// void Server::capabilityNegotiation(int newSocket) {
+//   this->m_pollfds[0].revents = POLLOUT;
+//   char buffer1[100] = "CAP * LS :cap reply...\r\n";
+//   int sending = send(newSocket, buffer1, sizeof(buffer1), 0);
+//   if (sending == -1)
+//     error("sending");
+//   memset(buffer1, 0, sizeof(buffer1));
+//   this->m_pollfds[0].revents = POLLIN;
+// }
 
 // void Server::getPortAndPasswd(char **argv) {
 //   std::string str = argv[1];
