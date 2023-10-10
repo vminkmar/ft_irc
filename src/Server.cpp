@@ -63,10 +63,14 @@ void Server::acceptClients() {
 
 void Server::runServer() {
   for (int i = 1; i < this->m_maxClients; i++) {
-    if (this->m_pollfds[i].revents & POLLIN)
-      receiveMessages(this->m_pollfds[i].fd);
-    // if (this->m_pollfds[i].revents & POLLOUT)
-    //   sendMessages(m_pollfds[i].fd);
+		if (this->m_pollfds[i].revents == 0)
+			continue;
+    	if (this->m_pollfds[i].revents & POLLIN)
+    	  receiveMessages(this->m_pollfds[i].fd);
+		if(this->userManagement.getSize() > 0){
+			if (this->m_pollfds[i].revents & POLLOUT)
+				sendMessages(m_pollfds[i].fd);
+		}
     // if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
     //   socketClosed(i);
   }
@@ -80,8 +84,10 @@ void Server::sendMessages(int socket) {
                    userManagement.getBuffer(socket, OUTPUT).size(), 0);
     if (sending < 0)
       std::cout << "sending" << std::endl;
-		size_t end = userManagement.getBuffer(socket, OUTPUT).find("\r\n");
-		userManagement.eraseBuffer(socket, OUTPUT, 0, end);
+		std::string tmp = userManagement.getBuffer(socket, OUTPUT);
+		size_t end = tmp.find("\r\n");
+		if (end != std::string::npos)
+			userManagement.eraseBuffer(socket, OUTPUT, 0, end);
   }
   // clearBuffer();
 }
@@ -98,7 +104,7 @@ void Server::receiveMessages(int socket) {
 
 void Server::writeToOutputBuffer(int response, int socket) {
   // if (response == CAP) {
-  //   std::string str = "CAP * LS :cap reply...\r\n";
+  //   std::string str = "CAP * LS :cap reply...\r\n";`
   //   userManagement.appendToBuffer(str, socket, OUTPUT);
   // }
 	if (response == WELCOME) {
