@@ -61,9 +61,9 @@ void Server::runServer() {
   for (int i = 1; i < this->m_maxClients; i++) {
     if (this->m_pollfds[i].revents == 0)
       continue;
-    if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL)) {
-      socketClosed(this->m_pollfds[i].fd);
-    }
+    // if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL)) {
+    //   socketClosed(this->m_pollfds[i].fd);
+    // }
     if (this->m_pollfds[i].revents & POLLIN)
       receiveMessages(this->m_pollfds[i].fd);
     if (this->m_pollfds[i].revents & POLLOUT)
@@ -102,149 +102,122 @@ void Server::receiveMessages(int socket) {
 
 void Server::writeToOutputBuffer(int response, int socket) {
   std::string str;
-	switch (response) {
+  switch (response) {
   case CAP:
     std::cout << "CAP message send to Socket: " << socket << std::endl;
     str = "CAP * LS :cap reply...\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
-		break;
+    break;
   case WELCOME:
     std::cout << "Welcome message send to: " << userManagement.getUser(socket)
               << std::endl;
     str = "001 " + userManagement.getNick(socket) +
-                      " :Welcome to the ft_irc network " +
-                      userManagement.getNick(socket) + "!" +
-                      userManagement.getUser(socket) + "@" + HOST + "\r\n";
+          " :Welcome to the ft_irc network " + userManagement.getNick(socket) +
+          "!" + userManagement.getUser(socket) + "@" + HOST + "\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
-		break;
+    break;
   case PING:
     std::cout << "PONG message send to: " << userManagement.getUser(socket)
               << std::endl;
     str = " PONG :" + m_parameters[0] + "\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
-    if (response == QUIT) {
-      str = userManagement.getNick(socket) + "!" +
-                        userManagement.getUser(socket) + "@" + "localhost" +
-                        " QUIT :Goodbye!\r\n";
-      userManagement.appendToBuffer(str, socket, OUTPUT);
-			break;
+    break;
+  case QUIT:
+		std::cout << "hello world" << std::endl;
+    str = userManagement.getNick(socket) + "!" +
+          userManagement.getUser(socket) + "@" + "localhost" +
+          " QUIT :Goodbye!\r\n";
+    userManagement.appendToBuffer(str, socket, OUTPUT);
+    break;
+  }
+}
+
+void Server::Messages(int socket) {
+  if (m_command == "CAP") {
+    writeToOutputBuffer(CAP, socket);
+  } else if (m_command == "NICK") {
+    this->userManagement.setNick(socket, this->m_parameters[0]);
+  } else if (m_command == "USER") {
+    this->userManagement.setUser(socket, this->m_parameters[0]);
+    writeToOutputBuffer(WELCOME, socket);
+  } else if (m_command == "PING") {
+    writeToOutputBuffer(PING, socket);
+  } else if (m_command == "QUIT")
+    writeToOutputBuffer(QUIT, socket);
+}
+
+void Server::parseIncomingMessage(std::string message, int socket) {
+  if (!userManagement.getBuffer(socket, INPUT).empty()) {
+    std::string buffer = userManagement.getBuffer(socket, INPUT);
+    buffer.append(message);
+    message = buffer;
+  }
+  size_t pos = message.find("\r\n");
+  while (pos != std::string::npos) {
+    std::string tmp = message;
+    tmp = message.substr(0, pos);
+    getCommand(tmp);
+    std::cout << "Command: " << this->m_command << std::endl;
+    tmp = getParameter(tmp);
+    for (std::vector<std::string>::iterator it = this->m_parameters.begin();
+         it != this->m_parameters.end(); it++) {
+      std::cout << "param: " << *it << std::endl;
     }
-	}
-    // if (response == CAP && m_parameters[0] == "LS") {
-    //   std::cout << "CAP message send to Socket: " << socket << std::endl;
-    //   std::string str = "CAP * LS :cap reply...\r\n";
-    //   userManagement.appendToBuffer(str, socket, OUTPUT);
-    // }
-    // if (response == WELCOME) {
-    //   std::cout << "Welcome message send to: " <<
-    //   userManagement.getUser(socket)
-    //             << std::endl;
-    //   std::string str = "001 " + userManagement.getNick(socket) +
-    //                     " :Welcome to the ft_irc network " +
-    //                     userManagement.getNick(socket) + "!" +
-    //                     userManagement.getUser(socket) + "@" + HOST + "\r\n";
-    //   userManagement.appendToBuffer(str, socket, OUTPUT);
-    // }
-    // if (response == PING) {
-    //   std::cout << "PONG message send to: " << userManagement.getUser(socket)
-    //             << std::endl;
-    //   std::string str = " PONG :" + m_parameters[0] + "\r\n";
-    //   userManagement.appendToBuffer(str, socket, OUTPUT);
-    //   if (response == QUIT) {
-    //     std::string str = userManagement.getNick(socket) + "!" +
-    //                       userManagement.getUser(socket) + "@" + "localhost"
-    //                       + " QUIT :Goodbye!\r\n";
-    //     userManagement.appendToBuffer(str, socket, OUTPUT);
-    //   }
-    // }
+    this->m_trail = tmp;
+    std::cout << "trail: " << this->m_trail << std::endl;
+    message.erase(message.begin(), message.begin() + pos + 2);
+    if (!(userManagement.getBuffer(socket, INPUT).empty()))
+      userManagement.eraseBuffer(socket, INPUT, 0, pos + 2);
+    Messages(socket);
+    this->m_parameters.clear();
+    pos = message.find("\r\n");
   }
-
-  void Server::Messages(int socket) {
-    if (m_command == "CAP") {
-      writeToOutputBuffer(CAP, socket);
-    } else if (m_command == "NICK") {
-      this->userManagement.setNick(socket, this->m_parameters[0]);
-    } else if (m_command == "USER") {
-      this->userManagement.setUser(socket, this->m_parameters[0]);
-      writeToOutputBuffer(WELCOME, socket);
-    } else if (m_command == "PING") {
-      writeToOutputBuffer(PING, socket);
-    } else if (m_command == "QUIT")
-      writeToOutputBuffer(QUIT, socket);
+  if (!message.empty()) {
+    userManagement.appendToBuffer(message, socket, INPUT);
   }
+}
 
-  void Server::parseIncomingMessage(std::string message, int socket) {
-    if (!userManagement.getBuffer(socket, INPUT).empty()) {
-      std::string buffer = userManagement.getBuffer(socket, INPUT);
-      buffer.append(message);
-      message = buffer;
+std::string Server::getParameter(std::string message) {
+  size_t colon = message.find(":");
+  if (colon != std::string::npos) {
+    std::string before = message.substr(0, colon);
+    std::string after = message.substr(colon + 1);
+    std::stringstream iss(before);
+    std::string token;
+    while (iss >> token) {
+      m_parameters.push_back(token);
     }
-    size_t pos = message.find("\r\n");
-    while (pos != std::string::npos) {
-      std::string tmp = message;
-      tmp = message.substr(0, pos);
-      getCommand(tmp);
-      std::cout << "Command: " << this->m_command << std::endl;
-      tmp = getParameter(tmp);
-      for (std::vector<std::string>::iterator it = this->m_parameters.begin();
-           it != this->m_parameters.end(); it++) {
-        std::cout << "param: " << *it << std::endl;
-      }
-      this->m_trail = tmp;
-      std::cout << "trail: " << this->m_trail << std::endl;
-      message.erase(message.begin(), message.begin() + pos + 2);
-      if (!(userManagement.getBuffer(socket, INPUT).empty()))
-        userManagement.eraseBuffer(socket, INPUT, 0, pos + 2);
-      Messages(socket);
-      this->m_parameters.clear();
-      pos = message.find("\r\n");
+    return (after);
+  } else {
+    std::stringstream iss(message);
+    std::string token;
+    while (iss >> token) {
+      this->m_parameters.push_back(token);
     }
-    if (!message.empty()) {
-      userManagement.appendToBuffer(message, socket, INPUT);
-    }
+    return ("");
   }
+}
 
-  std::string Server::getParameter(std::string message) {
-    size_t colon = message.find(":");
-    if (colon != std::string::npos) {
-      std::string before = message.substr(0, colon);
-      std::string after = message.substr(colon + 1);
-      std::stringstream iss(before);
-      std::string token;
-      while (iss >> token) {
-        m_parameters.push_back(token);
-      }
-      return (after);
-    } else {
-      std::stringstream iss(message);
-      std::string token;
-      while (iss >> token) {
-        this->m_parameters.push_back(token);
-      }
-      return ("");
-    }
-  }
+void Server::printCommand() {
+  if (!this->m_command.empty())
+    std::cout << "Command: " << this->m_command << std::endl;
+}
 
-  void Server::printCommand() {
-    if (!this->m_command.empty())
-      std::cout << "Command: " << this->m_command << std::endl;
-  }
+void Server::getCommand(std::string &message) {
+  size_t end = message.find(" ");
+  this->m_command = message.substr(0, end);
+  message.erase(message.begin(), message.begin() + end + 1);
+}
 
-  void Server::getCommand(std::string & message) {
-    size_t end = message.find(" ");
-    this->m_command = message.substr(0, end);
-    message.erase(message.begin(), message.begin() + end + 1);
-  }
+void Server::error(std::string str) {
+  std::cerr << str << std::endl;
+  exit(1);
+}
 
-  void Server::error(std::string str) {
-    std::cerr << str << std::endl;
-    exit(1);
-  }
-
-  // void Server::getPortAndPasswd(char **argv) {
-  //   std::string str = argv[1];
-  //   for (size_t i = 0; i < str.size() - 1; i++)
-  //     if (isnumber(str[i]) == false)
-  //       error("Bad input as Port");
-  //   this->m_port = atoi(argv[1]);
-  // }
+// void Server::getPortAndPasswd(char **argv) {
+//   std::string str = argv[1];
+//   for (size_t i = 0; i < str.size() - 1; i++)
+//     if (isnumber(str[i]) == false)
+//       error("Bad input as Port");
+//   this->m_port = atoi(argv[1]);
+// }
