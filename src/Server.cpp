@@ -75,17 +75,15 @@ void Server::runServer() {
 
 void Server::sendMessages(int socket) {
   if (!userManagement.getBuffer(socket, OUTPUT).empty()) {
-    std::string message = userManagement.getBuffer(socket, OUTPUT);
-    int sending = send(socket, message.data(), message.length(), 0);
-		std::cout << "sended: " << message << "with length "<< sending << std::endl;
-    if (sending < 0)
-      std::cout << "sending" << std::endl;
-    std::string tmp = userManagement.getBuffer(socket, OUTPUT);
-    size_t end = tmp.find("\r\n");
-    if (end != std::string::npos)
+    size_t end = userManagement.getBuffer(socket, OUTPUT).find("\r\n");
+    while(end != std::string::npos){
+			std::string message = userManagement.getBuffer(socket, OUTPUT);
+    	int sending = send(socket, message.data(), message.length(), 0);
+    	if (sending < 0)
+      	std::cout << "sending" << std::endl;    
       userManagement.eraseBuffer(socket, OUTPUT, 0, end + 2);
+		}
   }
-  // clearBuffer();
 }
 
 void Server::receiveMessages(int socket) {
@@ -101,20 +99,20 @@ void Server::receiveMessages(int socket) {
 
 void Server::writeToOutputBuffer(int response, int socket) {
   if (response == CAP && m_parameters[0] == "LS") {
+		std::cout << "CAP message send to Socket: " << socket << std::endl;
     std::string str = "CAP * LS :cap reply...\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
   }
   if (response == WELCOME) {
-    std::cout << "Welcome message written to Buffer" << std::endl;
+		std::cout << "Welcome message send to: " << userManagement.getUser(socket) << std::endl;
     std::string str = "001 " + userManagement.getNick(socket) +
                       " :Welcome to the ft_irc network " +
                       userManagement.getNick(socket) + "!" +
                       userManagement.getUser(socket) + "@" + HOST + "\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
-    std::cout << "BUFFER: " << userManagement.getBuffer(socket, OUTPUT)
-              << std::endl;
   }
   if (response == PING) {
+		std::cout << "PONG message send to: " << userManagement.getUser(socket) << std::endl;
     std::string str = " PONG :" + m_parameters[0] + "\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
     if (response == QUIT) {
@@ -192,7 +190,6 @@ std::string Server::getParameter(std::string message) {
     std::stringstream iss(message);
     std::string token;
     while (iss >> token) {
-      std::cout << token << std::endl;
       this->m_parameters.push_back(token);
     }
     return ("");
