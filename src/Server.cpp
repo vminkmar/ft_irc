@@ -1,11 +1,18 @@
+// -------------------------------------------------------------------------- //
 
-#include "../include/Server.hpp"
-#include "../include/UserManagement.hpp"
-// #include "../include/User.hpp"
+#include "../include/Server.hpp"         // needed for Server class
+#include "../include/UserManagement.hpp" // needed for UserManagement class
+
+#include <sstream>  // needed for std::stringstream
+#include <unistd.h> // needed for read
+#include <iostream> // needed for std::cout, std::endl
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
 Server::Server() : m_maxClients(512), m_command(""), m_trail("") {}
-
 Server::~Server(){};
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
 void Server::createSocket() {
   this->m_addrlen = sizeof(this->address);
@@ -240,3 +247,6 @@ void Server::error(std::string str) {
 // 	std::string passwd = argv[2];
 // 	m_passwd = passwd;
 // }
+
+
+// -------------------------------------------------------------------------- //
