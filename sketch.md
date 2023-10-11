@@ -93,5 +93,5 @@ Class Names uppercase
     Done:
 				"PING/PONG"
 
-		# Documenation
-			All incoming Messages are parsed in 3 Parts, COMMAND, PARAMETERS and TRAIL. Command is always the first part of the message. In the function Server::Messages you always need to look for m_command and after that you need to work with the m_parameters(vector). If there is a trail it is stored in m_trail but mostly you won't need it but you need to look it up in the RFC2812. If you want to search for other stuff then you look up RFC2810-RFC2813. If you have any question write me a message.
+# Documenation
+		All incoming Messages are parsed in 3 Parts, COMMAND, PARAMETERS and TRAIL. Command is always the first part of themessage. In the function Server::Messages you always need to look for m_command and after that you need to work with them_parameters(vector). If there is a trail it is stored in m_trail but mostly you won't need it but you need to look it upin the RFC2812. If you want to search for other stuff then you look up RFC2810-RFC2813. If you have any question write mea message.
