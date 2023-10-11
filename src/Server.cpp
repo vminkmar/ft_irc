@@ -25,7 +25,7 @@ void Server::createSocket() {
   if (listen(this->m_server_fd, 10) < 0)
     error("listen");
   this->m_pollfds[0].fd = m_server_fd;
-  this->m_pollfds->revents = POLLIN;
+  this->m_pollfds->events = POLLIN;
   while (1) {
     int ret = poll(this->m_pollfds, this->m_maxClients, -1);
     if (ret <= 0)
@@ -99,9 +99,11 @@ void Server::writeToOutputBuffer(int response, int socket) {
   std::string str;
   switch (response) {
   case CAP:
-    std::cout << "CAP message send to Socket: " << socket << std::endl;
-    str = "CAP * LS :cap reply...\r\n";
-    userManagement.appendToBuffer(str, socket, OUTPUT);
+    if (m_parameters[0] == "LS") {
+      std::cout << "CAP message send to Socket: " << socket << std::endl;
+      str = "CAP * LS :cap reply...\r\n";
+      userManagement.appendToBuffer(str, socket, OUTPUT);
+    }
     break;
   case WELCOME:
     std::cout << "Welcome message send to: " << userManagement.getUser(socket)
@@ -118,7 +120,6 @@ void Server::writeToOutputBuffer(int response, int socket) {
     userManagement.appendToBuffer(str, socket, OUTPUT);
     break;
   case QUIT:
-    std::cout << "hello world" << std::endl;
     str = userManagement.getNick(socket) + "!" +
           userManagement.getUser(socket) + "@" + "localhost" +
           " QUIT :Goodbye!\r\n";
@@ -139,7 +140,17 @@ void Server::Messages(int socket) {
     writeToOutputBuffer(PING, socket);
   } else if (m_command == "QUIT")
     writeToOutputBuffer(QUIT, socket);
+  else if (m_command == "PASS") {
+    comparePassword();
+  }
 }
+
+// void Server::comparePassword(){
+// 	if(m_passwd == m_parameters[0])
+
+// 	else
+// 		writeToOutputBuffer(ERR_PASSWD)		
+// }
 
 void Server::parseIncomingMessage(std::string message, int socket) {
   if (!userManagement.getBuffer(socket, INPUT).empty()) {
@@ -215,4 +226,6 @@ void Server::error(std::string str) {
 //     if (isnumber(str[i]) == false)
 //       error("Bad input as Port");
 //   this->m_port = atoi(argv[1]);
+// 	std::string passwd = argv[2];
+// 	m_passwd = passwd;
 // }
