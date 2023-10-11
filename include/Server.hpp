@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <vector>
+#include <list>
 #include <sstream>
 
 #include "UserManagement.hpp"
@@ -58,6 +59,7 @@ public:
 	void cleanUpSockets();
 	void checkCompleteMessage(int socket);
 	std::string getParameter(std::string message);
+	void comparePassword();
 };
 
 #endif // SERVER_HPP
