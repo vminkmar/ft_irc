@@ -35,7 +35,6 @@ User::~User(){
     print_log("destructor called");
 }
 
-
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> setters */
 
 void User::setNickname(std::string const& nickname){
@@ -86,7 +85,6 @@ std::string const& User::getOutputBuffer() const{
 bool User::getOnlineStatus() const{
     return m_onlineStatus;
 }
-
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 

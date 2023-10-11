@@ -43,7 +43,7 @@ bool UserManagement::checkForChannel(std::string channelName) const{
     return m_channels.find(channelName) != m_channels.end();
 }
 
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> public member functions */
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user operations */
 
 void UserManagement::setNick(int socket, std::string newNickname){
     t_um_users_it it = m_users.find(socket);
@@ -75,26 +75,6 @@ std::string UserManagement::getUser(int socket) const {
   return "";
 }
 
-bool UserManagement::getOnlineStatus(int socket) const {
-    t_um_users_cit it = m_users.find(socket);
-
-    if (it != m_users.end()){
-        return it->second.getOnlineStatus();
-    }
-    return false; /* @note throw exception! */
-}
-
-
-void UserManagement::setOnlineStatus(int socket, bool flag){
-  
-    t_um_users_it it = m_users.find(socket);
-    if (it != m_users.end()){
-        if (it->second.getOnlineStatus() != flag){
-            it->second.toggleOnlineStatus();
-        }
-    }
-    /* @note throw exception! */
-}
 
 std::string UserManagement::getNumberUsersAsString() const {
   std::stringstream ss;
@@ -164,9 +144,32 @@ std::string UserManagement::getBuffer(int socket, int flag){
     }
     return "";
 }
+
 int UserManagement::getSize() const{
 	return m_users.size();
 }
+
+bool UserManagement::getOnlineStatus(int socket) const{
+    t_um_users_cit it = m_users.find(socket);
+
+    if (it != m_users.end()){
+        return it->second.getOnlineStatus();
+    }
+    return false; /* @note throw exception! */
+}
+
+void UserManagement::setOnlineStatus(int socket, bool flag){
+  
+    t_um_users_it it = m_users.find(socket);
+    if (it != m_users.end()){
+        if (it->second.getOnlineStatus() != flag){
+            it->second.toggleOnlineStatus();
+        }
+    }
+    /* @note throw exception! */
+}
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> channel operations */
 
 void UserManagement::addChannel(std::string channelName){
   m_channels[channelName] = Channel(channelName);
