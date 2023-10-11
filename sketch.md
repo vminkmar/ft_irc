@@ -6,13 +6,8 @@ Class Names uppercase
 
 # Todos
 
-    Update main branch
-     --> branch dev/jakob has some important bug fixes
-     --> branch buffer/new buffer has some important updates
-	
     Consistent Formatting
-     --> Look through all classes and implementation and have consistent
-         documentation and formatting
+     --> Update Server class (considering adding new .cpp files)
 
     Implement example command
      --> Rigouros testing and error handling so we have a "prime example"
