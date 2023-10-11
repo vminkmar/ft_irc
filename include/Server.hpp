@@ -50,7 +50,6 @@ public:
 	void getCommand(std::string &message);
 	void printCommand();
 	void Messages(int socket);
-	void writeToOutputBuffer(int repsonse, int socket);
 	void acceptClients();
 	void runServer();
 	void socketClosed(int i);
@@ -60,6 +59,10 @@ public:
 	void checkCompleteMessage(int socket);
 	std::string getParameter(std::string message);
 	void comparePassword();
+	void QUIT_RPL(int socket);
+	void WELCOME_RPL(int socket);
+	void CAP_RPL(int socket);
+	void PING_RPL(int socket);
 };
 
 #endif // SERVER_HPP

@@ -95,51 +95,49 @@ void Server::receiveMessages(int socket) {
   memset(buffer, 0, sizeof(buffer));
 }
 
-void Server::writeToOutputBuffer(int response, int socket) {
-  std::string str;
-  switch (response) {
-  case CAP:
-    if (m_parameters[0] == "LS") {
-      std::cout << "CAP message send to Socket: " << socket << std::endl;
-      str = "CAP * LS :cap reply...\r\n";
-      userManagement.appendToBuffer(str, socket, OUTPUT);
-    }
-    break;
-  case WELCOME:
-    std::cout << "Welcome message send to: " << userManagement.getUser(socket)
-              << std::endl;
-    str = "001 " + userManagement.getNick(socket) +
-          " :Welcome to the ft_irc network " + userManagement.getNick(socket) +
-          "!" + userManagement.getUser(socket) + "@" + HOST + "\r\n";
+void Server::CAP_RPL(int socket) {
+  if (m_parameters[0] == "LS") {
+    std::cout << "CAP message send to Socket: " << socket << std::endl;
+    std::string str = "CAP * LS :cap reply...\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
-    break;
-  case PING:
-    std::cout << "PONG message send to: " << userManagement.getUser(socket)
-              << std::endl;
-    str = " PONG :" + m_parameters[0] + "\r\n";
-    userManagement.appendToBuffer(str, socket, OUTPUT);
-    break;
-  case QUIT:
-    str = userManagement.getNick(socket) + "!" +
-          userManagement.getUser(socket) + "@" + "localhost" +
-          " QUIT :Goodbye!\r\n";
-    userManagement.appendToBuffer(str, socket, OUTPUT);
-    break;
   }
+}
+
+void Server::WELCOME_RPL(int socket) {
+  std::cout << "Welcome message send to: " << userManagement.getUser(socket)
+            << std::endl;
+  std::string str = "001 " + userManagement.getNick(socket) +
+                    " :Welcome to the ft_irc network " +
+                    userManagement.getNick(socket) + "!" +
+                    userManagement.getUser(socket) + "@" + HOST + "\r\n";
+  userManagement.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::PING_RPL(int socket) {
+  std::cout << "PONG message send to: " << userManagement.getUser(socket)
+            << std::endl;
+  std::string str = " PONG :" + m_parameters[0] + "\r\n";
+  userManagement.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::QUIT_RPL(int socket){
+	std::string str = userManagement.getNick(socket) + "!" + userManagement.getUser(socket) +
+        "@" + "localhost" + " QUIT :Goodbye!\r\n";
+  userManagement.appendToBuffer(str, socket, OUTPUT);
 }
 
 void Server::Messages(int socket) {
   if (m_command == "CAP") {
-    writeToOutputBuffer(CAP, socket);
+    CAP_RPL(socket);
   } else if (m_command == "NICK") {
     this->userManagement.setNick(socket, this->m_parameters[0]);
   } else if (m_command == "USER") {
     this->userManagement.setUser(socket, this->m_parameters[0]);
-    writeToOutputBuffer(WELCOME, socket);
+    WELCOME_RPL(socket);
   } else if (m_command == "PING") {
-    writeToOutputBuffer(PING, socket);
+    PING_RPL(socket);
   } else if (m_command == "QUIT")
-    writeToOutputBuffer(QUIT, socket);
+    QUIT_RPL(socket);
   // else if (m_command == "PASS") {
   //   comparePassword();
   // }
@@ -149,7 +147,7 @@ void Server::Messages(int socket) {
 // 	if(m_passwd == m_parameters[0])
 
 // 	else
-// 		writeToOutputBuffer(ERR_PASSWD)		
+// 		writeToOutputBuffer(ERR_PASSWD)
 // }
 
 void Server::parseIncomingMessage(std::string message, int socket) {
