@@ -30,7 +30,7 @@ Class Names uppercase
 					- need to check if user name is already used?
 
         "PASS"
-
+					-need to add it at the end
         "QUIT"
 					- User should leave all channels, User gets erased from all containers and we need to delete user from pollfd struct or vector.
 
