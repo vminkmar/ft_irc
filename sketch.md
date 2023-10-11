@@ -6,17 +6,18 @@ Class Names uppercase
 
 # Todos
 
-    Draw Structure on Whiteboard
-
-    Restructure Server Main loop
-    
-    User class
-     --> implement Buffer
-
-	Commands
-    --> try to fully implement one or two commands ("full stack")
+    Update main branch
+     --> branch dev/jakob has some important bug fixes
+     --> branch buffer/new buffer has some important updates
 	
-	Error Handling (Exceptions/Messages)
+    Consistent Formatting
+     --> Look through all classes and implementation and have consistent
+         documentation and formatting
+
+    Implement example command
+     --> Rigouros testing and error handling so we have a "prime example"
+
+    Implement all commands
 
 # Commands
     transform parameters in vector and at trail after : to a string
