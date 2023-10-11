@@ -10,6 +10,8 @@ enum Responses {
   CAP,
 	PING,
 	QUIT,
+	JOIN,
+	PASS,
 };
 
 namespace irc {
