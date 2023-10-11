@@ -120,9 +120,17 @@ void Server::PING_RPL(int socket) {
   userManagement.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::QUIT_RPL(int socket){
-	std::string str = userManagement.getNick(socket) + "!" + userManagement.getUser(socket) +
-        "@" + "localhost" + " QUIT :Goodbye!\r\n";
+void Server::QUIT_RPL(int socket) {
+  std::string str = userManagement.getNick(socket) + "!" +
+                    userManagement.getUser(socket) + "@" + "localhost" +
+                    " QUIT :Goodbye!\r\n";
+  userManagement.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::JOIN_RPL(int socket, std::string name) {
+  std::string str = userManagement.getNick(socket) + "!" +
+                    userManagement.getUser(socket) + "@" + HOST + " JOIN " +
+                    name + " * :" + userManagement.getUser(socket) + "\r\n";
   userManagement.appendToBuffer(str, socket, OUTPUT);
 }
 
@@ -138,6 +146,11 @@ void Server::Messages(int socket) {
     PING_RPL(socket);
   } else if (m_command == "QUIT")
     QUIT_RPL(socket);
+  else if (m_command == "JOIN") {
+    m_parameters[0] = m_parameters[0].erase(0, 1);
+    userManagement.addChannel(m_parameters[0]);
+    JOIN_RPL(socket, m_parameters[0]);
+  }
   // else if (m_command == "PASS") {
   //   comparePassword();
   // }

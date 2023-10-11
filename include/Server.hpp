@@ -63,6 +63,7 @@ public:
 	void WELCOME_RPL(int socket);
 	void CAP_RPL(int socket);
 	void PING_RPL(int socket);
+	void JOIN_RPL(int socket, std::string name);
 };
 
 #endif // SERVER_HPP
