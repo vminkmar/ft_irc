@@ -65,7 +65,8 @@ void User::toggleOnlineStatus(){
     m_onlineStatus = !m_onlineStatus;
 }
 
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> getters */
+
 std::string const& User::getNickname() const{
     return m_nickname;
 }
