@@ -31,7 +31,15 @@ class Channel
         bool            m_channelKey;
 
     public:
+  
+        /* <------ constructors -----> */
+        Channel(std::string const& name);
+        Channel(Channel const& src);
+        Channel& operator=(Channel const& src);
+        Channel();
+        ~Channel();
 
+        /* <------ setters -----> */
         void setName     (std::string const& newName);
         void setTopic    (std::string const& newTopic);
         void setPassword (std::string const& newPassword);
@@ -41,6 +49,7 @@ class Channel
         void toggleTopicEditable();
         void toggleChannelKey();
         
+        /* <------ getters -----> */
         std::string const&     getName()         const;
         std::string const&     getTopic()        const;
         std::string const&     getPassword()     const;
@@ -51,15 +60,10 @@ class Channel
         bool isTopicEditable() const;
         bool isChannelKey()    const;
         
+        /* <------ member functions -----> */
         /* also behaves like set_privilege */
         void addUser   (int socket, UserPrivilege up); 
         void eraseUser(int socket);
-        
-        Channel(std::string const& name);
-        Channel(Channel const& src);
-        Channel& operator=(Channel const& src);
-        Channel();
-        ~Channel();
 
 };
 

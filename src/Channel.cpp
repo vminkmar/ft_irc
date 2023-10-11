@@ -82,7 +82,7 @@ Channel::~Channel()
     print_log("destructor called");
 }
 
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> setters */
 
 void Channel::setName(std::string const& newName) 
 {
@@ -118,6 +118,8 @@ void Channel::toggleChannelKey()
 {
 	m_channelKey = !m_channelKey;
 }
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> getters */
 
 std::string const& Channel::getName() const
 {
@@ -158,6 +160,8 @@ bool Channel::isChannelKey() const
 {
 	return m_channelKey;
 }
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
 void Channel::addUser(int socket, UserPrivilege up)
 {
