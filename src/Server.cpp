@@ -62,16 +62,21 @@ void Server::runServer() {
   for (int i = 1; i < this->m_maxClients; i++) {
     if (this->m_pollfds[i].revents == 0)
       continue;
+    if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
+      socketClosed(this->m_pollfds[i].fd);
     if (this->m_pollfds[i].revents & POLLIN)
       receiveMessages(this->m_pollfds[i].fd);
     	if (this->m_pollfds[i].revents & POLLOUT)
     	  sendMessages(m_pollfds[i].fd);
-    // if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
-    //   socketClosed(i);
 		this->m_pollfds[i].revents = -1;
   }
   // cleanUpSockets();
 }
+
+void Server::socketClosed(int socket){
+	userManagement.setOnlineStatus(socket);
+}
+
 
 void Server::sendMessages(int socket) {
   if (!userManagement.getBuffer(socket, OUTPUT).empty()) {

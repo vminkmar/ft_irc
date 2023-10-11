@@ -20,9 +20,7 @@ static inline void print_log(std::string const& message){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-User::User() : online(true){
-  print_log("default constructor called");
-}
+User::User() : m_online(true) { print_log("default constructor called"); }
 
 User::User(const User &copy) : m_nickname(copy.m_nickname),
                                m_username(copy.m_username),
@@ -72,12 +70,20 @@ std::string const& User::getOutputBuffer() const{
 	return m_outputBuffer;
 }
 
+bool User::getOnline() const{
+    return m_online;
+}
+
 void User::setNickname(std::string const& nickname){
     m_nickname = nickname;
 }
 
 void User::setUsername(std::string const& username){
     m_username = username;
+}
+
+void User::setOnline(){
+    m_online = false;
 }
 
 void User::appendInputBuffer(std::string const& message){
@@ -88,11 +94,11 @@ void User::appendOutputBuffer(std::string const& message){
 	m_outputBuffer.append(message);
 }
 
-void User::eraseInputBuffer(int start, int end){
-	m_inputBuffer = m_inputBuffer.erase(start, end);
+void User::eraseInputBuffer(int start, int end) {
+  m_inputBuffer = m_inputBuffer.erase(start, end);
 }
-void User::eraseOutputBuffer(int start, int end){
-	m_outputBuffer = m_outputBuffer.erase(start, end);
+void User::eraseOutputBuffer(int start, int end) {
+  m_outputBuffer = m_outputBuffer.erase(start, end);
 }
 
 // -------------------------------------------------------------------------- //

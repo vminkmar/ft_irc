@@ -75,6 +75,24 @@ std::string UserManagement::getUser(int socket) const {
   return "";
 }
 
+bool UserManagement::getOnlineStatus(int socket) {
+  for (t_um_users_cit it = m_users.begin(); it != m_users.end(); it++) {
+    if (it->first == socket) {
+      return it->second.getOnline();
+    }
+  }
+	return false;
+}
+
+
+void UserManagement::setOnlineStatus(int socket){
+  for (t_um_users_it it = m_users.begin(); it != m_users.end(); it++) {
+    if (it->first == socket) {
+      return it->second.setOnline();
+    }
+  }
+}
+
 std::string UserManagement::getNumberUsersAsString() const {
   std::stringstream ss;
   ss << m_numberUsers;

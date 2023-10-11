@@ -14,6 +14,7 @@ class User{
         std::string m_username;
         std::string m_inputBuffer;
         std::string m_outputBuffer;
+        bool        m_online;
 
     public:
     
@@ -27,11 +28,13 @@ class User{
         std::string const& getUsername()     const;
         std::string const& getInputBuffer()  const;
         std::string const& getOutputBuffer() const;
+        bool               getOnline()       const;
 
         void setNickname       (std::string const& nickname);
         void setUsername       (std::string const& username);
         void appendInputBuffer (std::string const& message);
         void appendOutputBuffer(std::string const& message);
+        void setOnline();
 
         void eraseOutputBuffer(int start, int end);
         void eraseInputBuffer(int start, int end);
