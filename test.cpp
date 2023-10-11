@@ -20,8 +20,8 @@ int main(void)
     Server s;
 
     log("Adding users to server");
-	s.userManagement.addUser(1, "Hans", "Dieter");
-	s.userManagement.addUser(2, "Walter", "Albert");
+	s.userManagement.addUser(1);
+	s.userManagement.addUser(2);
 
 	log("Testing Parser");
 	std::string tmp = "NICK vminkmar\r\nUSER vminkmar bla";

@@ -49,7 +49,7 @@ public:
   void appendToBuffer(std::string message, int socket, int flag);
   void eraseBuffer(int socket, int flag, int start, int end);
   std::string getBuffer(int socket, int flag);
-  int getSize();
+  int getSize() const;
 	void setOnlineStatus(int socket, bool flag);
 	bool getOnlineStatus(int socket) const;
   /* erase from channels too! */

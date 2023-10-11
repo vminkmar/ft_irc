@@ -122,17 +122,8 @@ std::string UserManagement::getUsernames() const{
   return ss.str();
 }
 
-<<<<<<< HEAD
-void UserManagement::addUser(int socket,
-                             std::string const &nickname,
-                             std::string const &username){
+void UserManagement::addUser(int socket){
   m_users[socket] = User(); /* c11 std::map.emplace */
-=======
-void UserManagement::addUser(int socket) {
-  User user;
-	setOnlineStatus(socket, true);
-  m_users[socket] = user;
->>>>>>> changed functions to get User online status and added socketClosed()
 }
 
 void UserManagement::eraseUser(int socket){
