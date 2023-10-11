@@ -19,7 +19,10 @@ Class Names uppercase
 
     Basics:
         "NICK"
-					- need to check if it is the first message and if the nickname is already set, if so then we need to send an message back to client that the nickname got changed, need to check if nick is already used.
+		    - need to check if it is the first message and if the nickname is 
+             already set, if so then we need to send an message back to client
+             that the nickname got changed, need to check if nick is already
+             used.
 
         "USER"
 					- need to check if user name is already used?
