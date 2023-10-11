@@ -20,7 +20,9 @@ static inline void print_log(std::string const& message){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-User::User() : m_online(true) { print_log("default constructor called"); }
+User::User() : m_onlineStatus(true){
+    print_log("default constructor called");
+}
 
 User::User(const User &copy) : m_nickname(copy.m_nickname),
                                m_username(copy.m_username),
@@ -32,6 +34,58 @@ User::User(const User &copy) : m_nickname(copy.m_nickname),
 User::~User(){
     print_log("destructor called");
 }
+
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> setters */
+
+void User::setNickname(std::string const& nickname){
+    m_nickname = nickname;
+}
+
+void User::setUsername(std::string const& username){
+    m_username = username;
+}
+
+void User::appendInputBuffer(std::string const& message){
+	m_inputBuffer.append(message);
+}
+
+void User::appendOutputBuffer(std::string const& message){
+	m_outputBuffer.append(message);
+}
+
+void User::eraseInputBuffer(int start, int end) {
+  m_inputBuffer = m_inputBuffer.erase(start, end);
+}
+void User::eraseOutputBuffer(int start, int end) {
+  m_outputBuffer = m_outputBuffer.erase(start, end);
+}
+
+void User::toggleOnlineStatus(){
+    m_onlineStatus = !m_onlineStatus;
+}
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
+std::string const& User::getNickname() const{
+    return m_nickname;
+}
+
+std::string const& User::getUsername() const{
+    return m_username;
+}
+
+std::string const& User::getInputBuffer() const{
+    return m_inputBuffer;
+}
+
+std::string const& User::getOutputBuffer() const{
+	return m_outputBuffer;
+}
+
+bool User::getOnlineStatus() const{
+    return m_onlineStatus;
+}
+
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 
@@ -50,58 +104,6 @@ User& User::operator=(const User& src){
         m_outputBuffer = src.m_outputBuffer;
 	}
 	return *this;
-}
-
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
-
-std::string const& User::getNickname() const{
-    return m_nickname;
-}
-
-std::string const& User::getUsername() const{
-    return m_username;
-}
-
-std::string const& User::getInputBuffer() const{
-    return m_inputBuffer;
-}
-
-std::string const& User::getOutputBuffer() const{
-	return m_outputBuffer;
-}
-
-bool User::getOnline() const{
-    return m_online;
-}
-
-void User::setNickname(std::string const& nickname){
-    m_nickname = nickname;
-}
-
-void User::setUsername(std::string const& username){
-    m_username = username;
-}
-
-void User::setOnline(bool status){
-  if (status == false)
-    m_online = false;
-  else
-    m_online = true;
-}
-
-void User::appendInputBuffer(std::string const& message){
-	m_inputBuffer.append(message);
-}
-
-void User::appendOutputBuffer(std::string const& message){
-	m_outputBuffer.append(message);
-}
-
-void User::eraseInputBuffer(int start, int end) {
-  m_inputBuffer = m_inputBuffer.erase(start, end);
-}
-void User::eraseOutputBuffer(int start, int end) {
-  m_outputBuffer = m_outputBuffer.erase(start, end);
 }
 
 // -------------------------------------------------------------------------- //
