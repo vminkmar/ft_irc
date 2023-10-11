@@ -75,7 +75,7 @@ std::string UserManagement::getUser(int socket) const {
   return "";
 }
 
-bool UserManagement::getOnlineStatus(int socket) {
+bool UserManagement::getOnlineStatus(int socket) const {
   for (t_um_users_cit it = m_users.begin(); it != m_users.end(); it++) {
     if (it->first == socket) {
       return it->second.getOnline();
@@ -85,10 +85,14 @@ bool UserManagement::getOnlineStatus(int socket) {
 }
 
 
-void UserManagement::setOnlineStatus(int socket){
+void UserManagement::setOnlineStatus(int socket, bool flag){
   for (t_um_users_it it = m_users.begin(); it != m_users.end(); it++) {
     if (it->first == socket) {
-      return it->second.setOnline();
+			if(flag == false)
+      	return it->second.setOnline(false);
+			else
+      	return it->second.setOnline(true);
+
     }
   }
 }
@@ -118,10 +122,17 @@ std::string UserManagement::getUsernames() const{
   return ss.str();
 }
 
+<<<<<<< HEAD
 void UserManagement::addUser(int socket,
                              std::string const &nickname,
                              std::string const &username){
   m_users[socket] = User(); /* c11 std::map.emplace */
+=======
+void UserManagement::addUser(int socket) {
+  User user;
+	setOnlineStatus(socket, true);
+  m_users[socket] = user;
+>>>>>>> changed functions to get User online status and added socketClosed()
 }
 
 void UserManagement::eraseUser(int socket){

@@ -31,63 +31,64 @@ void Server::createSocket() {
     if (ret <= 0)
       perror("poll");
     if (this->m_pollfds[0].revents & POLLIN)
-			acceptClients();
+      acceptClients();
     runServer();
   }
 }
 
 void Server::acceptClients() {
-    int newSocket;
-    if ((newSocket = accept(this->m_server_fd, (struct sockaddr *)&address,
-                            (socklen_t *)&m_addrlen)) < 0)
-      error("accept");
-    char buffer[30000] = {0};
-    int reading = read(newSocket, buffer, 30000);
-    (void)reading; /* for linux compilation (unused var) */
-    reading = 0;
-    std::cout << buffer << std::endl;
-    memset(buffer, 0, sizeof(buffer));
-    for (int j = 1; j < m_maxClients; j++) {
-      if (this->m_pollfds[j].fd == -1) {
-        this->m_pollfds[j].fd = newSocket;
-        this->m_pollfds[j].revents = POLLIN;
-        break;
-      }
+  int newSocket;
+  if ((newSocket = accept(this->m_server_fd, (struct sockaddr *)&address,
+                          (socklen_t *)&m_addrlen)) < 0)
+    error("accept");
+  char buffer[30000] = {0};
+  int reading = read(newSocket, buffer, 30000);
+  (void)reading; /* for linux compilation (unused var) */
+  reading = 0;
+  std::cout << buffer << std::endl;
+  memset(buffer, 0, sizeof(buffer));
+  for (int j = 1; j < m_maxClients; j++) {
+    if (this->m_pollfds[j].fd == -1) {
+      this->m_pollfds[j].fd = newSocket;
+      this->m_pollfds[j].revents = POLLIN;
+      break;
     }
-    userManagement.addUser(newSocket);
-    // capabilityNegotiation(newSocket);
+  }
+  userManagement.addUser(newSocket);
+ 	std::cout << userManagement.getOnlineStatus(newSocket) << std::endl;
+  // capabilityNegotiation(newSocket);
 }
 
 void Server::runServer() {
   for (int i = 1; i < this->m_maxClients; i++) {
     if (this->m_pollfds[i].revents == 0)
       continue;
-    if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
+    if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL)) {
       socketClosed(this->m_pollfds[i].fd);
+    }
     if (this->m_pollfds[i].revents & POLLIN)
       receiveMessages(this->m_pollfds[i].fd);
-    	if (this->m_pollfds[i].revents & POLLOUT)
-    	  sendMessages(m_pollfds[i].fd);
-		this->m_pollfds[i].revents = -1;
+    if (this->m_pollfds[i].revents & POLLOUT)
+      sendMessages(m_pollfds[i].fd);
+    this->m_pollfds[i].revents = -1;
   }
   // cleanUpSockets();
 }
 
-void Server::socketClosed(int socket){
-	userManagement.setOnlineStatus(socket);
+void Server::socketClosed(int socket) {
+  userManagement.setOnlineStatus(socket, false);
 }
-
 
 void Server::sendMessages(int socket) {
   if (!userManagement.getBuffer(socket, OUTPUT).empty()) {
     size_t end = userManagement.getBuffer(socket, OUTPUT).find("\r\n");
-    while(end != std::string::npos){
-			std::string message = userManagement.getBuffer(socket, OUTPUT);
-    	int sending = send(socket, message.data(), message.length(), 0);
-    	if (sending < 0)
-      	std::cout << "sending" << std::endl;    
+    while (end != std::string::npos) {
+      std::string message = userManagement.getBuffer(socket, OUTPUT);
+      int sending = send(socket, message.data(), message.length(), 0);
+      if (sending < 0)
+        std::cout << "sending" << std::endl;
       userManagement.eraseBuffer(socket, OUTPUT, 0, end + 2);
-		}
+    }
   }
 }
 
@@ -104,12 +105,13 @@ void Server::receiveMessages(int socket) {
 
 void Server::writeToOutputBuffer(int response, int socket) {
   if (response == CAP && m_parameters[0] == "LS") {
-		std::cout << "CAP message send to Socket: " << socket << std::endl;
+    std::cout << "CAP message send to Socket: " << socket << std::endl;
     std::string str = "CAP * LS :cap reply...\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
   }
   if (response == WELCOME) {
-		std::cout << "Welcome message send to: " << userManagement.getUser(socket) << std::endl;
+    std::cout << "Welcome message send to: " << userManagement.getUser(socket)
+              << std::endl;
     std::string str = "001 " + userManagement.getNick(socket) +
                       " :Welcome to the ft_irc network " +
                       userManagement.getNick(socket) + "!" +
@@ -117,7 +119,8 @@ void Server::writeToOutputBuffer(int response, int socket) {
     userManagement.appendToBuffer(str, socket, OUTPUT);
   }
   if (response == PING) {
-		std::cout << "PONG message send to: " << userManagement.getUser(socket) << std::endl;
+    std::cout << "PONG message send to: " << userManagement.getUser(socket)
+              << std::endl;
     std::string str = " PONG :" + m_parameters[0] + "\r\n";
     userManagement.appendToBuffer(str, socket, OUTPUT);
     if (response == QUIT) {
@@ -133,14 +136,14 @@ void Server::Messages(int socket) {
   if (m_command == "CAP") {
     writeToOutputBuffer(CAP, socket);
   } else if (m_command == "NICK") {
-    	this->userManagement.setNick(socket, this->m_parameters[0]);
+    this->userManagement.setNick(socket, this->m_parameters[0]);
   } else if (m_command == "USER") {
-    	this->userManagement.setUser(socket, this->m_parameters[0]);
-    	writeToOutputBuffer(WELCOME, socket);
+    this->userManagement.setUser(socket, this->m_parameters[0]);
+    writeToOutputBuffer(WELCOME, socket);
   } else if (m_command == "PING") {
-    	writeToOutputBuffer(PING, socket);
+    writeToOutputBuffer(PING, socket);
   } else if (m_command == "QUIT")
-    	writeToOutputBuffer(QUIT, socket);
+    writeToOutputBuffer(QUIT, socket);
 }
 
 void Server::parseIncomingMessage(std::string message, int socket) {

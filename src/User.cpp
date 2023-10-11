@@ -82,8 +82,11 @@ void User::setUsername(std::string const& username){
     m_username = username;
 }
 
-void User::setOnline(){
+void User::setOnline(bool status){
+  if (status == false)
     m_online = false;
+  else
+    m_online = true;
 }
 
 void User::appendInputBuffer(std::string const& message){
