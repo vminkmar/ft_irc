@@ -41,12 +41,6 @@ void Server::acceptClients() {
   if ((newSocket = accept(this->m_server_fd, (struct sockaddr *)&address,
                           (socklen_t *)&m_addrlen)) < 0)
     error("accept");
-  char buffer[30000] = {0};
-  int reading = read(newSocket, buffer, 30000);
-  (void)reading; /* for linux compilation (unused var) */
-  reading = 0;
-  std::cout << buffer << std::endl;
-  memset(buffer, 0, sizeof(buffer));
   for (int j = 1; j < m_maxClients; j++) {
     if (this->m_pollfds[j].fd == -1) {
       this->m_pollfds[j].fd = newSocket;
@@ -78,13 +72,14 @@ void Server::socketClosed(int socket) {
 
 void Server::sendMessages(int socket) {
   if (!userManagement.getBuffer(socket, OUTPUT).empty()) {
-    size_t end = userManagement.getBuffer(socket, OUTPUT).find("\r\n");
-    while (end != std::string::npos) {
+    while (!userManagement.getBuffer(socket, OUTPUT).empty()) {
       std::string message = userManagement.getBuffer(socket, OUTPUT);
       int sending = send(socket, message.data(), message.length(), 0);
       if (sending < 0)
         std::cout << "sending" << std::endl;
-      userManagement.eraseBuffer(socket, OUTPUT, 0, end + 2);
+      size_t end = userManagement.getBuffer(socket, OUTPUT).find("\r\n");
+      if (end != std::string::npos)
+        userManagement.eraseBuffer(socket, OUTPUT, 0, end + 2);
     }
   }
 }
@@ -123,7 +118,7 @@ void Server::writeToOutputBuffer(int response, int socket) {
     userManagement.appendToBuffer(str, socket, OUTPUT);
     break;
   case QUIT:
-		std::cout << "hello world" << std::endl;
+    std::cout << "hello world" << std::endl;
     str = userManagement.getNick(socket) + "!" +
           userManagement.getUser(socket) + "@" + "localhost" +
           " QUIT :Goodbye!\r\n";
