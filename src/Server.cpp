@@ -140,9 +140,9 @@ void Server::Messages(int socket) {
     writeToOutputBuffer(PING, socket);
   } else if (m_command == "QUIT")
     writeToOutputBuffer(QUIT, socket);
-  else if (m_command == "PASS") {
-    comparePassword();
-  }
+  // else if (m_command == "PASS") {
+  //   comparePassword();
+  // }
 }
 
 // void Server::comparePassword(){
