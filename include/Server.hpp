@@ -46,7 +46,6 @@ public:
   void createSocket();
   void getPortAndPasswd(char **argv);
 	void parseIncomingMessage(std::string message, int socket);
-	void capabilityNegotiation(int newSocket);
 	void getCommand(std::string &message);
 	void printCommand();
 	void Messages(int socket);
@@ -59,8 +58,6 @@ public:
 	void cleanUpSockets();
 	void checkCompleteMessage(int socket);
 	std::string getParameter(std::string message);
-	void getTrial(std::string &message);
-	void checkMessage(std::string &message);
 };
 
 #endif // SERVER_HPP
