@@ -3,9 +3,9 @@
 #include "../include/Server.hpp"         // needed for Server class
 #include "../include/UserManagement.hpp" // needed for UserManagement class
 
+#include <iostream> // needed for std::cout, std::endl
 #include <sstream>  // needed for std::stringstream
 #include <unistd.h> // needed for read
-#include <iostream> // needed for std::cout, std::endl
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
@@ -31,11 +31,13 @@ void Server::createSocket() {
     error("In bind");
   if (listen(this->m_server_fd, 10) < 0)
     error("listen");
-  this->m_pollfds[0].fd = m_server_fd;
-  this->m_pollfds->events = POLLIN;
+  struct pollfd newServer;
+  newServer.fd = m_server_fd;
+  newServer.events = POLLIN;
+  m_pollfds.push_back(newServer);
   while (1) {
-    int ret = poll(this->m_pollfds, this->m_maxClients, -1);
-    if (ret <= 0)
+    int ret = poll(this->m_pollfds.data(), m_pollfds.size(), 100);
+    if (ret < 0)
       perror("poll");
     if (this->m_pollfds[0].revents & POLLIN)
       acceptClients();
@@ -48,29 +50,29 @@ void Server::acceptClients() {
   if ((newSocket = accept(this->m_server_fd, (struct sockaddr *)&address,
                           (socklen_t *)&m_addrlen)) < 0)
     error("accept");
-  for (int j = 1; j < m_maxClients; j++) {
-    if (this->m_pollfds[j].fd == -1) {
-      this->m_pollfds[j].fd = newSocket;
-      this->m_pollfds[j].revents = POLLIN;
-      break;
-    }
-  }
+  struct pollfd newClient;
+  newClient.fd = newSocket;
+  newClient.revents = -1;
+  this->m_pollfds.push_back(newClient);
   userManagement.addUser(newSocket);
 }
 
 void Server::runServer() {
-  for (int i = 1; i < this->m_maxClients; i++) {
-    if (this->m_pollfds[i].revents == 0)
-      continue;
-    // if (this->m_pollfds[i].revents & (POLLERR | POLLHUP | POLLNVAL)) {
-    //   socketClosed(this->m_pollfds[i].fd);
-    // }
-    if (this->m_pollfds[i].revents & POLLIN)
-      receiveMessages(this->m_pollfds[i].fd);
-    if (this->m_pollfds[i].revents & POLLOUT)
-      sendMessages(m_pollfds[i].fd);
-    this->m_pollfds[i].revents = -1;
+  for (std::vector<pollfd>::iterator it = m_pollfds.begin() + 1; it != m_pollfds.end(); ++it) {
+    if (it->revents == 0){
+			// std::cout << "test1" << std::endl;
+		  continue;
+		}
+    // if (it->revents & (POLLERR | POLLHUP | POLLNVAL))
+    //   socketClosed(it->fd);
+    if (it->revents & POLLIN)
+      receiveMessages(it->fd);
+    if (it->revents & POLLOUT)
+      sendMessages(it->fd);
+    it->revents = 0;
+		// std::cout << "test" << std::endl;
   }
+  // cleanUpSockets
 }
 
 void Server::socketClosed(int socket) {
@@ -81,6 +83,7 @@ void Server::sendMessages(int socket) {
   if (!userManagement.getBuffer(socket, OUTPUT).empty()) {
     while (!userManagement.getBuffer(socket, OUTPUT).empty()) {
       std::string message = userManagement.getBuffer(socket, OUTPUT);
+      std::cout << message << std::endl;
       int sending = send(socket, message.data(), message.length(), 0);
       if (sending < 0)
         std::cout << "sending" << std::endl;
@@ -167,6 +170,7 @@ void Server::Messages(int socket) {
 // 	if(m_passwd == m_parameters[0])
 
 // 	else
+// 		throw sendError()
 // 		writeToOutputBuffer(ERR_PASSWD)
 // }
 
@@ -247,6 +251,5 @@ void Server::error(std::string str) {
 // 	std::string passwd = argv[2];
 // 	m_passwd = passwd;
 // }
-
 
 // -------------------------------------------------------------------------- //

@@ -103,6 +103,7 @@ std::string UserManagement::getUsernames() const{
 
 void UserManagement::addUser(int socket){
   m_users[socket] = User(); /* c11 std::map.emplace */
+	setOnlineStatus(socket, true);
 }
 
 void UserManagement::eraseUser(int socket){

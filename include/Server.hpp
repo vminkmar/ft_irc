@@ -36,7 +36,7 @@ class Server{
         std::vector<int>         m_clients;
         std::vector<std::string> m_parameters;
 
-        struct      pollfd m_pollfds[512];
+        std::vector<pollfd> m_pollfds;
         struct      sockaddr_in address;
 
         int         m_maxClients;
