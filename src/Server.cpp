@@ -52,9 +52,10 @@ void Server::acceptClients() {
     error("accept");
   struct pollfd newClient;
   newClient.fd = newSocket;
-  newClient.revents = -1;
+  newClient.events = POLLIN | POLLOUT;
   this->m_pollfds.push_back(newClient);
   userManagement.addUser(newSocket);
+	this->m_pollfds[0].revents = 0;
 }
 
 void Server::runServer() {
