@@ -1,11 +1,11 @@
 // -------------------------------------------------------------------------- //
 
-#include <cstdlib>                    // needed for MACROS
-#include <iostream>                   // needed for std::cout, std::endl
-#include <string.h>                   // needed for strdup()
+#include <cstdlib>  // needed for MACROS
+#include <iostream> // needed for std::cout, std::endl
+#include <string.h> // needed for strdup()
 
-#include "include/UserManagement.hpp" // needed for UserManagement class
-#include "include/Server.hpp"
+#include "include/Server.hpp" // needed for Server class
+
 #define GREEN "\033[32m"
 #define RESET "\033[0m"
 
@@ -20,8 +20,8 @@ int main(void)
     Server s;
 
     log("Adding users to server");
-	s.userManagement.addUser(1);
-	s.userManagement.addUser(2);
+	s.um.addUser(1);
+	s.um.addUser(2);
 
 	log("Testing Parser");
 	std::string tmp = "NICK vminkmar\r\nUSER vminkmar bla";
@@ -32,7 +32,7 @@ int main(void)
 	s.parseIncomingMessage(test1, 1);
 
     log("Getting Usernames from server");
-    std::cout << s.userManagement.getUsernames() << std::endl;
+    std::cout << s.um.getUsernames() << std::endl;
 
     // log("Getting Usernames from server");
     // std::cout << um.getUsernames() << std::endl;

@@ -89,7 +89,7 @@ void Server::acceptClients(){
     newClient.events = POLLIN | POLLOUT;
     this->m_pollfds.push_back(newClient);
 
-    userManagement.addUser(newSocket);
+    um.addUser(newSocket);
     this->m_pollfds[0].revents = 0; /* current event */
 }
 
@@ -116,21 +116,21 @@ void Server::runServer(){
 }
 
 void Server::socketClosed(int socket){
-    userManagement.setOnlineStatus(socket, false);
+    um.setOnlineStatus(socket, false);
 }
 
 void Server::sendMessages(int socket){
-    if (!userManagement.getBuffer(socket, OUTPUT).empty()){
-        while (!userManagement.getBuffer(socket, OUTPUT).empty()){
-            std::string message = userManagement.getBuffer(socket, OUTPUT);
+    if (!um.getBuffer(socket, OUTPUT).empty()){
+        while (!um.getBuffer(socket, OUTPUT).empty()){
+            std::string message = um.getBuffer(socket, OUTPUT);
             std::cout << message << std::endl;
             int sending = send(socket, message.data(), message.length(), 0);
             if (sending < 0){
                 std::cout << "sending" << std::endl;
             }
-            size_t end = userManagement.getBuffer(socket, OUTPUT).find("\r\n");
+            size_t end = um.getBuffer(socket, OUTPUT).find("\r\n");
             if (end != std::string::npos){
-                userManagement.eraseBuffer(socket, OUTPUT, 0, end + 2);
+                um.eraseBuffer(socket, OUTPUT, 0, end + 2);
             }
         }
     }
@@ -151,48 +151,48 @@ void Server::CAP_RPL(int socket) {
   if (m_parameters[0] == "LS") {
     std::cout << "CAP message send to Socket: " << socket << std::endl;
     std::string str = "CAP * LS :cap reply...\r\n";
-    userManagement.appendToBuffer(str, socket, OUTPUT);
+    um.appendToBuffer(str, socket, OUTPUT);
   }
 }
 
 void Server::WELCOME_RPL(int socket) {
-  std::cout << "Welcome message send to: " << userManagement.getUser(socket)
+  std::cout << "Welcome message send to: " << um.getUser(socket)
             << std::endl;
-  std::string str = "001 " + userManagement.getNick(socket) +
+  std::string str = "001 " + um.getNick(socket) +
                     " :Welcome to the ft_irc network " +
-                    userManagement.getNick(socket) + "!" +
-                    userManagement.getUser(socket) + "@" + HOST + "\r\n";
-  userManagement.appendToBuffer(str, socket, OUTPUT);
+                    um.getNick(socket) + "!" +
+                    um.getUser(socket) + "@" + HOST + "\r\n";
+  um.appendToBuffer(str, socket, OUTPUT);
 }
 
 void Server::PING_RPL(int socket) {
-  std::cout << "PONG message send to: " << userManagement.getUser(socket)
+  std::cout << "PONG message send to: " << um.getUser(socket)
             << std::endl;
   std::string str = " PONG :" + m_parameters[0] + "\r\n";
-  userManagement.appendToBuffer(str, socket, OUTPUT);
+  um.appendToBuffer(str, socket, OUTPUT);
 }
 
 void Server::QUIT_RPL(int socket) {
-  std::string str = userManagement.getNick(socket) + "!" +
-                    userManagement.getUser(socket) + "@" + "localhost" +
+  std::string str = um.getNick(socket) + "!" +
+                    um.getUser(socket) + "@" + "localhost" +
                     " QUIT :Goodbye!\r\n";
-  userManagement.appendToBuffer(str, socket, OUTPUT);
+  um.appendToBuffer(str, socket, OUTPUT);
 }
 
 void Server::JOIN_RPL(int socket, std::string name) {
-  std::string str = userManagement.getNick(socket) + "!" +
-                    userManagement.getUser(socket) + "@" + HOST + " JOIN " +
-                    name + " * :" + userManagement.getUser(socket) + "\r\n";
-  userManagement.appendToBuffer(str, socket, OUTPUT);
+  std::string str = um.getNick(socket) + "!" +
+                    um.getUser(socket) + "@" + HOST + " JOIN " +
+                    name + " * :" + um.getUser(socket) + "\r\n";
+  um.appendToBuffer(str, socket, OUTPUT);
 }
 
 void Server::Messages(int socket) {
   if (m_command == "CAP") {
     CAP_RPL(socket);
   } else if (m_command == "NICK") {
-    this->userManagement.setNick(socket, this->m_parameters[0]);
+    this->um.setNick(socket, this->m_parameters[0]);
   } else if (m_command == "USER") {
-    this->userManagement.setUser(socket, this->m_parameters[0]);
+    this->um.setUser(socket, this->m_parameters[0]);
     WELCOME_RPL(socket);
   } else if (m_command == "PING") {
     PING_RPL(socket);
@@ -200,7 +200,7 @@ void Server::Messages(int socket) {
     QUIT_RPL(socket);
   else if (m_command == "JOIN") {
     m_parameters[0] = m_parameters[0].erase(0, 1);
-    userManagement.addChannel(m_parameters[0]);
+    um.addChannel(m_parameters[0]);
     JOIN_RPL(socket, m_parameters[0]);
   }
   // else if (m_command == "PASS") {
@@ -217,8 +217,8 @@ void Server::Messages(int socket) {
 // }
 
 void Server::parseIncomingMessage(std::string message, int socket) {
-  if (!userManagement.getBuffer(socket, INPUT).empty()) {
-    std::string buffer = userManagement.getBuffer(socket, INPUT);
+  if (!um.getBuffer(socket, INPUT).empty()) {
+    std::string buffer = um.getBuffer(socket, INPUT);
     buffer.append(message);
     message = buffer;
   }
@@ -236,14 +236,14 @@ void Server::parseIncomingMessage(std::string message, int socket) {
     this->m_trail = tmp;
     std::cout << "trail: " << this->m_trail << std::endl;
     message.erase(message.begin(), message.begin() + pos + 2);
-    if (!(userManagement.getBuffer(socket, INPUT).empty()))
-      userManagement.eraseBuffer(socket, INPUT, 0, pos + 2);
+    if (!(um.getBuffer(socket, INPUT).empty()))
+      um.eraseBuffer(socket, INPUT, 0, pos + 2);
     Messages(socket);
     this->m_parameters.clear();
     pos = message.find("\r\n");
   }
   if (!message.empty()) {
-    userManagement.appendToBuffer(message, socket, INPUT);
+    um.appendToBuffer(message, socket, INPUT);
   }
 }
 

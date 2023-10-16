@@ -52,7 +52,7 @@ class Server{
 
     public:
 	
-        UserManagement userManagement;
+        UserManagement um;
 
         /* <------ constructors -----> */
         Server();
