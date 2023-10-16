@@ -6,6 +6,11 @@ Class Names uppercase
 
 # Todos
     
+    Branches
+     <main> <--> dev
+                  --> vale
+                  --> jakob
+
     Erasing from poll_fd vector (multiple clients / clients leaving)
 
     Parallel work on commands
