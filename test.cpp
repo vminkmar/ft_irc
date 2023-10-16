@@ -1,8 +1,8 @@
 // -------------------------------------------------------------------------- //
 
-#include <vector>                     // needed for std::vector
 #include <cstdlib>                    // needed for MACROS
 #include <iostream>                   // needed for std::cout, std::endl
+#include <string.h>                   // needed for strdup()
 
 #include "include/UserManagement.hpp" // needed for UserManagement class
 #include "include/Server.hpp"
@@ -68,6 +68,7 @@ int main(void)
     // um.eraseUser(2);
     // um.printChannelInfo("Test");
 
+    return (EXIT_SUCCESS);
 }
 
 // -------------------------------------------------------------------------- //
