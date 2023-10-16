@@ -5,7 +5,10 @@
 
 #include <iostream> // needed for std::cout, std::endl
 #include <sstream>  // needed for std::stringstream
-#include <unistd.h> // needed for read
+#include <unistd.h> // needed for read()
+#include <cstring>  // needed for memset() (linux compilation)
+#include <stdio.h>  // needed for perror() (linux compilation)
+#include <cstdlib>  // needed for exit() (linux compilation)
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
@@ -15,95 +18,142 @@ Server::~Server(){};
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
 void Server::createSocket() {
-  this->m_addrlen = sizeof(this->address);
-  if ((this->m_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
-    error("In socket");
-  int reuseaddr = 1;
-  if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr,
-                 sizeof(reuseaddr)) == -1)
-    error("socketopt");
-  this->address.sin_family = AF_INET;
-  this->address.sin_addr.s_addr = INADDR_ANY;
-  this->address.sin_port = htons(PORT);
-  memset(this->address.sin_zero, '\0', sizeof(this->address.sin_zero));
-  if (bind(this->m_server_fd, reinterpret_cast<struct sockaddr *>(&address),
-           sizeof(this->address)) < 0)
-    error("In bind");
-  if (listen(this->m_server_fd, 10) < 0)
-    error("listen");
-  struct pollfd newServer;
-  newServer.fd = m_server_fd;
-  newServer.events = POLLIN;
-  m_pollfds.push_back(newServer);
-  while (1) {
-    int ret = poll(this->m_pollfds.data(), m_pollfds.size(), 100);
-    if (ret < 0)
-      perror("poll");
-    if (this->m_pollfds[0].revents & POLLIN)
-      acceptClients();
-    runServer();
-  }
-}
+  
+    /* get sizeof of struct sockaddr_in address */
+    this->m_addrlen = sizeof(this->address);
 
-void Server::acceptClients() {
-  int newSocket;
-  if ((newSocket = accept(this->m_server_fd, (struct sockaddr *)&address,
-                          (socklen_t *)&m_addrlen)) < 0)
-    error("accept");
-  struct pollfd newClient;
-  newClient.fd = newSocket;
-  newClient.events = POLLIN | POLLOUT;
-  this->m_pollfds.push_back(newClient);
-  userManagement.addUser(newSocket);
-	this->m_pollfds[0].revents = 0;
-}
-
-void Server::runServer() {
-  for (std::vector<pollfd>::iterator it = m_pollfds.begin() + 1; it != m_pollfds.end(); ++it) {
-    if (it->revents == 0){
-			// std::cout << "test1" << std::endl;
-		  continue;
-		}
-    // if (it->revents & (POLLERR | POLLHUP | POLLNVAL))
-    //   socketClosed(it->fd);
-    if (it->revents & POLLIN)
-      receiveMessages(it->fd);
-    if (it->revents & POLLOUT)
-      sendMessages(it->fd);
-    it->revents = 0;
-		// std::cout << "test" << std::endl;
-  }
-  // cleanUpSockets
-}
-
-void Server::socketClosed(int socket) {
-  userManagement.setOnlineStatus(socket, false);
-}
-
-void Server::sendMessages(int socket) {
-  if (!userManagement.getBuffer(socket, OUTPUT).empty()) {
-    while (!userManagement.getBuffer(socket, OUTPUT).empty()) {
-      std::string message = userManagement.getBuffer(socket, OUTPUT);
-      std::cout << message << std::endl;
-      int sending = send(socket, message.data(), message.length(), 0);
-      if (sending < 0)
-        std::cout << "sending" << std::endl;
-      size_t end = userManagement.getBuffer(socket, OUTPUT).find("\r\n");
-      if (end != std::string::npos)
-        userManagement.eraseBuffer(socket, OUTPUT, 0, end + 2);
+    /* set socket int to m_server_fd */
+    if ((this->m_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0){
+        error("In socket");
     }
-  }
+
+    /* @note is this a flag? */
+    int reuseaddr = 1;
+
+    /* set socket options */
+    if (setsockopt(m_server_fd,
+                   SOL_SOCKET,
+                   SO_REUSEADDR,
+                   &reuseaddr,
+                   sizeof(reuseaddr)) == -1){
+        error("socketopt");
+    }
+    this->address.sin_family = AF_INET;
+    this->address.sin_addr.s_addr = INADDR_ANY;
+    /* use of conversion function htons (host byte -> network byte order) */
+    this->address.sin_port = htons(PORT);
+    memset(this->address.sin_zero, '\0', sizeof(this->address.sin_zero));
+
+    /* bind address to socket */
+    if (bind(this->m_server_fd,
+             reinterpret_cast<struct sockaddr *>(&address),
+             sizeof(this->address)) < 0){
+        error("In bind");
+    }
+
+    /* makes socket ready to listen for clients */
+    if (listen(this->m_server_fd, 10) < 0){
+        error("listen");
+    }
+
+
+    struct pollfd newServer;        /* @note naming newServer? */
+    newServer.fd = m_server_fd;
+    newServer.events = POLLIN;
+    m_pollfds.push_back(newServer);
+    /* @note will this ever run out of scope? */
+    /* @note will m_pollfds(std::vec) take care of destruction / erasing? */
+
+    while (1){
+        /* waits for event on filedescriptor */
+        int ret = poll(this->m_pollfds.data(), m_pollfds.size(), 100);
+        if (ret < 0){
+            perror("poll"); /* perror instead of error? */
+        }
+
+        /* if there is some incoming event */
+        if (this->m_pollfds[0].revents & POLLIN){
+            acceptClients();
+        }
+        runServer();
+    }
+}
+
+void Server::acceptClients(){
+    
+    /* accepts client on newSocket */
+    int newSocket;
+    if ((newSocket = accept(this->m_server_fd,
+                     (struct sockaddr *)&address,
+                     (socklen_t *)&m_addrlen)) < 0){
+         error("accept");
+    }
+
+    /* @note is this the same vector that has newServer? */
+    struct pollfd newClient; 
+    newClient.fd = newSocket;
+    newClient.events = POLLIN | POLLOUT;
+    this->m_pollfds.push_back(newClient);
+
+    userManagement.addUser(newSocket);
+    this->m_pollfds[0].revents = 0; /* @note what is this doing? */
+}
+
+void Server::runServer(){
+    
+    /* @note runs through all fd and checks if there is any */
+    /* incoming / outcoming messages? */
+    for (std::vector<pollfd>::iterator it = m_pollfds.begin() + 1;
+         it != m_pollfds.end();
+         ++it){
+        if (it->revents == 0){
+        // std::cout << "test1" << std::endl;
+            continue;
+	    }
+        // if (it->revents & (POLLERR | POLLHUP | POLLNVAL))
+        //   socketClosed(it->fd);
+        if (it->revents & POLLIN){
+            receiveMessages(it->fd);
+        }
+        if (it->revents & POLLOUT){
+            sendMessages(it->fd);
+        }
+        it->revents = 0;
+	    // std::cout << "test" << std::endl;
+    }
+    // cleanUpSockets
+}
+
+void Server::socketClosed(int socket){
+    userManagement.setOnlineStatus(socket, false);
+}
+
+void Server::sendMessages(int socket){
+    if (!userManagement.getBuffer(socket, OUTPUT).empty()){
+        while (!userManagement.getBuffer(socket, OUTPUT).empty()){
+            std::string message = userManagement.getBuffer(socket, OUTPUT);
+            std::cout << message << std::endl;
+            int sending = send(socket, message.data(), message.length(), 0);
+            if (sending < 0){
+                std::cout << "sending" << std::endl;
+            }
+            size_t end = userManagement.getBuffer(socket, OUTPUT).find("\r\n");
+            if (end != std::string::npos){
+                userManagement.eraseBuffer(socket, OUTPUT, 0, end + 2);
+            }
+        }
+    }
 }
 
 void Server::receiveMessages(int socket) {
-  char buffer[30000];
-  memset(buffer, 0, sizeof(buffer));
-  int valread = read(socket, buffer, sizeof(buffer));
-  (void)valread; /* for linux compilation! (unused var) */
-  valread = 0;   // error
-  std::string message = buffer;
-  parseIncomingMessage(message, socket);
-  memset(buffer, 0, sizeof(buffer));
+    char buffer[30000];
+    memset(buffer, 0, sizeof(buffer));
+    int valread = read(socket, buffer, sizeof(buffer));
+    (void)valread; /* for linux compilation! (unused var) */
+    valread = 0;   // error
+    std::string message = buffer;
+    parseIncomingMessage(message, socket);
+    memset(buffer, 0, sizeof(buffer));
 }
 
 void Server::CAP_RPL(int socket) {
