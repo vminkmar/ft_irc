@@ -164,18 +164,27 @@ void Server::Messages(int socket){
     }
     else if (m_command == "NICK")
     {
-        if(this->um.getNick(socket) == "")
-					this->um.setNick(socket, this->m_parameters[0]);
-				else
-				{
-					if(um.checkNickname(this->m_parameters[0]) == false){
-						NICKCHANGE_RPL(socket, m_parameters[0]);
-						um.setNick(socket, this->m_parameters[0]);
-					}
-					else{
-						ERR_NICKNAMEINUSE(socket, m_parameters[0]);
-					}
+			if(m_parameters.empty()){
+				ERR_NONICKNAMEGIVEN(socket);
+				return;
+			}
+			if(checkUnallowedCharacters(m_parameters[0]) == true){
+				ERR_ERRONEUSNICKNAME(socket, m_parameters[0]);
+				return;
+			}
+      if(this->um.getNick(socket) == ""){
+				this->um.setNick(socket, this->m_parameters[0]);
+			}
+			else
+			{
+				if(um.checkNickname(this->m_parameters[0]) == false){
+					NICKCHANGE_RPL(socket, m_parameters[0]);
+					um.setNick(socket, this->m_parameters[0]);
 				}
+				else{
+					ERR_NICKNAMEINUSE(socket, m_parameters[0]);
+				}
+			}
     }
     else if (m_command == "USER")
     {

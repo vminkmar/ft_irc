@@ -43,11 +43,34 @@ void Server::NICKCHANGE_RPL(int socket, std::string newNick){
   um.appendToBuffer(str, socket, OUTPUT);
 }
 
+bool Server::checkUnallowedCharacters(std::string nickname){
+	const std::string unallowedChars = " !@#$%^&*()[]{}<>:;,/";
+	for(size_t i = 0; i < unallowedChars.length(); i++)
+	{
+		size_t find = nickname.find(unallowedChars[i]);
+		if(find != std::string::npos)
+			return true; 
+
+	}
+	return false;
+}
 
 void Server::ERR_NICKNAMEINUSE(int socket, std::string nick){
-	std::cout << "Error: Username already in use" << std::endl;
+	std::cout << "Error: Nickname already in use" << std::endl;
 	std::string str = "433 " + nick + ":Nickname is already in use\r\n";
 	um.appendToBuffer(str, socket, OUTPUT);
 }
 
+void Server::ERR_ERRONEUSNICKNAME(int socket, std::string nick){
+	std::cout << "Error: Nickname has unallowed characters" << std::endl;
+	std::string str = "432 " + nick + ":Erroneous nickname\r\n";
+	um.appendToBuffer(str, socket, OUTPUT);
+}
+
+
+void Server::ERR_NONICKNAMEGIVEN(int socket){
+	std::cout << "Error: Username already in use" << std::endl;
+	std::string str = "431 :No nickname given\r\n";
+	um.appendToBuffer(str, socket, OUTPUT);
+}
 // -------------------------------------------------------------------------- //
