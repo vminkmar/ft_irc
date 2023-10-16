@@ -17,11 +17,13 @@
 //#include <sys/socket.h>
 //#include <sys/types.h>
 
-#include "../include/UserManagement.hpp" // needed for UserManagement class
+#include "UserManagement.hpp" // needed for UserManagement class
 
 #include <vector>       // needed for std::vector
-#include <netinet/in.h> // needed for sockaddr_in
 #include <poll.h>       // needed for poll_fd
+
+#include <string>       // needed for std::string
+#include <netinet/in.h> // needed for sockaddr_in
 
 //IP_ADDRESS 127.0.0.1
 #define PORT 6667
@@ -35,7 +37,7 @@ class Server{
 
         std::vector<int>         m_clients;    /* saves fd/sockets of clients */
         std::vector<std::string> m_parameters;
-        std::vector<pollfd>      m_pollfds;
+        std::vector<pollfd>      m_pollfds; /* holds server and client fd's */
 
         struct      sockaddr_in  address;
 
@@ -50,7 +52,7 @@ class Server{
 
     public:
 	
-        UserManagement userManagement; /* @note mb rename to um */
+        UserManagement userManagement;
 
         /* <------ constructors -----> */
         Server();

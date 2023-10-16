@@ -27,9 +27,7 @@ void Server::createSocket() {
         error("In socket");
     }
 
-    /* @note is this a flag? */
     int reuseaddr = 1;
-
     /* set socket options */
     if (setsockopt(m_server_fd,
                    SOL_SOCKET,
@@ -56,13 +54,10 @@ void Server::createSocket() {
         error("listen");
     }
 
-
-    struct pollfd newServer;        /* @note naming newServer? */
+    struct pollfd newServer;
     newServer.fd = m_server_fd;
     newServer.events = POLLIN;
     m_pollfds.push_back(newServer);
-    /* @note will this ever run out of scope? */
-    /* @note will m_pollfds(std::vec) take care of destruction / erasing? */
 
     while (1){
         /* waits for event on filedescriptor */
@@ -89,20 +84,16 @@ void Server::acceptClients(){
          error("accept");
     }
 
-    /* @note is this the same vector that has newServer? */
     struct pollfd newClient; 
     newClient.fd = newSocket;
     newClient.events = POLLIN | POLLOUT;
     this->m_pollfds.push_back(newClient);
 
     userManagement.addUser(newSocket);
-    this->m_pollfds[0].revents = 0; /* @note what is this doing? */
+    this->m_pollfds[0].revents = 0; /* current event */
 }
 
 void Server::runServer(){
-    
-    /* @note runs through all fd and checks if there is any */
-    /* incoming / outcoming messages? */
     for (std::vector<pollfd>::iterator it = m_pollfds.begin() + 1;
          it != m_pollfds.end();
          ++it){
