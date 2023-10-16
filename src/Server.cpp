@@ -98,11 +98,10 @@ void Server::runServer(){
          it != m_pollfds.end();
          ++it){
         if (it->revents == 0){
-        // std::cout << "test1" << std::endl;
             continue;
 	    }
-        // if (it->revents & (POLLERR | POLLHUP | POLLNVAL))
-        //   socketClosed(it->fd);
+        if (it->revents & (POLLERR | POLLHUP | POLLNVAL))
+          socketClosed(it->fd);
         if (it->revents & POLLIN){
             receiveMessages(it->fd);
         }
@@ -110,10 +109,20 @@ void Server::runServer(){
             sendMessages(it->fd);
         }
         it->revents = 0;
-	    // std::cout << "test" << std::endl;
     }
-    // cleanUpSockets
+    cleanUpSockets();
 }
+
+void Server::cleanUpSockets(){
+	for(std::vector<pollfd>::iterator it = m_pollfds.begin() + 1; it != m_pollfds.end();){
+		if(um.getOnlineStatus(it->fd) == false){
+			it = m_pollfds.erase(it);
+		}
+		else
+			++it;
+	}
+}
+
 
 void Server::socketClosed(int socket){
     um.setOnlineStatus(socket, false);
