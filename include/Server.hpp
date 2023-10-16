@@ -33,11 +33,11 @@ class Server{
 
         // char buffer[1024]; /* @note needed ? */
 
-        std::vector<int>         m_clients;
+        std::vector<int>         m_clients;    /* saves fd/sockets of clients */
         std::vector<std::string> m_parameters;
+        std::vector<pollfd>      m_pollfds;
 
-        std::vector<pollfd> m_pollfds;
-        struct      sockaddr_in address;
+        struct      sockaddr_in  address;
 
         int         m_maxClients;
         int         m_server_fd;
@@ -61,10 +61,11 @@ class Server{
         void getCommand(std::string &message);
         // void getPortAndPasswd(char **argv); /* @note no implement. */
 
+        void createSocket(); /* this function essent. runs the whole server */
+        
         /* <------ setup -----> */
         void runServer();
         void error(std::string str);
-        void createSocket();
         void socketClosed(int i);
         void acceptClients();
         void cleanUpSockets();
