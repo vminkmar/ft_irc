@@ -3,7 +3,8 @@
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
-#include "User.hpp" // needed for User class
+#include "UserPrivilege.hpp" // needed for UserPrivilege ENUM
+
 #include <string>   // needed for std::string
 #include <map>      // needed for std::map <-- C11 would be unordered_map
 
