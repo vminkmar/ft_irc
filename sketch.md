@@ -5,19 +5,22 @@ Class Names uppercase
 # Questions
 
 # Todos
+    
+    Erasing from poll_fd vector (multiple clients / clients leaving)
 
-    Consistent Formatting
-     --> Update Server class (considering adding new .cpp files)
+    Parallel work on commands
+        --> cmds_vale.cpp
+            --> NICK
+            --> USER
+        --> cmds_jakob.cpp
+            --> <CHANNEL> commands
 
-    Implement example command
-     --> Rigouros testing and error handling so we have a "prime example"
-
-    Implement all commands
 
 # Commands
     transform parameters in vector and at trail after : to a string
 
     Basics:
+
         "NICK"
 		    - need to check if it is the first message and if the nickname is 
              already set, if so then we need to send an message back to client
@@ -30,7 +33,8 @@ Class Names uppercase
         "PASS"
 			-need to add it at the end
         "QUIT"
-		    - User should leave all channels, User gets erased from all containers and we need to delete user from pollfd struct or vector.
+		    - User should leave all channels, User gets erased from all 
+            - containers and we need to delete user from pollfd struct or vector.
 
         "PRIVMSG"
 			- m_parameters[0] are users as well as channels (msgtarget)
@@ -38,8 +42,7 @@ Class Names uppercase
 
         "PING"/"PONG"
 			works
-
-
+        
         "ERROR" ?
         "RESTART"	?
         "NAMES" ?
@@ -57,8 +60,6 @@ Class Names uppercase
 			- check if a Channel with the same name exists
 			- first User that creates a Channel needs to be operator
 			- User gets join message
-
-
 
         "KICK"   /* operator */
 			- remove User from vector
@@ -97,7 +98,7 @@ Class Names uppercase
     Done:
 				"PING/PONG"
 
-# Documenation
+# Documentation
 		All incoming Messages are parsed in 3 Parts, COMMAND, PARAMETERS and 
         TRAIL. Command is always the first part of themessage. In the function
         Server::Messages you always need to look for m_command and after that
@@ -105,3 +106,9 @@ Class Names uppercase
         is stored in m_trail but mostly you won't need it but you need to look
         it upin the RFC2812. If you want to search for other stuff then you
         look up RFC2810-RFC2813. If you have any question write me a message.
+
+# Example Command on Client
+ /nick jwill
+    --> should log a message on the server 
+ /huhu hallo
+    --> not a valid command, client will give error message
