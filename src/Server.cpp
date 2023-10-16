@@ -147,62 +147,35 @@ void Server::receiveMessages(int socket) {
     memset(buffer, 0, sizeof(buffer));
 }
 
-void Server::CAP_RPL(int socket) {
-  if (m_parameters[0] == "LS") {
-    std::cout << "CAP message send to Socket: " << socket << std::endl;
-    std::string str = "CAP * LS :cap reply...\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-  }
-}
-
-void Server::WELCOME_RPL(int socket) {
-  std::cout << "Welcome message send to: " << um.getUser(socket)
-            << std::endl;
-  std::string str = "001 " + um.getNick(socket) +
-                    " :Welcome to the ft_irc network " +
-                    um.getNick(socket) + "!" +
-                    um.getUser(socket) + "@" + HOST + "\r\n";
-  um.appendToBuffer(str, socket, OUTPUT);
-}
-
-void Server::PING_RPL(int socket) {
-  std::cout << "PONG message send to: " << um.getUser(socket)
-            << std::endl;
-  std::string str = " PONG :" + m_parameters[0] + "\r\n";
-  um.appendToBuffer(str, socket, OUTPUT);
-}
-
-void Server::QUIT_RPL(int socket) {
-  std::string str = um.getNick(socket) + "!" +
-                    um.getUser(socket) + "@" + "localhost" +
-                    " QUIT :Goodbye!\r\n";
-  um.appendToBuffer(str, socket, OUTPUT);
-}
-
-void Server::JOIN_RPL(int socket, std::string name) {
-  std::string str = um.getNick(socket) + "!" +
-                    um.getUser(socket) + "@" + HOST + " JOIN " +
-                    name + " * :" + um.getUser(socket) + "\r\n";
-  um.appendToBuffer(str, socket, OUTPUT);
-}
-
-void Server::Messages(int socket) {
-  if (m_command == "CAP") {
-    CAP_RPL(socket);
-  } else if (m_command == "NICK") {
-    this->um.setNick(socket, this->m_parameters[0]);
-  } else if (m_command == "USER") {
-    this->um.setUser(socket, this->m_parameters[0]);
-    WELCOME_RPL(socket);
-  } else if (m_command == "PING") {
-    PING_RPL(socket);
-  } else if (m_command == "QUIT")
-    QUIT_RPL(socket);
-  else if (m_command == "JOIN") {
-    m_parameters[0] = m_parameters[0].erase(0, 1);
-    um.addChannel(m_parameters[0]);
-    JOIN_RPL(socket, m_parameters[0]);
-  }
+void Server::Messages(int socket){
+    
+    if (m_command == "CAP")
+    {
+        CAP_RPL(socket);
+    }
+    else if (m_command == "NICK")
+    {
+        this->um.setNick(socket, this->m_parameters[0]);
+    }
+    else if (m_command == "USER")
+    {
+        this->um.setUser(socket, this->m_parameters[0]);
+        WELCOME_RPL(socket);
+    }
+    else if (m_command == "PING")
+    {
+        PING_RPL(socket);
+    }
+    else if (m_command == "QUIT")
+    {
+        QUIT_RPL(socket);
+    }
+    else if (m_command == "JOIN")
+    {
+        m_parameters[0] = m_parameters[0].erase(0, 1);
+        um.addChannel(m_parameters[0]);
+        JOIN_RPL(socket, m_parameters[0]);
+    }
   // else if (m_command == "PASS") {
   //   comparePassword();
   // }

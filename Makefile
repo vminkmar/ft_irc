@@ -1,24 +1,27 @@
-NAME			:= ircserv
+NAME            := ircserv
 
-CC				:= c++
+CC              := c++
 
-RM				:= rm -f
+RM              := rm -f
 
-INCLUDE			:= include
+INCLUDE         := include
 
 DEBUG_FLAG      := $(shell echo $$DEBUG_FLAG)
 #-MMD
-CFLAGS			:= -Wall -Wextra -Werror -std=c++98 -I $(INCLUDE) $(DEBUG_FLAG) 
+CFLAGS          := -Wall -Wextra -Werror -std=c++98 -I $(INCLUDE) $(DEBUG_FLAG) 
 
 VPATH           := src/
 
-SRC_FILES		:= main.cpp Channel.cpp Server.cpp User.cpp UserManagement.cpp ServerResponses.cpp
+SRC_FILES       := main.cpp \
+                   Server.cpp cmds_vale.cpp cmds_jakob.cpp \
+                   Channel.cpp User.cpp UserManagement.cpp \
+                   ServerResponses.cpp
 
-ODIR			:= obj
+ODIR            := obj
 
-OBJS_O			:= $(SRC_FILES:%.cpp=$(ODIR)/%.o)
+OBJS_O          := $(SRC_FILES:%.cpp=$(ODIR)/%.o)
 
-OBJS_D			:= $(SRC_FILES:%.cpp=$(ODIR)/%.d)
+OBJS_D          := $(SRC_FILES:%.cpp=$(ODIR)/%.d)
 
 all: $(NAME)
 
