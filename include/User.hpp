@@ -3,8 +3,7 @@
 #ifndef USER_HPP
 #define USER_HPP
 
-#include "UserPrivilege.hpp" // needed for ENUM
-#include <string>            // needed for std::string
+#include <string> // needed for std::string
 
 class User {
 
