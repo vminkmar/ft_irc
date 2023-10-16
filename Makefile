@@ -12,10 +12,13 @@ CFLAGS          := -Wall -Wextra -Werror -std=c++98 -I $(INCLUDE) $(DEBUG_FLAG)
 
 VPATH           := src/
 
-SRC_FILES       := main.cpp \
-                   Server.cpp cmds_vale.cpp cmds_jakob.cpp \
+SRC_MAIN        := main.cpp
+SRC_SOURCES     := Server.cpp cmds_vale.cpp cmds_jakob.cpp \
                    Channel.cpp User.cpp UserManagement.cpp \
                    ServerResponses.cpp
+SRC_FULL_SOURCES= $(foreach src,$(SRC_SOURCES),src/$(src))
+
+SRC_FILES       := $(SRC_MAIN) $(SRC_SOURCES)
 
 ODIR            := obj
 
@@ -46,7 +49,7 @@ re: fclean all
 .PHONY: all clean fclean re test test_build
 
 test_build:
-	$(CC) $(CFLAGS) test.cpp src/UserManagement.cpp src/Channel.cpp src/User.cpp src/Server.cpp -o test 
+	$(CC) $(CFLAGS) $(SRC_FULL_SOURCES) test.cpp -o test 
 
 test: test_build
 	@clear
