@@ -36,7 +36,7 @@ class UserManagement{
 
         bool checkForUser(int socket) const;
         bool checkForChannel(std::string name) const;
-
+				bool checkUsername(std::string username) const;
     public:
 
         /* <------ constructors-----> */
@@ -44,6 +44,7 @@ class UserManagement{
         ~UserManagement();
 
         /* <------ user operations-----> */
+				bool checkNickname(std::string nickname) const;
         void setNick(int socket, std::string parameter);
         void setUser(int socket, std::string user);
         std::string getNick(int socket) const;

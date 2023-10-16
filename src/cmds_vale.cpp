@@ -37,4 +37,17 @@ void Server::QUIT_RPL(int socket) {
   um.appendToBuffer(str, socket, OUTPUT);
 }
 
+void Server::NICKCHANGE_RPL(int socket, std::string newNick){
+	std::cout << um.getNick(socket) + " got changed to " + newNick << std::endl;
+	std::string str = um.getNick(socket) + "!" + um.getUser(socket) + "@" + "localhost" + " " + "NICK" + " :" + newNick + "\r\n";
+  um.appendToBuffer(str, socket, OUTPUT);
+}
+
+
+void Server::ERR_NICKNAMEINUSE(int socket, std::string nick){
+	std::cout << "Error: Username already in use" << std::endl;
+	std::string str = "433 " + nick + ":Nickname is already in use\r\n";
+	um.appendToBuffer(str, socket, OUTPUT);
+}
+
 // -------------------------------------------------------------------------- //

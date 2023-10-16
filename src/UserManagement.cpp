@@ -35,6 +35,15 @@ UserManagement::~UserManagement(){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> private member functions */
 
+bool UserManagement::checkNickname(std::string nickname) const{
+	for(t_um_users_cit it = m_users.begin(); it != m_users.end(); ++it){
+		if(it->second.getNickname() == nickname)
+			return true;
+	}
+	return false;
+}
+
+
 bool UserManagement::checkForUser(int socket) const{
     return m_users.find(socket) != m_users.end();
 }

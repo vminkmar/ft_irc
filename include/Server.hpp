@@ -86,6 +86,11 @@ class Server{
         void CAP_RPL(int socket);
         void PING_RPL(int socket);
         void JOIN_RPL(int socket, std::string name);
+				void NICKCHANGE_RPL(int socket, std::string newNick);
+
+				/* <------ server Errors -----> */
+							/* <---- NICK ---> */
+				void ERR_NICKNAMEINUSE(int socket, std::string nick);
 
         /* <------ else -----> */
         void printCommand();
