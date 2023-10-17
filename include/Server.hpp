@@ -85,7 +85,11 @@ class Server{
 
         /* <------ else -----> */
         void printCommand();
-        void log(std::string message); /* used for logging with colour */
+
+        void log    (std::string message); /* YELLOW */
+        void log_in (std::string message); /* CYAN */
+        void log_out(std::string message); /* PINK */
+        void log_err(std::string message); /* RED */
 
 };
 

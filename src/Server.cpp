@@ -10,8 +10,18 @@
 #include <stdio.h>  // needed for perror() (linux compilation)
 #include <cstdlib>  // needed for exit() (linux compilation)
 
-#define CYAN  "\033[36m"
-#define RESET "\033[0m"
+/* LOG COLOURING */
+#define YELLOW "\033[33m"
+#define PINK   "\033[95m"
+#define CYAN   "\033[36m"
+#define RED    "\033[31m"
+#define WHITE  "\033[37m"
+
+#define COLOUR_LOG WHITE
+#define COLOUR_IN  CYAN
+#define COLOUR_OUT PINK
+#define COLOUR_ERR RED
+#define RESET      "\033[0m"
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
@@ -237,7 +247,7 @@ void Server::parseIncomingMessage(std::string message, int socket) {
     }
 
     /* @note error prone */
-    log("Incoming message: " + 
+    log_in("Incoming message: " + 
             message.substr(0, message.find_last_not_of("\n") + 1));
 
     /* find terminating characters \r\n */
@@ -312,8 +322,21 @@ void Server::error(std::string str) {
   exit(1);
 }
 
+
 void Server::log(std::string message){
-    std::cout << CYAN << message << RESET << std::endl;
+    std::cout << COLOUR_LOG << message << RESET << std::endl;
+}
+
+void Server::log_in(std::string message){
+    std::cout << COLOUR_IN << message << RESET << std::endl;
+}
+
+void Server::log_out(std::string message){
+    std::cout << COLOUR_OUT << message << RESET << std::endl;
+}
+
+void Server::log_err(std::string message){
+    std::cout << COLOUR_ERR << "Error: " << message << RESET << std::endl;
 }
 
 // void Server::getPortAndPasswd(char **argv) {
