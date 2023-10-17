@@ -14,7 +14,9 @@ VPATH           := src/
 
 SRC_MAIN        := main.cpp
 SRC_SOURCES     := Server.cpp cmds_vale.cpp cmds_jakob.cpp \
-                   Channel.cpp User.cpp UserManagement.cpp \
+				   UserManagement.cpp UserManagementUsers.cpp UserManagementChannels.cpp\
+                   Channel.cpp \
+				   User.cpp \
                    ServerResponses.cpp
 SRC_FULL_SOURCES= $(foreach src,$(SRC_SOURCES),src/$(src))
 

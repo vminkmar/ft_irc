@@ -193,7 +193,7 @@ void Server::Messages(int socket){
         }
         else
         {
-            if(um.checkNickname(this->m_parameters[0]) == false)
+            if(um.checkForNickname(this->m_parameters[0]) == false)
             {
                 NICKCHANGE_RPL(socket, m_parameters[0]);
                 um.setNickname(socket, this->m_parameters[0]);
