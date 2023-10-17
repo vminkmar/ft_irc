@@ -3,7 +3,6 @@
 #include "../include/Channel.hpp" // needed for Channel class
 
 #include <iostream>  // needed for std::cerr, std::endl
-#include <sstream>   // needed for std::stringstream
 
 #ifndef DEBUG
 # define DEBUG 0
