@@ -3,17 +3,12 @@
 #include "../include/Server.hpp" // needed for Server class
 
 #include <iostream> // needed for std::cout, std::endl
-#include <sstream>  // needed for std::stringstream
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server replies */
 
 void Server::RPL_CAP(int socket) {
   if (m_parameters[0] == "LS") {
     
-    std::stringstream ss;
-    ss << "CAP message send to Socket: " << socket << std::endl;
-    log_out(ss.str());
-
     //std::cout << "CAP message send to Socket: " << socket << std::endl;
 
     std::string str = "CAP * LS :cap reply...\r\n";
@@ -22,7 +17,6 @@ void Server::RPL_CAP(int socket) {
 }
 
 void Server::RPL_WELCOME(int socket) {
-    log_out("Welcome message send to: " + um.getUsername(socket));
     //std::cout << "Welcome message send to: " << um.getUsername(socket)
     //         << std::endl;
     
@@ -34,7 +28,6 @@ void Server::RPL_WELCOME(int socket) {
 }
 
 void Server::RPL_PING(int socket) {
-    log_out("PONG message send to: " + um.getUsername(socket));
 
     //std::cout << "PONG message send to: " << um.getUsername(socket)
             //<< std::endl;
@@ -45,7 +38,6 @@ void Server::RPL_PING(int socket) {
 }
 
 void Server::RPL_QUIT(int socket) {
-    log("QUIT command by: " + um.getUsername(socket));
     std::string str = um.getNickname(socket) + "!" +
                     um.getUsername(socket) + "@" + "localhost" +
                     " QUIT :Goodbye!\r\n";
@@ -60,10 +52,6 @@ void Server::RPL_JOIN(int socket, std::string name) {
 }
 
 void Server::RPL_NICKCHANGE(int socket, std::string newNick){
-    log(um.getUsername(socket)
-        + " changed his Nickname from <" 
-        + um.getNickname(socket) + "> to <" + newNick + ">");
-
 	//std::cout << um.getNickname(socket) + " got changed to " + newNick << std::endl;
     std::string str = ":" + um.getNickname(socket)
                       + "!" + um.getUsername(socket)

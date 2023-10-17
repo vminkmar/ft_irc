@@ -22,6 +22,7 @@ void t_incoming_message(std::string message, int socket){
 void t_command(std::string message, int socket){
     log("Testing command");
     s.parseIncomingMessage(message.c_str(), socket);
+    s.sendMessages(socket);
 }
 
 void t_show_users(){
@@ -35,7 +36,9 @@ void t_setup(){
     log("Adding User/Client to server at socket #1");
     s.um.addUser(1);
     t_incoming_message("USER Dummy-User\r\n", 1);
+    s.sendMessages(1);
     t_incoming_message("NICK Dummy-Test\r\n", 1);
+    s.sendMessages(1);
 }
 
 int main(void)

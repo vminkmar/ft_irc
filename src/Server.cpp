@@ -147,10 +147,18 @@ void Server::sendMessages(int socket){
     if (!um.getBuffer(socket, OUTPUT).empty()){
         while (!um.getBuffer(socket, OUTPUT).empty()){
             std::string message = um.getBuffer(socket, OUTPUT);
-            std::cout << message << std::endl;
+            
+
+            std::stringstream ss;
+            ss << socket;
+            log_out("Sending: [" 
+                    + message.substr(0, message.find_first_of("\r"))
+                    + "] --> socket #"
+                    + ss.str());
+
             int sending = send(socket, message.data(), message.length(), 0);
             if (sending < 0){
-                std::cout << "sending" << std::endl;
+                /* @note error handling? */
             }
             size_t end = um.getBuffer(socket, OUTPUT).find("\r\n");
             if (end != std::string::npos){
