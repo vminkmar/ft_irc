@@ -66,7 +66,7 @@ void Server::createSocket() {
         /* waits for event on filedescriptor */
         int ret = poll(this->m_pollfds.data(), m_pollfds.size(), 100);
         if (ret < 0){
-            perror("poll"); /* perror instead of error? */
+            perror("poll"); /* @note perror instead of error? */
         }
 
         /* if there is some incoming event */
@@ -98,13 +98,14 @@ void Server::acceptClients(){
 
 void Server::runServer(){
     for (std::vector<pollfd>::iterator it = m_pollfds.begin() + 1;
-         it != m_pollfds.end();
-         ++it){
+                                       it != m_pollfds.end();
+                                       ++it){
         if (it->revents == 0){
             continue;
 	    }
-        if (it->revents & (POLLERR | POLLHUP | POLLNVAL))
-          socketClosed(it->fd);
+        if (it->revents & (POLLERR | POLLHUP | POLLNVAL)){
+            socketClosed(it->fd);
+        }
         if (it->revents & POLLIN){
             receiveMessages(it->fd);
         }
@@ -117,12 +118,13 @@ void Server::runServer(){
 }
 
 void Server::cleanUpSockets(){
-	for(std::vector<pollfd>::iterator it = m_pollfds.begin() + 1; it != m_pollfds.end();){
+	for(std::vector<pollfd>::iterator it = m_pollfds.begin() + 1;
+                                      it != m_pollfds.end();){
 		if(um.getOnlineStatus(it->fd) == false){
 			it = m_pollfds.erase(it);
 		}
 		else
-			++it;
+			++it; /* @note could just be in the for condition */
 	}
 }
 
@@ -142,7 +144,7 @@ void Server::sendMessages(int socket){
             }
             size_t end = um.getBuffer(socket, OUTPUT).find("\r\n");
             if (end != std::string::npos){
-                um.eraseBuffer(socket, OUTPUT, 0, end + 2);
+            um.eraseBuffer(socket, OUTPUT, 0, end + 2);
             }
         }
     }
@@ -225,34 +227,51 @@ void Server::Messages(int socket){
 // }
 
 void Server::parseIncomingMessage(std::string message, int socket) {
-  if (!um.getBuffer(socket, INPUT).empty()) {
-    std::string buffer = um.getBuffer(socket, INPUT);
-    buffer.append(message);
-    message = buffer;
-  }
-  size_t pos = message.find("\r\n");
-  while (pos != std::string::npos) {
-    std::string tmp = message;
-    tmp = message.substr(0, pos);
-    getCommand(tmp);
-    std::cout << "Command: " << this->m_command << std::endl;
-    tmp = getParameter(tmp);
-    for (std::vector<std::string>::iterator it = this->m_parameters.begin();
-         it != this->m_parameters.end(); it++) {
-      std::cout << "param: " << *it << std::endl;
+  
+    /* if buffer isnt empty, append message to buffer and use that as new msg */
+    if (!um.getBuffer(socket, INPUT).empty())
+    {
+        std::string buffer = um.getBuffer(socket, INPUT);
+        buffer.append(message);
+        message = buffer;
     }
-    this->m_trail = tmp;
-    std::cout << "trail: " << this->m_trail << std::endl;
-    message.erase(message.begin(), message.begin() + pos + 2);
-    if (!(um.getBuffer(socket, INPUT).empty()))
-      um.eraseBuffer(socket, INPUT, 0, pos + 2);
-    Messages(socket);
-    this->m_parameters.clear();
-    pos = message.find("\r\n");
-  }
-  if (!message.empty()) {
-    um.appendToBuffer(message, socket, INPUT);
-  }
+
+    /* @note error prone */
+    log("Incoming message: " + 
+            message.substr(0, message.find_last_not_of("\n")));
+
+    /* find terminating characters \r\n */
+    size_t pos = message.find("\r\n");
+
+    /* while find doesnt return the end of the message */
+    while (pos != std::string::npos)
+    {
+        std::string tmp = message.substr(0, pos);
+
+        getCommand(tmp);
+
+        tmp = getParameter(tmp);
+
+        log("Command: " + this->m_command);
+        for (std::vector<std::string>::iterator it = this->m_parameters.begin();
+                                                it != this->m_parameters.end();
+                                                ++it){
+            log("--param: " + *it);
+        }
+        this->m_trail = tmp;
+        log("traiL: " + this->m_trail);
+
+        message.erase(message.begin(), message.begin() + pos + 2);
+        if (!(um.getBuffer(socket, INPUT).empty())){
+            um.eraseBuffer(socket, INPUT, 0, pos + 2);
+        }
+        Messages(socket);
+        this->m_parameters.clear();
+        pos = message.find("\r\n");
+    }
+    if (!message.empty()) {
+        um.appendToBuffer(message, socket, INPUT);
+    }
 }
 
 std::string Server::getParameter(std::string message) {
