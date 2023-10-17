@@ -47,45 +47,44 @@ class Server{
 
         /* <------ getters -----> */
         std::string getParameter(std::string message);
-        void getCommand(std::string &message);
+        void        getCommand(std::string &message);
         // void getPortAndPasswd(char **argv); /* @note no implement. */
 
         void createSocket(); /* this function essent. runs the whole server */
         
         /* <------ setup -----> */
-        void runServer();
-        void error(std::string str);
-        void socketClosed(int i);
-        void acceptClients();
+        void runServer     ();
+        void error         (std::string str);
+        void socketClosed  (int i);
+        void acceptClients ();
         void cleanUpSockets();
 
         /* <------ client communication -----> */
-        void Messages(int socket);
+        void Messages            (int socket);
         void checkCompleteMessage(int socket);
-        void sendMessages(int i);
-        void receiveMessages(int i);
+        void sendMessages        (int i);
+        void receiveMessages     (int i);
         void parseIncomingMessage(std::string message, int socket);
-        void comparePassword();
-
-        /* <------ server commands -----> */
-        void QUIT_RPL(int socket);
-        void WELCOME_RPL(int socket);
-        void CAP_RPL(int socket);
-        void PING_RPL(int socket);
-        void JOIN_RPL(int socket, std::string name);
-        void NICKCHANGE_RPL(int socket, std::string newNick);
-
+        void comparePassword     ();
         bool checkUnallowedCharacters(std::string nickname);
 
+        /* <------ server replies -----> */
+        void RPL_QUIT      (int socket);
+        void RPL_WELCOME   (int socket);
+        void RPL_CAP       (int socket);
+        void RPL_PING      (int socket);
+        void RPL_JOIN      (int socket, std::string name);
+        void RPL_NICKCHANGE(int socket, std::string newNick);
+
         /* <------ server errors -----> */
-        void ERR_NICKNAMEINUSE(int socket, std::string nick);
+        void ERR_NICKNAMEINUSE   (int socket, std::string nick);
         void ERR_ERRONEUSNICKNAME(int socket, std::string nick);
-        void ERR_NONICKNAMEGIVEN(int socket);
-        void ERR_NEEDMOREPARAMS(int socket, std::string command);
+        void ERR_NONICKNAMEGIVEN (int socket);
+        void ERR_NEEDMOREPARAMS  (int socket, std::string command);
 
         /* <------ else -----> */
         void printCommand();
-
+        
         void log    (std::string message); /* YELLOW */
         void log_in (std::string message); /* CYAN */
         void log_out(std::string message); /* PINK */

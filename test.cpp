@@ -53,6 +53,9 @@ int main(void)
     /* Test command NICK */
     t_command("NICK huhu\r\n", 1);
 
+    /* Test command QUIT */
+    t_command("QUIT\r\n", 1);
+
     // log("Appending some content to UserBuffer");
     // log("Adding channels to server");
     // log("Listing Channels");

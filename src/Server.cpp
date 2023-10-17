@@ -175,7 +175,7 @@ void Server::Messages(int socket){
     
     if (m_command == "CAP")
     {
-        CAP_RPL(socket);
+        RPL_CAP(socket);
     }
     else if (m_command == "NICK")
     {
@@ -195,7 +195,7 @@ void Server::Messages(int socket){
         {
             if(um.checkForNickname(this->m_parameters[0]) == false)
             {
-                NICKCHANGE_RPL(socket, m_parameters[0]);
+                RPL_NICKCHANGE(socket, m_parameters[0]);
                 um.setNickname(socket, this->m_parameters[0]);
             }
             else
@@ -207,21 +207,21 @@ void Server::Messages(int socket){
     else if (m_command == "USER")
     {
         this->um.setUsername(socket, this->m_parameters[0]);
-        WELCOME_RPL(socket); /* @note will this be send everytime? */
+        RPL_WELCOME(socket); /* @note will this be send everytime? */
     }
     else if (m_command == "PING")
     {
-        PING_RPL(socket);
+        RPL_PING(socket);
     }
     else if (m_command == "QUIT")
     {
-        QUIT_RPL(socket);
+        RPL_QUIT(socket);
     }
     else if (m_command == "JOIN")
     {
         m_parameters[0] = m_parameters[0].erase(0, 1);
         um.addChannel(m_parameters[0]);
-        JOIN_RPL(socket, m_parameters[0]);
+        RPL_JOIN(socket, m_parameters[0]);
     }
   // else if (m_command == "PASS") {
   //   comparePassword();
@@ -235,6 +235,17 @@ void Server::Messages(int socket){
 // 		throw sendError()
 // 		writeToOutputBuffer(ERR_PASSWD)
 // }
+
+bool Server::checkUnallowedCharacters(std::string nickname){
+	const std::string unallowedChars = " !@#$%^&*()[]{}<>:;,/";
+	for(size_t i = 0; i < unallowedChars.length(); ++i){
+		size_t find = nickname.find(unallowedChars[i]);
+		if(find != std::string::npos){
+			return true;
+        }
+	}
+	return false;
+}
 
 void Server::parseIncomingMessage(std::string message, int socket) {
   
