@@ -19,13 +19,13 @@ void t_incoming_message(std::string message, int socket){
     s.parseIncomingMessage(message.c_str(), socket);
 }
 
-void t_command(std::string command, int socket){
+void t_command(std::string message, int socket){
     log("Testing command");
-    s.parseIncomingMessage(command, socket);
+    s.parseIncomingMessage(message.c_str(), socket);
 }
 
-void t_users(){
-    log("Testing users");
+void t_show_users(){
+    log("Listing users");
     std::cout << "Usernames: " << s.um.getUsernames() << "\n"
               << "Nicknames: " << s.um.getNicknames()
               << std::endl;
@@ -40,40 +40,27 @@ void t_setup(){
 
 int main(void)
 {
-    
+    /* USAGE: */
+        /* Test commands with t_command(<full_message>, socket) */
+            /* needs \r\n !!! */
+
+    /* Setting up testing environment (Server + Client + User on socket #1) */
     t_setup();
-    t_users();
+
+    /* Show Users after basic setup */
+    t_show_users();
+
+    /* Test command NICK */
+    t_command("NICK huhu\r\n", 1);
 
     // log("Appending some content to UserBuffer");
-    // um.appendToBuffer("some content", 1, INPUT);
-    // std::cout << um.getBuffer(1, INPUT) << std::endl;
-
     // log("Adding channels to server");
-	// um.addChannel("Test");
-	// um.addChannel("Hamburg");
-    
     // log("Listing Channels");
-	// um.listChannels();
-	
     // log("Erasing and listing channel");
-    // um.eraseChannel("Hamburg");
-    // um.listChannels();
-
     // log("ChannelInfo");
-    // um.printChannelInfo("Test");
-
     // log("Adding Users to channel");
-	// um.addUserToChannel(1, USER, "Test");
-	// um.addUserToChannel(2, OPERATOR, "Test");
-    // um.printChannelInfo("Test");
-
     // log("Erasing User from Channel");
-    // um.eraseUserFromChannel(1, "Test");
-    // um.printChannelInfo("Test");
-
     // log("Erasing User from Server who is part of a Channel");
-    // um.eraseUser(2);
-    // um.printChannelInfo("Test");
 
     return (EXIT_SUCCESS);
 }
