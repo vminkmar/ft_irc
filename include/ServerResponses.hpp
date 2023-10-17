@@ -1,6 +1,6 @@
 #ifndef SERVERRESPONSES_HPP
-#define SERVERRESPONSES_HPP
-#include <iostream>
+# define SERVERRESPONSES_HPP
+
 #include <string>
 
 #define SERVERNAME "irc"

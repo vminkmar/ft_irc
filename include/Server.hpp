@@ -1,5 +1,5 @@
 #ifndef SERVER_HPP
-#define SERVER_HPP
+# define SERVER_HPP
 
 /* @note not needed? */
 //#include <arpa/inet.h>

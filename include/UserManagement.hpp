@@ -1,11 +1,10 @@
 // -------------------------------------------------------------------------- //
 
 #ifndef USERMANAGEMENT_HPP
-#define USERMANAGEMENT_HPP
+# define USERMANAGEMENT_HPP
 
 #include <map>    // needed for std::map
 #include <string> // needed for std::string
-#include <vector> // needed for std::vector
 
 #include "Channel.hpp"       // needed for Channel class
 #include "User.hpp"          // needed for User class

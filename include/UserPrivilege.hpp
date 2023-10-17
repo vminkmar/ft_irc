@@ -1,5 +1,5 @@
 #ifndef USERPRIVILEGE_HPP
-#define USERPRIVILEGE_HPP
+# define USERPRIVILEGE_HPP
 
 /* @note could put this into UserManagement.hpp i guess */
 
