@@ -189,7 +189,7 @@ void Server::Messages(int socket){
     else if (m_command == "USER")
     {
         this->um.setUser(socket, this->m_parameters[0]);
-        WELCOME_RPL(socket);
+        WELCOME_RPL(socket); /* @note will this be send everytime? */
     }
     else if (m_command == "PING")
     {
