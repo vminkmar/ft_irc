@@ -54,21 +54,21 @@ bool UserManagement::checkForChannel(std::string channelName) const{
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user operations */
 
-void UserManagement::setNick(int socket, std::string newNickname){
+void UserManagement::setNickname(int socket, std::string newNickname){
     t_um_users_it it = m_users.find(socket);
     if (it != m_users.end()){
         it->second.setNickname(newNickname);
     }
 }
 
-void UserManagement::setUser(int socket, std::string newUsername){
+void UserManagement::setUsername(int socket, std::string newUsername){
     t_um_users_it it = m_users.find(socket);
     if (it != m_users.end()){
         it->second.setUsername(newUsername);
     }
 }
 
-std::string UserManagement::getNick(int socket) const{
+std::string UserManagement::getNickname(int socket) const{
     t_um_users_cit it = m_users.find(socket);
     if (it != m_users.end()){
         return it->second.getNickname();
@@ -76,7 +76,7 @@ std::string UserManagement::getNick(int socket) const{
     return "";
 }
 
-std::string UserManagement::getUser(int socket) const {
+std::string UserManagement::getUsername(int socket) const {
     t_um_users_cit it = m_users.find(socket);
     if (it != m_users.end()){
         return it->second.getUsername();
@@ -108,6 +108,21 @@ std::string UserManagement::getUsernames() const{
         }
     }
   return ss.str();
+}
+
+std::string UserManagement::getNicknames() const{
+    if (m_users.empty()){
+        return "";
+    }
+    std::stringstream ss;
+    t_um_users_cit last = --m_users.end();
+    for (t_um_users_cit it = m_users.begin(); it != m_users.end(); ++it){
+        ss << it->second.getNickname();
+        if (it != last){
+            ss << ", ";
+        }
+    }
+    return ss.str();
 }
 
 void UserManagement::addUser(int socket){

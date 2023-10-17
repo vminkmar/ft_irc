@@ -19,8 +19,13 @@ void t_incoming_message(std::string message, int socket){
     s.parseIncomingMessage(message.c_str(), socket);
 }
 
+void t_command(std::string command, int socket){
+    log("Testing command");
+    s.parseIncomingMessage(command, socket);
+}
+
 void t_setup(){
-    log("Adding User/Client to server");
+    log("Adding User/Client to server at socket #1");
     s.um.addUser(1);
     t_incoming_message("USER Dummy-User\r\n", 1);
 }
@@ -29,6 +34,7 @@ int main(void)
 {
 
     t_setup();
+    t_command("NICK test\r\n", 1);
 
     std::cout << s.um.getUsernames() << std::endl;
 

@@ -44,13 +44,14 @@ class UserManagement{
 
         /* <------ user operations-----> */
 				bool checkNickname(std::string nickname) const;
-        void setNick(int socket, std::string parameter);
-        void setUser(int socket, std::string user);
-        std::string getNick(int socket) const;
-        std::string getUser(int socket) const;
+        void setNickname(int socket, std::string parameter);
+        void setUsername(int socket, std::string user);
+        std::string getNickname(int socket) const;
+        std::string getUsername(int socket) const;
+        std::string getUsernames() const;
+        std::string getNicknames() const; /* @note new, needs testing. */
         std::string getNumberUsersAsString() const;
         int getNumberUsers() const;
-        std::string getUsernames() const;
         void addUser(int socket);
         void eraseUser(int socket);
         void appendToBuffer(std::string message, int socket, int flag);

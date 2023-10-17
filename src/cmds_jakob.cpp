@@ -5,9 +5,9 @@
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> commands jakob */
 
 void Server::JOIN_RPL(int socket, std::string name) {
-  std::string str = um.getNick(socket) + "!" +
-                    um.getUser(socket) + "@" + HOST + " JOIN " +
-                    name + " * :" + um.getUser(socket) + "\r\n";
+  std::string str = um.getNickname(socket) + "!" +
+                    um.getUsername(socket) + "@" + HOST + " JOIN " +
+                    name + " * :" + um.getUsername(socket) + "\r\n";
   um.appendToBuffer(str, socket, OUTPUT);
 }
 

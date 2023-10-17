@@ -14,32 +14,32 @@ void Server::CAP_RPL(int socket) {
 }
 
 void Server::WELCOME_RPL(int socket) {
-  std::cout << "Welcome message send to: " << um.getUser(socket)
+  std::cout << "Welcome message send to: " << um.getUsername(socket)
             << std::endl;
-  std::string str = "001 " + um.getNick(socket) +
+  std::string str = "001 " + um.getNickname(socket) +
                     " :Welcome to the ft_irc network " +
-                    um.getNick(socket) + "!" +
-                    um.getUser(socket) + "@" + HOST + "\r\n";
+                    um.getNickname(socket) + "!" +
+                    um.getUsername(socket) + "@" + HOST + "\r\n";
   um.appendToBuffer(str, socket, OUTPUT);
 }
 
 void Server::PING_RPL(int socket) {
-  std::cout << "PONG message send to: " << um.getUser(socket)
+  std::cout << "PONG message send to: " << um.getUsername(socket)
             << std::endl;
   std::string str = " PONG :" + m_parameters[0] + "\r\n";
   um.appendToBuffer(str, socket, OUTPUT);
 }
 
 void Server::QUIT_RPL(int socket) {
-  std::string str = um.getNick(socket) + "!" +
-                    um.getUser(socket) + "@" + "localhost" +
+  std::string str = um.getNickname(socket) + "!" +
+                    um.getUsername(socket) + "@" + "localhost" +
                     " QUIT :Goodbye!\r\n";
   um.appendToBuffer(str, socket, OUTPUT);
 }
 
 void Server::NICKCHANGE_RPL(int socket, std::string newNick){
-	std::cout << um.getNick(socket) + " got changed to " + newNick << std::endl;
-	std::string str = ":" + um.getNick(socket) + "!" + um.getUser(socket) + "@" + "localhost" + " " + "NICK" + " :" + newNick + "\r\n";
+	std::cout << um.getNickname(socket) + " got changed to " + newNick << std::endl;
+	std::string str = ":" + um.getNickname(socket) + "!" + um.getUsername(socket) + "@" + "localhost" + " " + "NICK" + " :" + newNick + "\r\n";
   um.appendToBuffer(str, socket, OUTPUT);
 }
 
