@@ -5,21 +5,18 @@ Class Names uppercase
 # Questions
 
 # Todos
-    
-    Branches
-     <main> <--> dev
-                  --> vale
-                  --> jakob
 
-    Erasing from poll_fd vector (multiple clients / clients leaving)
+    Server log messages
+      --> meaningful color
+      --> consistency
+      --> abstracted function
+    
+    Update Tester
 
     Parallel work on commands
         --> cmds_vale.cpp
-            --> NICK
-            --> USER
         --> cmds_jakob.cpp
             --> <CHANNEL> commands
-
 
 # Commands
     transform parameters in vector and at trail after : to a string
