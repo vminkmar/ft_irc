@@ -89,10 +89,13 @@ class Server{
 				void NICKCHANGE_RPL(int socket, std::string newNick);
 				bool checkUnallowedCharacters(std::string nickname);
 				/* <------ server Errors -----> */
-							/* <---- NICK ---> */
 				void ERR_NICKNAMEINUSE(int socket, std::string nick);
 				void ERR_ERRONEUSNICKNAME(int socket, std::string nick);
 				void ERR_NONICKNAMEGIVEN(int socket);
+
+				void ERR_NEEDMOREPARAMS(int socket, std::string command);
+
+
         /* <------ else -----> */
         void printCommand();
 
