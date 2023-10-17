@@ -2,40 +2,35 @@
 
 #include <cstdlib>  // needed for MACROS
 #include <iostream> // needed for std::cout, std::endl
-#include <string.h> // needed for strdup()
 
 #include "include/Server.hpp" // needed for Server class
 
 #define GREEN "\033[32m"
 #define RESET "\033[0m"
 
+Server s;
+
 static inline void log(std::string const& message)
 {
     std::cerr << GREEN << ">> " << message << " <<" << RESET << std::endl;
 }
 
+void t_incoming_message(std::string message, int socket){
+    s.parseIncomingMessage(message.c_str(), socket);
+}
+
+void t_setup(){
+    log("Adding User/Client to server");
+    s.um.addUser(1);
+    t_incoming_message("USER Dummy-User\r\n", 1);
+}
+
 int main(void)
 {
-    log("Allocating Server on stack");
-    Server s;
 
-    log("Adding users to server");
-	s.um.addUser(1);
-	s.um.addUser(2);
+    t_setup();
 
-	log("Testing Parser");
-	std::string tmp = "NICK vminkmar\r\nUSER vminkmar bla";
-	char *test = strdup(tmp.c_str());
-	s.parseIncomingMessage(test, 1);
-	std::string tmp1 = ":vminkmar\r\n";
-	char *test1 = strdup(tmp1.c_str());
-	s.parseIncomingMessage(test1, 1);
-
-    log("Getting Usernames from server");
     std::cout << s.um.getUsernames() << std::endl;
-
-    // log("Getting Usernames from server");
-    // std::cout << um.getUsernames() << std::endl;
 
     // log("Appending some content to UserBuffer");
     // um.appendToBuffer("some content", 1, INPUT);
