@@ -43,6 +43,8 @@ class Server{
         Server();
         ~Server();
 
+    /* @note essentially all of this could be private at some point */
+
         /* <------ getters -----> */
         std::string getParameter(std::string message);
         void getCommand(std::string &message);
