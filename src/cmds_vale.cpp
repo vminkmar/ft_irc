@@ -69,7 +69,7 @@ void Server::ERR_ERRONEUSNICKNAME(int socket, std::string nick){
 
 
 void Server::ERR_NEEDMOREPARAMS(int socket, std::string command){
-	std::string str = command + " :Not enough parameters";
+	std::string str = "461 " + command + " :Not enough parameters";
 	std::cout << str << std::endl;
 	um.appendToBuffer(str, socket, OUTPUT);
 }
