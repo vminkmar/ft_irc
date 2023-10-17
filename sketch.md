@@ -6,12 +6,7 @@ Class Names uppercase
 
 # Todos
 
-    Server log messages
-      --> meaningful color
-      --> consistency
-      --> abstracted function
-    
-    Update Tester
+    Update Tester to test new todos
 
     Parallel work on commands
         --> cmds_vale.cpp
