@@ -1,28 +1,13 @@
+// -------------------------------------------------------------------------- //
+
 #ifndef SERVER_HPP
 # define SERVER_HPP
-
-/* @note not needed? */
-//#include <arpa/inet.h>
-//#include <iostream> 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <string>
-//#include <unistd.h>
-//#include <list>
-//#include <sstream>
-//#include "UserManagement.hpp"
-//#include "User.hpp"
-//#include "ServerResponses.hpp"
-//#include <sys/socket.h>
-//#include <sys/types.h>
 
 #include "UserManagement.hpp" // needed for UserManagement class
 
 #include <vector>       // needed for std::vector
-#include <poll.h>       // needed for poll_fd
-
 #include <string>       // needed for std::string
+#include <poll.h>       // needed for poll_fd
 #include <netinet/in.h> // needed for sockaddr_in
 
 //IP_ADDRESS 127.0.0.1
@@ -86,15 +71,15 @@ class Server{
         void CAP_RPL(int socket);
         void PING_RPL(int socket);
         void JOIN_RPL(int socket, std::string name);
-				void NICKCHANGE_RPL(int socket, std::string newNick);
-				bool checkUnallowedCharacters(std::string nickname);
-				/* <------ server Errors -----> */
-				void ERR_NICKNAMEINUSE(int socket, std::string nick);
-				void ERR_ERRONEUSNICKNAME(int socket, std::string nick);
-				void ERR_NONICKNAMEGIVEN(int socket);
+        void NICKCHANGE_RPL(int socket, std::string newNick);
 
-				void ERR_NEEDMOREPARAMS(int socket, std::string command);
+        bool checkUnallowedCharacters(std::string nickname);
 
+        /* <------ server errors -----> */
+        void ERR_NICKNAMEINUSE(int socket, std::string nick);
+        void ERR_ERRONEUSNICKNAME(int socket, std::string nick);
+        void ERR_NONICKNAMEGIVEN(int socket);
+        void ERR_NEEDMOREPARAMS(int socket, std::string command);
 
         /* <------ else -----> */
         void printCommand();
@@ -102,3 +87,5 @@ class Server{
 };
 
 #endif // SERVER_HPP
+
+// -------------------------------------------------------------------------- //
