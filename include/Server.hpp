@@ -85,6 +85,7 @@ class Server{
 
         /* <------ else -----> */
         void printCommand();
+        void log(std::string message); /* used for logging with colour */
 
 };
 

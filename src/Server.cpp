@@ -10,6 +10,9 @@
 #include <stdio.h>  // needed for perror() (linux compilation)
 #include <cstdlib>  // needed for exit() (linux compilation)
 
+#define CYAN  "\033[36m"
+#define RESET "\033[0m"
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
 Server::Server() : m_maxClients(512), m_command(""), m_trail("") {}
@@ -274,8 +277,9 @@ std::string Server::getParameter(std::string message) {
 }
 
 void Server::printCommand() {
-  if (!this->m_command.empty())
-    std::cout << "Command: " << this->m_command << std::endl;
+    if (!this->m_command.empty()){
+        log("Command: " + this->m_command);
+    }
 }
 
 void Server::getCommand(std::string &message) {
@@ -287,6 +291,10 @@ void Server::getCommand(std::string &message) {
 void Server::error(std::string str) {
   std::cerr << str << std::endl;
   exit(1);
+}
+
+void Server::log(std::string message){
+    std::cout << CYAN << message << RESET << std::endl;
 }
 
 // void Server::getPortAndPasswd(char **argv) {
