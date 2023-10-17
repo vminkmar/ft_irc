@@ -24,19 +24,25 @@ void t_command(std::string command, int socket){
     s.parseIncomingMessage(command, socket);
 }
 
+void t_users(){
+    log("Testing users");
+    std::cout << "Usernames: " << s.um.getUsernames() << "\n"
+              << "Nicknames: " << s.um.getNicknames()
+              << std::endl;
+}
+
 void t_setup(){
     log("Adding User/Client to server at socket #1");
     s.um.addUser(1);
     t_incoming_message("USER Dummy-User\r\n", 1);
+    t_incoming_message("NICK Dummy-Test\r\n", 1);
 }
 
 int main(void)
 {
-
+    
     t_setup();
-    t_command("NICK test\r\n", 1);
-
-    std::cout << s.um.getUsernames() << std::endl;
+    t_users();
 
     // log("Appending some content to UserBuffer");
     // um.appendToBuffer("some content", 1, INPUT);
