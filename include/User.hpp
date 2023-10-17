@@ -38,8 +38,6 @@ class User{
         std::string const& getInputBuffer()  const;
         std::string const& getOutputBuffer() const;
         bool               getOnlineStatus() const;
- 
-        //void searchMessage(std::string buffer); /* @note not implemented */
 
 };
 

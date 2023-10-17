@@ -17,6 +17,7 @@
             --> <CHANNEL> commands
 
 # Commands
+    
     transform parameters in vector and at trail after : to a string
 
     Basics:
@@ -99,16 +100,28 @@
 				"PING/PONG"
 
 # Documentation
-		All incoming Messages are parsed in 3 Parts, COMMAND, PARAMETERS and 
-        TRAIL. Command is always the first part of themessage. In the function
-        Server::Messages you always need to look for m_command and after that
-        you need to work with them_parameters(vector). If there is a trail it
-        is stored in m_trail but mostly you won't need it but you need to look
-        it upin the RFC2812. If you want to search for other stuff then you
-        look up RFC2810-RFC2813. If you have any question write me a message.
+		
+    All incoming Messages are parsed in 3 Parts:
+    
+    COMMAND PARAMETERS TRAIL
+    
+    COMMAND is always the first part of the message. In the function
+    Server::Messages you always need to look for m_command.
+
+    For PARAMETERS you need to work with the m_parameters(std::vector).
+
+    If there is a TRAIL it is stored in m_trail,
+    but mostly you won't need it but you need to look it up in the
+   
+    RFC2812
+
+    If you want to search for other stuff then you look up RFC2810-RFC2813
 
 # Example Command on Client
- /nick jwill
-    --> should log a message on the server 
- /huhu hallo
+
+    /nick jwill
+    --> should log a message on the server
+
+    /huhu hallo
     --> not a valid command, client will give error message
+
