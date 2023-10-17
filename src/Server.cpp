@@ -238,7 +238,7 @@ void Server::parseIncomingMessage(std::string message, int socket) {
 
     /* @note error prone */
     log("Incoming message: " + 
-            message.substr(0, message.find_last_not_of("\n")));
+            message.substr(0, message.find_last_not_of("\n") + 1));
 
     /* find terminating characters \r\n */
     size_t pos = message.find("\r\n");
