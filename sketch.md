@@ -4,12 +4,13 @@
     Class Names uppercase
 
 # Questions
-    
-    review @notes
 
 # Todos
 
-    @review USER, PING, QUIT, JOIN, PASS
+    @vale   -review @notes
+
+    @jakob  -review USER, PING, QUIT, JOIN, PASS
+            -abstract NICK code?
 
     Parallel work on commands
         --> cmds_vale.cpp
