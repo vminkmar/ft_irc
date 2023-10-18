@@ -2,13 +2,14 @@
 
 #include "../include/UserManagement.hpp" // needed for UserManagement class
 
-#include <sstream> // needed for std::stringstream
+#include <sstream>   // needed for std::stringstream
+#include <stdexcept> // needed for std::exception
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user map operations */
 
 void UserManagement::addUser(int socket){
-  m_users[socket] = User(); /* c11 std::map.emplace */
-	setOnlineStatus(socket, true);
+    m_users[socket] = User(); /* c11 std::map.emplace */
+    setOnlineStatus(socket, true);
 }
 
 void UserManagement::eraseUser(int socket){
@@ -21,6 +22,7 @@ void UserManagement::eraseUser(int socket){
     if (user != m_users.end()){
         m_users.erase(user);
     }
+    throw std::runtime_error("User not found!");
 }
 
 bool UserManagement::checkForUser(int socket) const{
@@ -69,7 +71,7 @@ void UserManagement::setOnlineStatus(int socket, bool flag){
             it->second.toggleOnlineStatus();
         }
     }
-    /* @note throw exception! */
+    throw std::runtime_error("User not found!");
 }
 
 void UserManagement::appendToBuffer(std::string message, int socket, int flag){
@@ -97,7 +99,7 @@ std::string UserManagement::getNickname(int socket) const{
     if (it != m_users.end()){
         return it->second.getNickname();
     }
-    return "";
+    throw std::runtime_error("User not found!");
 }
 
 std::string UserManagement::getNicknames() const{
@@ -120,7 +122,7 @@ std::string UserManagement::getUsername(int socket) const {
     if (it != m_users.end()){
         return it->second.getUsername();
     }
-  return "";
+    throw std::runtime_error("User not found!");
 }
 
 std::string UserManagement::getUsernames() const{
@@ -153,7 +155,7 @@ bool UserManagement::getOnlineStatus(int socket) const{
     if (it != m_users.end()){
         return it->second.getOnlineStatus();
     }
-    return false; /* @note throw exception! */
+    throw std::runtime_error("User not found!");
 }
 
 // -------------------------------------------------------------------------- //

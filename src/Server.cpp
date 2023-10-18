@@ -353,11 +353,11 @@ void Server::log(std::string message){
 }
 
 void Server::log_success(std::string message){
-    std::cout << COLOUR_SUCCESS << message << RESET << std::endl;
+    std::cout << COLOUR_SUCCESS << "Success: " << message << RESET << std::endl;
 }
 
 void Server::log_inc(std::string message){
-    std::cout << COLOUR_IN << "Incoming: " << message << RESET << std::endl;
+    std::cout << COLOUR_IN << "\nIncoming: " << message << RESET << std::endl;
 }
 
 void Server::log_send(std::string message){
