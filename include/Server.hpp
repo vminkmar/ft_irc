@@ -85,10 +85,11 @@ class Server{
         /* <------ else -----> */
         void printCommand();
         
-        void log    (std::string message); /* YELLOW */
-        void log_in (std::string message); /* CYAN */
-        void log_out(std::string message); /* PINK */
-        void log_err(std::string message); /* RED */
+        void log        (std::string message);
+        void log_success(std::string message);
+        void log_inc    (std::string message); 
+        void log_send   (std::string message);
+        void log_err    (std::string message);
 
 };
 

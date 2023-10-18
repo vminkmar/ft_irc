@@ -16,12 +16,13 @@
 #define CYAN   "\033[36m"
 #define RED    "\033[31m"
 #define WHITE  "\033[37m"
+#define RESET  "\033[0m"
 
-#define COLOUR_LOG WHITE
-#define COLOUR_IN  CYAN
-#define COLOUR_OUT PINK
-#define COLOUR_ERR RED
-#define RESET      "\033[0m"
+#define COLOUR_LOG     WHITE
+#define COLOUR_SUCCESS WHITE
+#define COLOUR_IN      CYAN
+#define COLOUR_OUT     PINK
+#define COLOUR_ERR     RED
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
@@ -151,9 +152,8 @@ void Server::sendMessages(int socket){
 
             std::stringstream ss;
             ss << socket;
-            log_out("Sending: [" 
-                    + message.substr(0, message.find_first_of("\r"))
-                    + "] --> socket #"
+            log_send(message.substr(0, message.find_first_of("\r"))
+                    + " --> socket #"
                     + ss.str());
 
             int sending = send(socket, message.data(), message.length(), 0);
@@ -267,14 +267,10 @@ void Server::parseIncomingMessage(std::string message, int socket) {
         message = buffer;
     }
 
-    /* @note error prone */
-    log_in("\nIncoming message: " + 
-            message.substr(0, message.find_last_not_of("\n") + 1));
+    /* @note might be error prone */
+    log_inc(message.substr(0, message.find_last_not_of("\n") + 1));
 
-    /* find terminating characters \r\n */
     size_t pos = message.find("\r\n");
-
-    /* while find doesnt return the end of the message */
     while (pos != std::string::npos)
     {
         std::string tmp = message.substr(0, pos);
@@ -347,12 +343,16 @@ void Server::log(std::string message){
     std::cout << COLOUR_LOG << message << RESET << std::endl;
 }
 
-void Server::log_in(std::string message){
-    std::cout << COLOUR_IN << message << RESET << std::endl;
+void Server::log_success(std::string message){
+    std::cout << COLOUR_SUCCESS << message << RESET << std::endl;
 }
 
-void Server::log_out(std::string message){
-    std::cout << COLOUR_OUT << message << RESET << std::endl;
+void Server::log_inc(std::string message){
+    std::cout << COLOUR_IN << "Incoming: " << message << RESET << std::endl;
+}
+
+void Server::log_send(std::string message){
+    std::cout << COLOUR_OUT << "Sending: "<< message << RESET << std::endl;
 }
 
 void Server::log_err(std::string message){

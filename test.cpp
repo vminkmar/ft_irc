@@ -1,6 +1,7 @@
 // -------------------------------------------------------------------------- //
 
 #include <cstdlib>  // needed for MACROS
+#include <sstream>  // needed for std::stringstream
 #include <iostream> // needed for std::cout, std::endl
 
 #include "include/Server.hpp" // needed for Server class
@@ -32,13 +33,17 @@ void t_show_users(){
               << std::endl;
 }
 
-void t_setup(){
-    log("ADDING USER/CLIENT TO SOCKET #1");
-    s.um.addUser(1);
-    t_incoming_message("USER Dummy-User\r\n", 1);
-    s.sendMessages(1);
-    t_incoming_message("NICK Dummy-Test\r\n", 1);
-    s.sendMessages(1);
+void t_connect(std::string const& username,
+               std::string const& nickname,
+               int socket){
+    std::stringstream ss;
+    ss << socket;
+    log("ADDING USER/CLIENT TO SOCKET #" + ss.str());
+    s.um.addUser(socket);
+    t_incoming_message("USER " + username + "\r\n", socket);
+    s.sendMessages(socket);
+    t_incoming_message("NICK " + nickname + "\r\n", socket);
+    s.sendMessages(socket);
 }
 
 int main(void)
@@ -48,7 +53,8 @@ int main(void)
             /* needs \r\n !!! */
 
     /* Setting up testing environment (Server + Client + User on socket #1) */
-    t_setup();
+    t_connect("Dummy-User", "Dummy-Nick", 1);
+    t_connect("Hans", "Peter", 2);
 
     /* Show Users after basic setup */
     t_show_users();
@@ -57,8 +63,12 @@ int main(void)
     t_command("NICK huhu\r\n", 1);
     t_command("NICK \r\n", 1);
 
+    t_show_users();
+
     /* Test command QUIT */
     t_command("QUIT\r\n", 1);
+
+    t_show_users();
 
     // log("Appending some content to UserBuffer");
     // log("Adding channels to server");

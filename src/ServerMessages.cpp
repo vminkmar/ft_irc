@@ -2,15 +2,16 @@
 
 #include "../include/Server.hpp" // needed for Server class
 
+#include <sstream>  // needed for std::stringstream
 #include <iostream> // needed for std::cout, std::endl
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server replies */
 
 void Server::RPL_CAP(int socket) {
   if (m_parameters[0] == "LS") {
-    
-    //std::cout << "CAP message send to Socket: " << socket << std::endl;
-
+    std::stringstream ss;
+    ss << socket;
+    log_success("CAP message send to socket# " + ss.str());
     std::string str = "CAP * LS :cap reply...\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
   }
@@ -52,7 +53,12 @@ void Server::RPL_JOIN(int socket, std::string name) {
 }
 
 void Server::RPL_NICKCHANGE(int socket, std::string newNick){
-	//std::cout << um.getNickname(socket) + " got changed to " + newNick << std::endl;
+    if (um.getNickname(socket).empty() == true){
+        log_success("UNSET_NICKNAME got changed to " + newNick);
+    }
+    else{
+        log_success(um.getNickname(socket) + " got changed to " + newNick);
+    }
     std::string str = ":" + um.getNickname(socket)
                       + "!" + um.getUsername(socket)
                       + "@" + "localhost" + " " + "NICK"
