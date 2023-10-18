@@ -12,7 +12,7 @@ Server s;
 
 static inline void log(std::string const& message)
 {
-    std::cerr << GREEN << ">> " << message << " <<" << RESET << std::endl;
+    std::cerr << GREEN << "\n>> " << message << " <<" << RESET << std::endl;
 }
 
 void t_incoming_message(std::string message, int socket){
@@ -20,20 +20,20 @@ void t_incoming_message(std::string message, int socket){
 }
 
 void t_command(std::string message, int socket){
-    log("Testing command");
+    log("TESTING COMMAND");
     s.parseIncomingMessage(message.c_str(), socket);
     s.sendMessages(socket);
 }
 
 void t_show_users(){
-    log("Listing users");
-    std::cout << "Usernames: " << s.um.getUsernames() << "\n"
-              << "Nicknames: " << s.um.getNicknames()
+    log("LISTING USERS");
+    std::cout << "\nUsernames: " << s.um.getUsernames() << "\n"
+              << "Nicknames: " << s.um.getNicknames() 
               << std::endl;
 }
 
 void t_setup(){
-    log("Adding User/Client to server at socket #1");
+    log("ADDING USER/CLIENT TO SOCKET #1");
     s.um.addUser(1);
     t_incoming_message("USER Dummy-User\r\n", 1);
     s.sendMessages(1);
@@ -55,6 +55,7 @@ int main(void)
 
     /* Test command NICK */
     t_command("NICK huhu\r\n", 1);
+    t_command("NICK \r\n", 1);
 
     /* Test command QUIT */
     t_command("QUIT\r\n", 1);

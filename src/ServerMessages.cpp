@@ -86,11 +86,7 @@ void Server::ERR_NEEDMOREPARAMS(int socket, std::string command){
 }
 
 void Server::ERR_NONICKNAMEGIVEN(int socket){
-    
-    /* @note correct message? */
-    log_err("Username already in use");
-    //std::cout << "Error: Username already in use" << std::endl;
-	
+    log_err("No Nickname given");
     std::string str = "431 :No nickname given\r\n";
 	um.appendToBuffer(str, socket, OUTPUT);
 }

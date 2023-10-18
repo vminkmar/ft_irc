@@ -283,14 +283,14 @@ void Server::parseIncomingMessage(std::string message, int socket) {
 
         tmp = getParameter(tmp);
 
-        log("Command: " + this->m_command);
+        log("<command> " + this->m_command);
         for (std::vector<std::string>::iterator it = this->m_parameters.begin();
                                                 it != this->m_parameters.end();
                                                 ++it){
-            log("--param: " + *it);
+            log("<param>   " + *it);
         }
         this->m_trail = tmp;
-        log("traiL: " + this->m_trail);
+        log("<trail>   " + this->m_trail);
 
         message.erase(message.begin(), message.begin() + pos + 2);
         if (!(um.getBuffer(socket, INPUT).empty())){
