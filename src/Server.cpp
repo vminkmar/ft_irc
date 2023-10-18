@@ -181,6 +181,7 @@ void Server::receiveMessages(int socket) {
 
 void Server::Messages(int socket){
     
+    /* @note switch case statement? */
     if (m_command == "CAP")
     {
         RPL_CAP(socket);
@@ -215,7 +216,8 @@ void Server::Messages(int socket){
     else if (m_command == "USER")
     {
         this->um.setUsername(socket, this->m_parameters[0]);
-        RPL_WELCOME(socket); /* @note will this be send everytime? */
+        RPL_WELCOME(socket);
+        /* @note will this be send everytime someone changes his USER name? */
     }
     else if (m_command == "PING")
     {
@@ -266,7 +268,7 @@ void Server::parseIncomingMessage(std::string message, int socket) {
     }
 
     /* @note error prone */
-    log_in("Incoming message: " + 
+    log_in("\nIncoming message: " + 
             message.substr(0, message.find_last_not_of("\n") + 1));
 
     /* find terminating characters \r\n */
@@ -340,7 +342,6 @@ void Server::error(std::string str) {
   std::cerr << str << std::endl;
   exit(1);
 }
-
 
 void Server::log(std::string message){
     std::cout << COLOUR_LOG << message << RESET << std::endl;
