@@ -66,7 +66,7 @@ void Server::ERR_NICKNAMEINUSE(int socket, std::string nick){
 	log_err("Nickname already in use");
     //std::cout << "Error: Nickname already in use" << std::endl;
 
-	std::string str = "433 " + nick + ":Nickname is already in use\r\n";
+	std::string str = "433 " + nick + " :Nickname is already in use\r\n";
 	um.appendToBuffer(str, socket, OUTPUT);
 }
 
@@ -74,7 +74,7 @@ void Server::ERR_ERRONEUSNICKNAME(int socket, std::string nick){
     log_err("Nickname has unallowed characters");
     //std::cout << "Error: Nickname has unallowed characters" << std::endl;
 	
-    std::string str = "432 " + nick + ":Erroneous nickname\r\n";
+    std::string str = "432 " + nick + " :Erroneous nickname\r\n";
 	um.appendToBuffer(str, socket, OUTPUT);
 }
 
