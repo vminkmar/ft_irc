@@ -9,7 +9,7 @@
 
 # Todos
 
-    Update Tester to test new todos
+    @review USER, PING, QUIT, JOIN, PASS
 
     Parallel work on commands
         --> cmds_vale.cpp
