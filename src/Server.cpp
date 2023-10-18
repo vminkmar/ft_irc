@@ -188,30 +188,39 @@ void Server::Messages(int socket){
     }
     else if (m_command == "NICK")
     {
-        if(m_parameters.empty()){
+        if (m_parameters.empty() == true){
             ERR_NONICKNAMEGIVEN(socket);
-            return;
         }
-        if(checkUnallowedCharacters(m_parameters[0]) == true){
+        else if (checkUnallowedCharacters(m_parameters[0]) == true){
             ERR_ERRONEUSNICKNAME(socket, m_parameters[0]);
-            return;
         }
-        if(this->um.getNickname(socket) == "")
-        {
-            this->um.setNickname(socket, this->m_parameters[0]);
+        else if (um.checkForNickname(m_parameters[0]) == true){
+            ERR_NICKNAMEINUSE(socket, m_parameters[0]);
         }
-        else
-        {
-            if(um.checkForNickname(this->m_parameters[0]) == false)
-            {
-                RPL_NICKCHANGE(socket, m_parameters[0]);
-                um.setNickname(socket, this->m_parameters[0]);
-            }
-            else
-            {
-                ERR_NICKNAMEINUSE(socket, m_parameters[0]);
-            }
+        else{
+            RPL_NICKCHANGE(socket, m_parameters[0]);
+            um.setNickname(socket, m_parameters[0]);
         }
+
+        /* @note Changed, i think this is more practical */
+        /* @note Do we want to abstract this code into a CMD_NICK() function? */
+       
+       // if(this->um.getNickname(socket) == "") /*@note good practice? */
+       // {
+       //     this->um.setNickname(socket, this->m_parameters[0]);
+       // }
+       // else
+       // {
+       //     if(um.checkForNickname(this->m_parameters[0]) == false)
+       //     {
+       //         RPL_NICKCHANGE(socket, m_parameters[0]);
+       //         um.setNickname(socket, this->m_parameters[0]);
+       //     }
+       //     else
+       //     {
+       //         ERR_NICKNAMEINUSE(socket, m_parameters[0]);
+       //     }
+       // }
     }
     else if (m_command == "USER")
     {

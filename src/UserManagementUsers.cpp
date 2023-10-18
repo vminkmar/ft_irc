@@ -135,7 +135,7 @@ std::string UserManagement::getUsernames() const{
             ss << ", ";
         }
     }
-  return ss.str();
+    return ss.str();
 }
 
 std::string UserManagement::getBuffer(int socket, int flag) const{
