@@ -149,16 +149,16 @@ void Server::sendMessages(int socket){
         while (!um.getBuffer(socket, OUTPUT).empty()){
             std::string message = um.getBuffer(socket, OUTPUT);
             
-
-            std::stringstream ss;
-            ss << socket;
-            log_send(message.substr(0, message.find_first_of("\r"))
-                    + " --> socket #"
-                    + ss.str());
-
             int sending = send(socket, message.data(), message.length(), 0);
             if (sending < 0){
-                /* @note error handling? */
+                log_err("Send return < 0?");
+            }
+            else{
+                std::stringstream ss;
+                ss << socket;
+                log_send(message.substr(0, message.find_first_of("\r"))
+                        + " --> socket #"
+                        + ss.str());
             }
             size_t end = um.getBuffer(socket, OUTPUT).find("\r\n");
             if (end != std::string::npos){
@@ -181,7 +181,6 @@ void Server::receiveMessages(int socket) {
 
 void Server::Messages(int socket){
     
-    /* @note switch case statement? */
     if (m_command == "CAP")
     {
         RPL_CAP(socket);
@@ -198,29 +197,11 @@ void Server::Messages(int socket){
             ERR_NICKNAMEINUSE(socket, m_parameters[0]);
         }
         else{
-            RPL_NICKCHANGE(socket, m_parameters[0]);
+            if (um.getNickname(socket).empty() == false){
+                RPL_NICKCHANGE(socket, m_parameters[0]);
+            }
             um.setNickname(socket, m_parameters[0]);
         }
-
-        /* @note Changed, i think this is more practical */
-        /* @note Do we want to abstract this code into a CMD_NICK() function? */
-       
-       // if(this->um.getNickname(socket) == "") /*@note good practice? */
-       // {
-       //     this->um.setNickname(socket, this->m_parameters[0]);
-       // }
-       // else
-       // {
-       //     if(um.checkForNickname(this->m_parameters[0]) == false)
-       //     {
-       //         RPL_NICKCHANGE(socket, m_parameters[0]);
-       //         um.setNickname(socket, this->m_parameters[0]);
-       //     }
-       //     else
-       //     {
-       //         ERR_NICKNAMEINUSE(socket, m_parameters[0]);
-       //     }
-       // }
     }
     else if (m_command == "USER")
     {
@@ -230,8 +211,8 @@ void Server::Messages(int socket){
             ERR_ALREADYREGISTRED(socket);
         }
         else{
-            this->um.setUsername(socket, this->m_parameters[0]);
             RPL_WELCOME(socket);
+            this->um.setUsername(socket, this->m_parameters[0]);
         }
     }
     else if (m_command == "PING")

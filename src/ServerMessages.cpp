@@ -25,7 +25,7 @@ void Server::RPL_WELCOME(int socket) {
                       " 001 " + um.getNickname(socket) +
                       " :Welcome to the ft_irc network " +
                       um.getNickname(socket) + "!" +
-                      um.getUsername(socket) + "@" + HOST + "\r\n";
+                      m_parameters[0] + "@" + HOST + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
@@ -58,23 +58,15 @@ void Server::RPL_JOIN(int socket, std::string name) {
 }
 
 void Server::RPL_NICKCHANGE(int socket, std::string newNick){
-    
     std::string oldNick = um.getNickname(socket);
     if (oldNick.empty() == true){
         log_success("UNSET_NICKNAME got changed to " + newNick);
-        oldNick = newNick; /* so that there is sth put into the response */
     }
     else{
         log_success(oldNick + " got changed to " + newNick);
     }
-
-    std::string username = um.getUsername(socket);
-    if (username.empty() == true){
-        username = newNick;
-    }
-
     std::string str = ":"   + oldNick
-                      + "!" + username
+                      + "!" + um.getUsername(socket)
                       + "@" + "localhost" + " " + "NICK"
                       + " :" + newNick + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
