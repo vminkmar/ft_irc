@@ -38,13 +38,13 @@ class UserManagement{
         /* <------ user map operations-----> */
         void addUser         (int socket);
         void eraseUser       (int socket);
-        bool checkForUser   (int socket)       const;
+        bool checkForUser    (int socket)           const;
         bool checkForUsername(std::string username) const;
         bool checkForNickname(std::string nickname) const;
 
             /* <---- setters */
-            void setUsername    (int socket, std::string user);
-            void setNickname    (int socket, std::string parameter);
+            void setUsername    (int socket, std::string newUsername);
+            void setNickname    (int socket, std::string newNickname);
             void setOnlineStatus(int socket, bool flag);
             void appendToBuffer (std::string message, int socket, int flag);
             void eraseBuffer    (int socket, int flag, int start, int end);
@@ -58,9 +58,9 @@ class UserManagement{
             bool        getOnlineStatus(int socket)           const;
 
         /* <------ channel map operations-----> */
-        void addChannel      (std::string name);
-        void eraseChannel    (std::string name);
-        bool checkForChannel (std::string name)        const;
+        void addChannel      (std::string channelName);
+        void eraseChannel    (std::string channelName);
+        bool checkForChannel (std::string channelName) const;
         void printChannelInfo(std::string channelName) const;
         void listChannels    ()                        const;
             
