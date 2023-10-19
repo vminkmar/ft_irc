@@ -3,7 +3,7 @@
 #include "../include/UserManagement.hpp" // needed for UserManagement class
 
 #include <sstream>   // needed for std::stringstream
-#include <stdexcept> // needed for std::exception
+#include <stdexcept> // needed for std::runtime_error
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user map operations */
 
@@ -21,6 +21,7 @@ void UserManagement::eraseUser(int socket){
     t_um_users_it user = m_users.find(socket);
     if (user != m_users.end()){
         m_users.erase(user);
+        return ;
     }
     throw std::runtime_error("eraseUser: User not found!");
 }
@@ -69,6 +70,7 @@ void UserManagement::setOnlineStatus(int socket, bool flag){
     if (it != m_users.end()){
         if (it->second.getOnlineStatus() != flag){
             it->second.toggleOnlineStatus();
+            return ;
         }
     }
     throw std::runtime_error("setOnlineStatus: User not found!");
