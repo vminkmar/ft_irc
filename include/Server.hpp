@@ -81,6 +81,7 @@ class Server{
         void ERR_ERRONEUSNICKNAME(int socket, std::string nick);
         void ERR_NONICKNAMEGIVEN (int socket);
         void ERR_NEEDMOREPARAMS  (int socket, std::string command);
+        void ERR_ALREADYREGISTRED(int socket);
 
         /* <------ else -----> */
         void printCommand();
