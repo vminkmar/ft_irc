@@ -3,9 +3,8 @@
 #ifndef USERMANAGEMENT_HPP
 # define USERMANAGEMENT_HPP
 
-#include "Channel.hpp"       // needed for Channel class
+#include "Channel.hpp"       // needed for Channel class, UserPrivilege ENUM
 #include "User.hpp"          // needed for User class
-#include "UserPrivilege.hpp" // needed for ENUM
 
 #include <map>    // needed for std::map
 #include <string> // needed for std::string
