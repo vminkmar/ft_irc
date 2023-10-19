@@ -224,9 +224,15 @@ void Server::Messages(int socket){
     }
     else if (m_command == "USER")
     {
-        this->um.setUsername(socket, this->m_parameters[0]);
-        RPL_WELCOME(socket);
         /* @note will this be send everytime someone changes his USER name? */
+        if (um.checkForUser(socket) == true
+            && um.getUsername(socket).empty() == false){
+            ERR_ALREADYREGISTRED(socket);
+        }
+        else{
+            this->um.setUsername(socket, this->m_parameters[0]);
+            RPL_WELCOME(socket);
+        }
     }
     else if (m_command == "PING")
     {

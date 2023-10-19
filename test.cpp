@@ -54,22 +54,22 @@ int main(void)
 
     /* Setting up testing environment (Server + Client + User on socket #1) */
     t_connect("Dummy-User", "Dummy-Nick", 1);
-    t_connect("Hans", "Peter", 2);
-
-    /* Show Users after basic setup */
-    t_show_users();
-
-    /* Test command NICK */
-    t_command("NICK huhu\r\n", 1);
-    t_command("NICK \r\n", 1);
+//    t_connect("Hans", "Peter", 2);
 
     t_show_users();
 
-    /* Test command QUIT */
+    t_command("USER Dummy-User\r\n", 1);
+
+    t_show_users();
+
     t_command("QUIT\r\n", 1);
 
     t_show_users();
 
+    return (EXIT_SUCCESS);
+}
+
+/* Past test cases */
     // log("Appending some content to UserBuffer");
     // log("Adding channels to server");
     // log("Listing Channels");
@@ -78,8 +78,5 @@ int main(void)
     // log("Adding Users to channel");
     // log("Erasing User from Channel");
     // log("Erasing User from Server who is part of a Channel");
-
-    return (EXIT_SUCCESS);
-}
 
 // -------------------------------------------------------------------------- //
