@@ -22,7 +22,7 @@ void UserManagement::eraseUser(int socket){
     if (user != m_users.end()){
         m_users.erase(user);
     }
-    throw std::runtime_error("User not found!");
+    throw std::runtime_error("eraseUser: User not found!");
 }
 
 bool UserManagement::checkForUser(int socket) const{
@@ -71,7 +71,7 @@ void UserManagement::setOnlineStatus(int socket, bool flag){
             it->second.toggleOnlineStatus();
         }
     }
-    throw std::runtime_error("User not found!");
+    throw std::runtime_error("setOnlineStatus: User not found!");
 }
 
 void UserManagement::appendToBuffer(std::string message, int socket, int flag){
@@ -99,7 +99,7 @@ std::string UserManagement::getNickname(int socket) const{
     if (it != m_users.end()){
         return it->second.getNickname();
     }
-    throw std::runtime_error("User not found!");
+    throw std::runtime_error("getNickname: User not found!");
 }
 
 std::string UserManagement::getNicknames() const{
@@ -122,7 +122,7 @@ std::string UserManagement::getUsername(int socket) const {
     if (it != m_users.end()){
         return it->second.getUsername();
     }
-    throw std::runtime_error("User not found!");
+    throw std::runtime_error("getUsername: User not found!");
 }
 
 std::string UserManagement::getUsernames() const{
@@ -155,7 +155,7 @@ bool UserManagement::getOnlineStatus(int socket) const{
     if (it != m_users.end()){
         return it->second.getOnlineStatus();
     }
-    throw std::runtime_error("User not found!");
+    throw std::runtime_error("getOnlineStatus: User not found!");
 }
 
 // -------------------------------------------------------------------------- //
