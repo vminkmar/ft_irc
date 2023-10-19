@@ -3,8 +3,8 @@
 #ifndef USERMANAGEMENT_HPP
 # define USERMANAGEMENT_HPP
 
-#include "Channel.hpp"       // needed for Channel class, UserPrivilege ENUM
-#include "User.hpp"          // needed for User class
+#include "Channel.hpp" // needed for Channel class, UserPrivilege ENUM
+#include "User.hpp"    // needed for User class
 
 #include <map>    // needed for std::map
 #include <string> // needed for std::string
@@ -71,7 +71,7 @@ class UserManagement{
             void eraseUserFromChannel(int socket, std::string channelName);
             
             /* <---- getters */
-            Channel const& getChannel(std::string name)                 const;
+            Channel const& getChannel(std::string channelName)          const;
             std::string    getChannelNames()                            const;
             std::string    getChannelUsernames(std::string channelName) const;
             std::string    getChannelNicknames(std::string channelName) const;
