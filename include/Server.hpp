@@ -11,8 +11,9 @@
 #include <netinet/in.h> // needed for sockaddr_in
 
 //IP_ADDRESS 127.0.0.1
-#define PORT 6667
-#define HOST "localhost"
+#define PORT       6667
+#define HOST       "localhost"
+#define SERVERNAME std::string("Valhalla")
 
 class Server{
     

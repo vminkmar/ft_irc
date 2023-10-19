@@ -11,7 +11,7 @@ void Server::RPL_CAP(int socket) {
   if (m_parameters[0] == "LS") {
     std::stringstream ss;
     ss << socket;
-    log_success("CAP message send to socket# " + ss.str());
+    log_success("CAP message send to socket#" + ss.str());
     std::string str = "CAP * LS :cap reply...\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
   }
@@ -21,10 +21,11 @@ void Server::RPL_WELCOME(int socket) {
     std::stringstream ss;
     ss << socket;
     log_success("Welcome message send to socket#" + ss.str());
-    std::string str = "001 " + um.getNickname(socket) +
-                    " :Welcome to the ft_irc network " +
-                    um.getNickname(socket) + "!" +
-                    um.getUsername(socket) + "@" + HOST + "\r\n";
+    std::string str = ":" + SERVERNAME +
+                      " 001 " + um.getNickname(socket) +
+                      " :Welcome to the ft_irc network " +
+                      um.getNickname(socket) + "!" +
+                      um.getUsername(socket) + "@" + HOST + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
@@ -57,14 +58,23 @@ void Server::RPL_JOIN(int socket, std::string name) {
 }
 
 void Server::RPL_NICKCHANGE(int socket, std::string newNick){
-    if (um.getNickname(socket).empty() == true){
+    
+    std::string oldNick = um.getNickname(socket);
+    if (oldNick.empty() == true){
         log_success("UNSET_NICKNAME got changed to " + newNick);
+        oldNick = newNick; /* so that there is sth put into the response */
     }
     else{
-        log_success(um.getNickname(socket) + " got changed to " + newNick);
+        log_success(oldNick + " got changed to " + newNick);
     }
-    std::string str = ":" + um.getNickname(socket)
-                      + "!" + um.getUsername(socket)
+
+    std::string username = um.getUsername(socket);
+    if (username.empty() == true){
+        username = newNick;
+    }
+
+    std::string str = ":"   + oldNick
+                      + "!" + username
                       + "@" + "localhost" + " " + "NICK"
                       + " :" + newNick + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);

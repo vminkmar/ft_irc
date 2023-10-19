@@ -40,9 +40,9 @@ void t_connect(std::string const& username,
     ss << socket;
     log("ADDING USER/CLIENT TO SOCKET #" + ss.str());
     s.um.addUser(socket);
-    t_incoming_message("USER " + username + "\r\n", socket);
-    s.sendMessages(socket);
-    t_incoming_message("NICK " + nickname + "\r\n", socket);
+
+    t_incoming_message("NICK " + nickname + "\r\n" + " USER " + username + "\r\n", socket);
+
     s.sendMessages(socket);
 }
 
@@ -54,13 +54,11 @@ int main(void)
 
     /* Setting up testing environment (Server + Client + User on socket #1) */
     t_connect("Dummy-User", "Dummy-Nick", 1);
-//    t_connect("Hans", "Peter", 2);
+    //t_connect("Hans", "Peter", 2);
 
     t_show_users();
 
-    t_command("USER Dummy-User\r\n", 1);
-
-    t_show_users();
+    //t_command("USER Dummy-User\r\n", 1);
 
     t_command("QUIT\r\n", 1);
 
