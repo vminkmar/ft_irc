@@ -7,6 +7,8 @@
 
 # Todos
 
+    connecting --> disconnecting --> reconnecting && quitting
+
     @vale   -review @notes
 
     @jakob  -review USER, PING, QUIT, JOIN, PASS

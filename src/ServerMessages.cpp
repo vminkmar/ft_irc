@@ -32,7 +32,7 @@ void Server::RPL_PING(int socket) {
     std::stringstream ss;
     ss << socket;
     log_success("PONG message send to socket#" + ss.str());
-    std::string str = " PONG :" + m_parameters[0] + "\r\n";
+    std::string str = "PONG :" + m_parameters[0] + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
