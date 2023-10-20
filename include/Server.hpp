@@ -110,15 +110,20 @@ class Server{
         void ERR_NICKNAMEINUSE   (int socket, std::string const& nickname);
         void ERR_NEEDMOREPARAMS  (int socket, std::string const& command);
         void ERR_ALREADYREGISTRED(int socket);
-
-        /* <------ else -----> */
-        void printCommand();
         
+        /* <------ server logs -----> */
         void log        (std::string const& message) const;
         void log_success(std::string const& message) const;
         void log_inc    (std::string const& message) const; 
         void log_send   (std::string const& message) const;
         void log_err    (std::string const& message) const;
+        void log_vector (std::string const& name,
+                         std::vector<std::string> const& vec) const;
+
+        /* <------ else -----> */
+        void printCommand();
+        std::vector<std::string> split(std::string parameter,
+                                          char delimiter);
 
 };
 

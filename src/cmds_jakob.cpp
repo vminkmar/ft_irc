@@ -2,6 +2,8 @@
 
 #include "../include/Server.hpp" // needed for Server class
 
+//#include <iostream> // @note debugging
+
 void Server::CMD_CAP(int socket){
     if (m_parameters[0] == "LS"){
         RPL_CAP(socket);
@@ -62,7 +64,11 @@ void Server::CMD_JOIN(int socket){
     /* channel */ /* , */ /* channel */
     /* key */ /* , */ /* key */
 
-    
+    /* channelnames */
+    /* must begin with "&, #, + or !" */
+    /* up to 50 length */
+    /* shall not contain: ' ', ^G, ',' */
+
     if (m_parameters.empty() == true){
         ERR_NEEDMOREPARAMS(socket, m_command);
     }
@@ -72,7 +78,15 @@ void Server::CMD_JOIN(int socket){
         /* handle like PART command and reply accordingly */
     }
     else{
-        
+            
+        std::vector<std::string>channelNames = split(m_parameters[0], ',');
+        log_vector("channelNames", channelNames);
+       
+        if (m_parameters.size() >= 2){
+            std::vector<std::string>channelKeys = split(m_parameters[1], ',');
+            log_vector("channelKeys", channelKeys);
+        }
+
         // @note parse and test with test.cpp
         //
         // @note put all of this into ...
@@ -80,10 +94,8 @@ void Server::CMD_JOIN(int socket){
 
         // @note loop through map and join/create channel with corresp. password
         
-        std::string const& channelName = m_parameters[0];
-        std::vector< std::pair<std::string, std::string> > channels;
 
-        RPL_JOIN(socket, channelName, um.getUsername(socket));
+        //RPL_JOIN(socket, channelName, um.getUsername(socket));
     }
 }
 

@@ -139,13 +139,11 @@ void Server::sendMessages(int socket){
             if (sending < 0){
                 log_err("Send return < 0?");
             }
-            else{
-                std::stringstream ss;
-                ss << socket;
-                log_send(message.substr(0, message.find_first_of("\r"))
-                        + " --> socket #"
-                        + ss.str());
-            }
+            std::stringstream ss;
+            ss << socket;
+            log_send(message.substr(0, message.find_first_of("\r"))
+                + " --> socket #"
+                + ss.str());
             size_t end = um.getBuffer(socket, OUTPUT).find("\r\n");
             if (end != std::string::npos){
             um.eraseBuffer(socket, OUTPUT, 0, end + 2);
@@ -308,6 +306,30 @@ void Server::log_send(std::string const& message) const{
 
 void Server::log_err(std::string const& message) const{
     std::cout << COLOUR_ERR << "Error: " << message << RESET << std::endl;
+}
+
+void Server::log_vector(std::string const& name,
+                        std::vector<std::string> const& vec) const{
+    
+    std::cout << COLOUR_LOG << "vec<" + name + "> ";
+    for (std::vector<std::string>::const_iterator it = vec.begin();
+                                                  it != vec.end();
+                                                  ++it){
+        std::cout << "[" << *it << "] ";
+    }
+    std::cout << RESET << std::endl;
+
+}
+
+std::vector<std::string> Server::split(std::string parameter,
+                                       char delimiter){
+    std::vector<std::string> split;
+    std::string              token;
+    std::stringstream        ss(parameter);
+    while (std::getline(ss, token, delimiter)){
+        split.push_back(token);
+    }
+    return split;
 }
 
 // void Server::getPortAndPasswd(char **argv) {
