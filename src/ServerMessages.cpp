@@ -76,6 +76,7 @@ void Server::RPL_TOPIC(int socket, std::string const& channelName){
     std::stringstream ss;
     ss << socket;
     log("TOPIC message send to socket#" + ss.str());
+    /* @note needs implementation */
 }
 
 void Server::RPL_NAMREPLY(int socket){(void) socket;};

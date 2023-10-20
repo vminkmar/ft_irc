@@ -95,6 +95,14 @@ void Server::CMD_JOIN(int socket){
                                                       it != channelNames.end();
                                                       ++it){
             if (um.checkForChannel(*it) == false){
+                
+                /* @note if no channel is found... */
+                    /* ERR message */
+                    /* add Channel */
+                    /* add user to channel as operator */
+                    /* RPL_NOTOPIC */
+                    /* RPL_NAMRELPY */
+
                 ERR_NOSUCHCHANNEL(socket, *it);
                 um.addChannel(*it);
                 um.addUserToChannel(socket, OPERATOR, *it);
