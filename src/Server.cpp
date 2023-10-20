@@ -10,20 +10,6 @@
 #include <stdio.h>  // needed for perror() (linux compilation)
 #include <cstdlib>  // needed for exit() (linux compilation)
 
-/* LOG COLOURING */
-#define YELLOW "\033[33m"
-#define PINK   "\033[95m"
-#define CYAN   "\033[36m"
-#define RED    "\033[31m"
-#define WHITE  "\033[37m"
-#define RESET  "\033[0m"
-
-#define COLOUR_LOG     WHITE
-#define COLOUR_SUCCESS WHITE
-#define COLOUR_IN      CYAN
-#define COLOUR_OUT     PINK
-#define COLOUR_ERR     RED
-
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
 Server::Server() : m_maxClients(512), m_command(""), m_trail("") {}
@@ -212,10 +198,9 @@ void Server::Messages(int socket){
 // 		writeToOutputBuffer(ERR_PASSWD)
 // }
 
-bool Server::checkUnallowedCharacters(std::string const& nickname) const{
-	const std::string unallowedChars = " !@#$%^&*()[]{}<>:;,/";
+bool Server::checkUnallowedCharacters(std::string const& stringToCheck, std::string const& unallowedChars) const{
 	for(size_t i = 0; i < unallowedChars.length(); ++i){
-		size_t find = nickname.find(unallowedChars[i]);
+		size_t find = stringToCheck.find(unallowedChars[i]);
 		if(find != std::string::npos){
 			return true;
         }

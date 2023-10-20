@@ -15,6 +15,22 @@
 #define HOST       "localhost"
 #define SERVERNAME std::string("Valhalla")
 
+/* LOG COLOURING */
+#define YELLOW         "\033[33m"
+#define PINK           "\033[95m"
+#define CYAN           "\033[36m"
+#define RED            "\033[31m"
+#define WHITE          "\033[37m"
+#define RESET          "\033[0m"
+#define COLOUR_LOG     WHITE
+#define COLOUR_SUCCESS WHITE
+#define COLOUR_IN      CYAN
+#define COLOUR_OUT     PINK
+#define COLOUR_ERR     RED
+
+/* UNALLOWED CHARACTERS */
+#define UNALLOWED_NICK " !@#$%^&*()[]{}<>:;,/"
+
 class Server{
     
     private:
@@ -67,7 +83,8 @@ class Server{
         void receiveMessages         (int i);
         void parseIncomingMessage    (std::string message, int socket);
         void comparePassword         ();
-        bool checkUnallowedCharacters(std::string const& nickname) const;
+        bool checkUnallowedCharacters(std::string const& strToCheck,
+                                      std::string const& unallowedChars) const;
 
         /* <------ server commands -----> */
         void CMD_CAP (int socket);
