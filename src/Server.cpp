@@ -183,36 +183,25 @@ void Server::Messages(int socket){
     
     if (m_command == "CAP")
     {
-        RPL_CAP(socket);
+        CMD_CAP(socket);
     }
     else if (m_command == "NICK")
     {
-        if (m_parameters.empty() == true){
-            ERR_NONICKNAMEGIVEN(socket);
-        }
-        else if (checkUnallowedCharacters(m_parameters[0]) == true){
-            ERR_ERRONEUSNICKNAME(socket, m_parameters[0]);
-        }
-        else if (um.checkForNickname(m_parameters[0]) == true){
-            ERR_NICKNAMEINUSE(socket, m_parameters[0]);
-        }
-        else{
-            if (um.getNickname(socket).empty() == false){
-                RPL_NICKCHANGE(socket, m_parameters[0]);
-            }
-            um.setNickname(socket, m_parameters[0]);
-        }
+        CMD_NICK(socket);
     }
     else if (m_command == "USER")
     {
         /* @note will this be send everytime someone changes his USER name? */
+        if (m_parameters.empty() == true){
+            ERR_NEEDMOREPARAMS(socket);
+        }
         if (um.checkForUser(socket) == true
             && um.getUsername(socket).empty() == false){
             ERR_ALREADYREGISTRED(socket);
         }
         else{
             RPL_WELCOME(socket);
-            this->um.setUsername(socket, this->m_parameters[0]);
+            um.setUsername(socket, m_parameters[0]);
         }
     }
     else if (m_command == "PING")
@@ -225,9 +214,7 @@ void Server::Messages(int socket){
     }
     else if (m_command == "JOIN")
     {
-        m_parameters[0] = m_parameters[0].erase(0, 1);
-        um.addChannel(m_parameters[0]);
-        RPL_JOIN(socket, m_parameters[0]);
+        RPL_JOIN(socket);
     }
   // else if (m_command == "PASS") {
   //   comparePassword();
@@ -242,7 +229,7 @@ void Server::Messages(int socket){
 // 		writeToOutputBuffer(ERR_PASSWD)
 // }
 
-bool Server::checkUnallowedCharacters(std::string nickname){
+bool Server::checkUnallowedCharacters(std::string const& nickname) const{
 	const std::string unallowedChars = " !@#$%^&*()[]{}<>:;,/";
 	for(size_t i = 0; i < unallowedChars.length(); ++i){
 		size_t find = nickname.find(unallowedChars[i]);
@@ -297,7 +284,7 @@ void Server::parseIncomingMessage(std::string message, int socket) {
     }
 }
 
-std::string Server::getParameter(std::string message) {
+std::string Server::getParameter(std::string const& message) {
   size_t colon = message.find(":");
   if (colon != std::string::npos) {
     std::string before = message.substr(0, colon);
@@ -324,7 +311,7 @@ void Server::printCommand() {
     }
 }
 
-void Server::getCommand(std::string &message) {
+void Server::getCommand(std::string& message){
   size_t end = message.find(" ");
   this->m_command = message.substr(0, end);
   message.erase(message.begin(), message.begin() + end + 1);
@@ -335,23 +322,23 @@ void Server::error(std::string str) {
   exit(1);
 }
 
-void Server::log(std::string message){
+void Server::log(std::string const& message) const{
     std::cout << COLOUR_LOG << message << RESET << std::endl;
 }
 
-void Server::log_success(std::string message){
+void Server::log_success(std::string const& message) const{
     std::cout << COLOUR_SUCCESS << "Success: " << message << RESET << std::endl;
 }
 
-void Server::log_inc(std::string message){
+void Server::log_inc(std::string const& message) const{
     std::cout << COLOUR_IN << "\nIncoming: " << message << RESET << std::endl;
 }
 
-void Server::log_send(std::string message){
+void Server::log_send(std::string const& message) const{
     std::cout << COLOUR_OUT << "Sending: "<< message << RESET << std::endl;
 }
 
-void Server::log_err(std::string message){
+void Server::log_err(std::string const& message) const{
     std::cout << COLOUR_ERR << "Error: " << message << RESET << std::endl;
 }
 

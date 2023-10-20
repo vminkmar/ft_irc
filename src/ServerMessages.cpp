@@ -8,13 +8,55 @@
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server replies */
 
 void Server::RPL_CAP(int socket) {
-  if (m_parameters[0] == "LS") {
     std::stringstream ss;
     ss << socket;
     log_success("CAP message send to socket#" + ss.str());
     std::string str = "CAP * LS :cap reply...\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
-  }
+}
+
+void Server::RPL_JOIN(int socket){
+    std::stringstream ss;
+    ss << socket;
+    log_success("JOIN message send to socket#" + ss.str());
+    std::string name = m_parameters[0];
+    std::string str  = um.getNickname(socket) + "!" +
+                       um.getUsername(socket) + "@" + HOST + " JOIN " +
+                       name + " * :" + um.getUsername(socket) + "\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::RPL_NICKCHANGE(int socket, std::string const& newNickname){
+    std::string oldNickname = um.getNickname(socket);
+    if (oldNickname.empty() == true){
+        log_success("UNSET_NICKNAME got changed to " + newNickname);
+    }
+    else{
+        log_success(oldNickname + " got changed to " + newNickname);
+    }
+    std::string str = ":"   + oldNickname
+                      + "!" + um.getUsername(socket)
+                      + "@" + "localhost" + " " + "NICK"
+                      + " :" + newNickname + "\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::RPL_QUIT(int socket) {
+    std::stringstream ss;
+    ss << socket;
+    log_success("QUIT message send to socket#" + ss.str());
+    std::string str = um.getNickname(socket) + "!" +
+                      um.getUsername(socket) + "@" + "localhost" +
+                      " QUIT :Goodbye!\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::RPL_PING(int socket) {
+    std::stringstream ss;
+    ss << socket;
+    log_success("PONG message send to socket#" + ss.str());
+    std::string str = "PONG :" + m_parameters[0] + "\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
 }
 
 void Server::RPL_WELCOME(int socket) {
@@ -29,72 +71,30 @@ void Server::RPL_WELCOME(int socket) {
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::RPL_PING(int socket) {
-    std::stringstream ss;
-    ss << socket;
-    log_success("PONG message send to socket#" + ss.str());
-    std::string str = "PONG :" + m_parameters[0] + "\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-}
-
-void Server::RPL_QUIT(int socket) {
-    std::stringstream ss;
-    ss << socket;
-    log_success("QUIT message send to socket#" + ss.str());
-    std::string str = um.getNickname(socket) + "!" +
-                    um.getUsername(socket) + "@" + "localhost" +
-                    " QUIT :Goodbye!\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-}
-
-void Server::RPL_JOIN(int socket, std::string name) {
-    std::stringstream ss;
-    ss << socket;
-    log_success("JOIN message send to socket#" + ss.str());
-    std::string str = um.getNickname(socket) + "!" +
-                    um.getUsername(socket) + "@" + HOST + " JOIN " +
-                    name + " * :" + um.getUsername(socket) + "\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-}
-
-void Server::RPL_NICKCHANGE(int socket, std::string newNick){
-    std::string oldNick = um.getNickname(socket);
-    if (oldNick.empty() == true){
-        log_success("UNSET_NICKNAME got changed to " + newNick);
-    }
-    else{
-        log_success(oldNick + " got changed to " + newNick);
-    }
-    std::string str = ":"   + oldNick
-                      + "!" + um.getUsername(socket)
-                      + "@" + "localhost" + " " + "NICK"
-                      + " :" + newNick + "\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-}
-
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
-
-void Server::ERR_NICKNAMEINUSE(int socket, std::string nick){
-	log_err("Nickname already in use");
-	std::string str = "433 " + nick + " :Nickname is already in use\r\n";
-	um.appendToBuffer(str, socket, OUTPUT);
-}
-
-void Server::ERR_ERRONEUSNICKNAME(int socket, std::string nick){
-    log_err("Nickname has unallowed characters");
-    std::string str = "432 " + nick + " :Erroneous nickname\r\n";
-	um.appendToBuffer(str, socket, OUTPUT);
-}
-
-void Server::ERR_NEEDMOREPARAMS(int socket, std::string command){
-	log_err("Not enough parameters");
-    std::string str = "461 " + command + " :Not enough parameters\r\n";
-	um.appendToBuffer(str, socket, OUTPUT);
-}
 
 void Server::ERR_NONICKNAMEGIVEN(int socket){
     log_err("No Nickname given");
     std::string str = "431 :No nickname given\r\n";
+	um.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::ERR_ERRONEUSNICKNAME(int socket, std::string const& nickname){
+    log_err("Nickname has unallowed characters");
+    std::string str = "432 " + nickname + " :Erroneous nickname\r\n";
+	um.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::ERR_NICKNAMEINUSE(int socket, std::string const& nickname){
+	log_err("Nickname already in use");
+	std::string str = "433 " + nickname + " :Nickname is already in use\r\n";
+	um.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::ERR_NEEDMOREPARAMS(int socket){
+    log_err("Not enough parameters");
+    std::string command = m_parameters[0];
+    std::string str = "461 " + command + " :Not enough parameters\r\n";
 	um.appendToBuffer(str, socket, OUTPUT);
 }
 

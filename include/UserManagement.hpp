@@ -39,8 +39,8 @@ class UserManagement{
         void addUser         (int socket);
         void eraseUser       (int socket);
         bool checkForUser    (int socket)           const;
-        bool checkForUsername(std::string username) const;
-        bool checkForNickname(std::string nickname) const;
+        bool checkForUsername(std::string const& username) const;
+        bool checkForNickname(std::string const& nickname) const;
 
             /* <---- setters */
             void setUsername    (int socket, std::string newUsername);

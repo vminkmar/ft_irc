@@ -30,7 +30,7 @@ bool UserManagement::checkForUser(int socket) const{
     return m_users.find(socket) != m_users.end();
 }
 
-bool UserManagement::checkForUsername(std::string username) const{
+bool UserManagement::checkForUsername(std::string const& username) const{
     for (t_um_users_cit it = m_users.begin(); it != m_users.end(); ++it){
         if(it->second.getUsername() == username){
             return true;
@@ -39,7 +39,7 @@ bool UserManagement::checkForUsername(std::string username) const{
     return false;
 }
 
-bool UserManagement::checkForNickname(std::string nickname) const{
+bool UserManagement::checkForNickname(std::string const& nickname) const{
 	for(t_um_users_cit it = m_users.begin(); it != m_users.end(); ++it){
 		if(it->second.getNickname() == nickname){
 			return true;

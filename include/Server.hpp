@@ -44,11 +44,11 @@ class Server{
         Server();
         ~Server();
 
-    /* @note essentially all of this could be private at some point */
+        /* @note essentially all of this could be private at some point */
 
         /* <------ getters -----> */
-        std::string getParameter(std::string message);
-        void        getCommand(std::string &message);
+        std::string getParameter(std::string const& message);
+        void        getCommand  (std::string&       message);
         // void getPortAndPasswd(char **argv); /* @note no implement. */
 
         void createSocket(); /* this function essent. runs the whole server */
@@ -61,37 +61,41 @@ class Server{
         void cleanUpSockets();
 
         /* <------ client communication -----> */
-        void Messages            (int socket);
-        void checkCompleteMessage(int socket);
-        void sendMessages        (int i);
-        void receiveMessages     (int i);
-        void parseIncomingMessage(std::string message, int socket);
-        void comparePassword     ();
-        bool checkUnallowedCharacters(std::string nickname);
+        void Messages                (int socket);
+        void checkCompleteMessage    (int socket);
+        void sendMessages            (int i);
+        void receiveMessages         (int i);
+        void parseIncomingMessage    (std::string message, int socket);
+        void comparePassword         ();
+        bool checkUnallowedCharacters(std::string const& nickname) const;
+
+        /* <------ server commands -----> */
+        void CMD_CAP (int socket);
+        void CMD_NICK(int socket);
 
         /* <------ server replies -----> */
-        void RPL_QUIT      (int socket);
-        void RPL_WELCOME   (int socket);
         void RPL_CAP       (int socket);
+        void RPL_JOIN      (int socket);
+        void RPL_NICKCHANGE(int socket, std::string const& newNickname);
+        void RPL_QUIT      (int socket);
         void RPL_PING      (int socket);
-        void RPL_JOIN      (int socket, std::string name);
-        void RPL_NICKCHANGE(int socket, std::string newNick);
+        void RPL_WELCOME   (int socket);
 
         /* <------ server errors -----> */
-        void ERR_NICKNAMEINUSE   (int socket, std::string nick);
-        void ERR_ERRONEUSNICKNAME(int socket, std::string nick);
         void ERR_NONICKNAMEGIVEN (int socket);
-        void ERR_NEEDMOREPARAMS  (int socket, std::string command);
+        void ERR_ERRONEUSNICKNAME(int socket, std::string const& nickname);
+        void ERR_NICKNAMEINUSE   (int socket, std::string const& nickname);
+        void ERR_NEEDMOREPARAMS  (int socket);
         void ERR_ALREADYREGISTRED(int socket);
 
         /* <------ else -----> */
         void printCommand();
         
-        void log        (std::string message);
-        void log_success(std::string message);
-        void log_inc    (std::string message); 
-        void log_send   (std::string message);
-        void log_err    (std::string message);
+        void log        (std::string const& message) const;
+        void log_success(std::string const& message) const;
+        void log_inc    (std::string const& message) const; 
+        void log_send   (std::string const& message) const;
+        void log_err    (std::string const& message) const;
 
 };
 
