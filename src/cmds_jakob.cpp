@@ -82,19 +82,52 @@ void Server::CMD_JOIN(int socket){
         std::vector<std::string>channelNames = split(m_parameters[0], ',');
         log_vector("channelNames", channelNames);
        
+        std::vector<std::string>channelKeys;
         if (m_parameters.size() >= 2){
-            std::vector<std::string>channelKeys = split(m_parameters[1], ',');
+            channelKeys = split(m_parameters[1], ',');
             log_vector("channelKeys", channelKeys);
         }
 
-        // @note parse and test with test.cpp
-        //
-        // @note put all of this into ...
-            // std::map<std::vector<std::string>, std::vector<std::string>>
+        std::vector<std::string>::const_iterator key;
+        key = channelKeys.begin();
 
-        // @note loop through map and join/create channel with corresp. password
-        
+        for (std::vector<std::string>::const_iterator it = channelNames.begin();
+                                                      it != channelNames.end();
+                                                      ++it){
+            if (um.checkForChannel(*it) == false){
+                ERR_NOSUCHCHANNEL(socket, *it);
+                um.addChannel(*it);
+                um.addUserToChannel(socket, OPERATOR, *it);
+                RPL_NOTOPIC(socket, *it);
+                RPL_NAMREPLY(socket);
+            }
+            else{
+                
+                Channel const& channel = um.getChannel(*it);
 
+                std::string passw;
+                if (key != channelKeys.end()){
+                    passw = *key;
+                    ++key;
+                }
+
+                if (passw.empty() == false){
+
+                    if (channel.isChannelKey() == false){
+                        /* some kind of error! */
+                    }
+                    else{
+                        if (channel.getPassword() != passw){
+                            /* ERR_BADCHANNELKEY */
+                        }
+                        um.addUserToChannel(socket, USER, *it);
+                    }
+                }
+                else{
+                    um.addUserToChannel(socket, USER, *it);
+                }
+            }
+        }
         //RPL_JOIN(socket, channelName, um.getUsername(socket));
     }
 }

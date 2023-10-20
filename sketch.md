@@ -5,37 +5,23 @@
 
 # Questions
 
-# Todos
-
     connecting --> disconnecting --> reconnecting && quitting
 
-    @vale   -review @notes
+# Todos
 
-    @jakob  -review USER, PING, QUIT, JOIN, PASS
-            -abstract NICK code?
-
-    Parallel work on commands
-        --> cmds_vale.cpp
-        --> cmds_jakob.cpp
-            --> <CHANNEL> commands
+    @jakob  JOIN
 
 # Commands
     
-    transform parameters in vector and at trail after : to a string
-
     Basics:
 
-        "NICK"
-		    - need to check if it is the first message and if the nickname is 
-             already set, if so then we need to send an message back to client
-             that the nickname got changed, need to check if nick is already
-             used.
+        "NICK"  -- works
 
-        "USER"
-			- need to check if user name is already used?
+        "USER"  -- works
 
         "PASS"
 			-need to add it at the end
+        
         "QUIT"
 		    - User should leave all channels, User gets erased from all 
             - containers and we need to delete user from pollfd struct or vector.
@@ -44,8 +30,7 @@
 			- m_parameters[0] are users as well as channels (msgtarget)
 			- m_parameters[1] is the content of the message
 
-        "PING"/"PONG"
-			works
+        "PING"/"PONG" -- works
         
         "ERROR" ?
         "RESTART"	?
@@ -54,16 +39,6 @@
     Channels:
 				
         "JOIN"
-			- Channel can be divided by , that means there are multiple
-             channels (m_parameters[0])
-			- Channels can have an # or an & as Prefix. # means channel with
-             key and  & means without a key/password
-			- m_parameters[1] are the keys that can also be divided by comma
-			- if m_parameters[0] = 0 then the user wants to leave all currently
-             joined channels
-			- check if a Channel with the same name exists
-			- first User that creates a Channel needs to be operator
-			- User gets join message
 
         "KICK"   /* operator */
 			- remove User from vector

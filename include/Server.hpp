@@ -16,17 +16,17 @@
 #define SERVERNAME std::string("Valhalla")
 
 /* LOG COLOURING */
-#define YELLOW         "\033[33m"
-#define PINK           "\033[95m"
-#define CYAN           "\033[36m"
-#define RED            "\033[31m"
-#define WHITE          "\033[37m"
-#define RESET          "\033[0m"
-#define COLOUR_LOG     WHITE
-#define COLOUR_SUCCESS WHITE
-#define COLOUR_IN      CYAN
-#define COLOUR_OUT     PINK
-#define COLOUR_ERR     RED
+#define YELLOW             "\033[33m"
+#define PINK               "\033[95m"
+#define CYAN               "\033[36m"
+#define RED                "\033[31m"
+#define WHITE              "\033[37m"
+#define RESET              "\033[0m"
+#define COLOUR_LOG         WHITE
+#define COLOUR_INTERACTION WHITE
+#define COLOUR_IN          CYAN
+#define COLOUR_OUT         PINK
+#define COLOUR_ERR         RED
 
 /* UNALLOWED CHARACTERS */
 #define UNALLOWED_NICK " !@#$%^&*()[]{}<>:;,/"
@@ -99,12 +99,16 @@ class Server{
         void RPL_JOIN      (int socket,
                             std::string const& channelName,
                             std::string const& username);
+        void RPL_NAMREPLY  (int socket);
         void RPL_NICKCHANGE(int socket, std::string const& newNickname);
-        void RPL_QUIT      (int socket);
+        void RPL_NOTOPIC   (int socket, std::string const& channelName);
         void RPL_PING      (int socket, std::string const& servername);
+        void RPL_QUIT      (int socket);
+        void RPL_TOPIC     (int socket, std::string const& channelName);
         void RPL_WELCOME   (int socket, std::string const& username);
 
         /* <------ server errors -----> */
+        void ERR_NOSUCHCHANNEL   (int socket, std::string const& channelName);
         void ERR_NONICKNAMEGIVEN (int socket);
         void ERR_ERRONEUSNICKNAME(int socket, std::string const& nickname);
         void ERR_NICKNAMEINUSE   (int socket, std::string const& nickname);
@@ -112,13 +116,14 @@ class Server{
         void ERR_ALREADYREGISTRED(int socket);
         
         /* <------ server logs -----> */
-        void log        (std::string const& message) const;
-        void log_success(std::string const& message) const;
-        void log_inc    (std::string const& message) const; 
-        void log_send   (std::string const& message) const;
-        void log_err    (std::string const& message) const;
-        void log_vector (std::string const& name,
-                         std::vector<std::string> const& vec) const;
+        void log            (std::string const& message) const;
+        void log_inc        (int socket, std::string const& message) const; 
+        void log_send       (int socket, std::string const& message) const;
+        void log_err        (std::string const& message) const;
+        void log_vector     (std::string const& name,
+                             std::vector<std::string> const& vec) const;
+        void log_interaction(int socket,
+                             std::string const& message) const;
 
         /* <------ else -----> */
         void printCommand();

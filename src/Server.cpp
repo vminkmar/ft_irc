@@ -141,9 +141,8 @@ void Server::sendMessages(int socket){
             }
             std::stringstream ss;
             ss << socket;
-            log_send(message.substr(0, message.find_first_of("\r"))
-                + " --> socket #"
-                + ss.str());
+            log_send(socket,
+                     message.substr(0, message.find_first_of("\r")) + ss.str());
             size_t end = um.getBuffer(socket, OUTPUT).find("\r\n");
             if (end != std::string::npos){
             um.eraseBuffer(socket, OUTPUT, 0, end + 2);
@@ -217,8 +216,8 @@ void Server::parseIncomingMessage(std::string message, int socket) {
     }
 
     /* @note might be error prone */
-    log_inc(message.substr(0, message.find_last_not_of("\n") + 1));
-
+    log_inc(socket, message.substr(0, message.find_first_of("\r")));
+    
     size_t pos = message.find("\r\n");
     while (pos != std::string::npos)
     {
@@ -292,16 +291,27 @@ void Server::log(std::string const& message) const{
     std::cout << COLOUR_LOG << message << RESET << std::endl;
 }
 
-void Server::log_success(std::string const& message) const{
-    std::cout << COLOUR_SUCCESS << "Success: " << message << RESET << std::endl;
+void Server::log_interaction(int socket, std::string const& message) const{
+    (void) socket;
+    std::cout << COLOUR_INTERACTION
+              << message
+              << RESET << std::endl;
 }
 
-void Server::log_inc(std::string const& message) const{
-    std::cout << COLOUR_IN << "\nIncoming: " << message << RESET << std::endl;
+void Server::log_inc(int socket, std::string const& message) const{
+    std::stringstream ss;
+    ss << socket;
+    std::cout << COLOUR_IN
+              << "\nIncoming: " << message << " <-- socket#" << ss.str()
+              << RESET << std::endl;
 }
 
-void Server::log_send(std::string const& message) const{
-    std::cout << COLOUR_OUT << "Sending: "<< message << RESET << std::endl;
+void Server::log_send(int socket, std::string const& message) const{
+    std::stringstream ss;
+    ss << socket;
+    std::cout << COLOUR_OUT
+              << "Sending: "<< message << " --> socket#" << ss.str()
+              << RESET << std::endl;
 }
 
 void Server::log_err(std::string const& message) const{
