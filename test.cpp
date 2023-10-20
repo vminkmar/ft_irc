@@ -9,6 +9,16 @@
 #define GREEN "\033[32m"
 #define RESET "\033[0m"
 
+/* Past test cases */
+    // log("Appending some content to UserBuffer");
+    // log("Adding channels to server");
+    // log("Listing Channels");
+    // log("Erasing and listing channel");
+    // log("ChannelInfo");
+    // log("Adding Users to channel");
+    // log("Erasing User from Channel");
+    // log("Erasing User from Server who is part of a Channel");
+
 Server s;
 
 static inline void log(std::string const& message)
@@ -41,7 +51,10 @@ void t_connect(std::string const& username,
     log("ADDING USER/CLIENT TO SOCKET #" + ss.str());
     s.um.addUser(socket);
 
-    t_incoming_message("NICK " + nickname + "\r\n" + " USER " + username + "\r\n", socket);
+    std::string msg = "NICK " + nickname + "\r\n";
+    std::string msg2 = "USER " + username + "\r\n";
+    t_incoming_message(msg.c_str(), socket);
+    t_incoming_message(msg2.c_str(), socket);
 
     s.sendMessages(socket);
 }
@@ -52,29 +65,13 @@ int main(void)
         /* Test commands with t_command(<full_message>, socket) */
             /* needs \r\n !!! */
 
-    /* Setting up testing environment (Server + Client + User on socket #1) */
     t_connect("Dummy-User", "Dummy-Nick", 1);
-    //t_connect("Hans", "Peter", 2);
-
     t_show_users();
 
-    //t_command("USER Dummy-User\r\n", 1);
-
-    t_command("QUIT\r\n", 1);
-
-    t_show_users();
+    t_command("JOIN channel", 1);
 
     return (EXIT_SUCCESS);
 }
 
-/* Past test cases */
-    // log("Appending some content to UserBuffer");
-    // log("Adding channels to server");
-    // log("Listing Channels");
-    // log("Erasing and listing channel");
-    // log("ChannelInfo");
-    // log("Adding Users to channel");
-    // log("Erasing User from Channel");
-    // log("Erasing User from Server who is part of a Channel");
 
 // -------------------------------------------------------------------------- //
