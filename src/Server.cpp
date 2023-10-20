@@ -185,9 +185,9 @@ void Server::Messages(int socket){
     else if (m_command == "JOIN"){
         CMD_JOIN(socket);
     }
-  // else if (m_command == "PASS") {
-  //   comparePassword();
-  // }
+    // else if (m_command == "PASS")
+    //     comparePassword();
+    // }
 }
 
 // void Server::comparePassword(){

@@ -62,15 +62,29 @@ void Server::CMD_JOIN(int socket){
     /* channel */ /* , */ /* channel */
     /* key */ /* , */ /* key */
 
-    // @note parse and test with test.cpp
-    // @note put all of this into a std::map<std::vector<std::string>, std::vector<std::string>>
-    // @note loop through map and join/create channel with corresp. password
-    // @note 
+    
+    if (m_parameters.empty() == true){
+        ERR_NEEDMOREPARAMS(socket, m_command);
+    }
 
-    std::string const& channelName = m_parameters[0];
-    RPL_JOIN(socket, channelName, um.getUsername(socket));
+    if (m_parameters[0] == "0"){
+        /* @note leave all channels */
+        /* handle like PART command and reply accordingly */
+    }
+    else{
+        
+        // @note parse and test with test.cpp
+        //
+        // @note put all of this into ...
+            // std::map<std::vector<std::string>, std::vector<std::string>>
 
+        // @note loop through map and join/create channel with corresp. password
+        
+        std::string const& channelName = m_parameters[0];
+        std::vector< std::pair<std::string, std::string> > channels;
+
+        RPL_JOIN(socket, channelName, um.getUsername(socket));
+    }
 }
-
 
 // -------------------------------------------------------------------------- //
