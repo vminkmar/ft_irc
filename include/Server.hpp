@@ -72,20 +72,26 @@ class Server{
         /* <------ server commands -----> */
         void CMD_CAP (int socket);
         void CMD_NICK(int socket);
+        void CMD_USER(int socket);
+        void CMD_PING(int socket);
+        void CMD_QUIT(int socket);
+        void CMD_JOIN(int socket);
 
         /* <------ server replies -----> */
         void RPL_CAP       (int socket);
-        void RPL_JOIN      (int socket);
+        void RPL_JOIN      (int socket,
+                            std::string const& channelName,
+                            std::string const& username);
         void RPL_NICKCHANGE(int socket, std::string const& newNickname);
         void RPL_QUIT      (int socket);
-        void RPL_PING      (int socket);
-        void RPL_WELCOME   (int socket);
+        void RPL_PING      (int socket, std::string const& servername);
+        void RPL_WELCOME   (int socket, std::string const& username);
 
         /* <------ server errors -----> */
         void ERR_NONICKNAMEGIVEN (int socket);
         void ERR_ERRONEUSNICKNAME(int socket, std::string const& nickname);
         void ERR_NICKNAMEINUSE   (int socket, std::string const& nickname);
-        void ERR_NEEDMOREPARAMS  (int socket);
+        void ERR_NEEDMOREPARAMS  (int socket, std::string const& command);
         void ERR_ALREADYREGISTRED(int socket);
 
         /* <------ else -----> */

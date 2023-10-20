@@ -15,14 +15,13 @@ void Server::RPL_CAP(int socket) {
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::RPL_JOIN(int socket){
+void Server::RPL_JOIN(int socket, std::string const& channelName, std::string const& username){
     std::stringstream ss;
     ss << socket;
     log_success("JOIN message send to socket#" + ss.str());
-    std::string name = m_parameters[0];
     std::string str  = um.getNickname(socket) + "!" +
-                       um.getUsername(socket) + "@" + HOST + " JOIN " +
-                       name + " * :" + um.getUsername(socket) + "\r\n";
+                       username + "@" + HOST + " JOIN " +
+                       channelName + " * :" + username + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
@@ -41,7 +40,7 @@ void Server::RPL_NICKCHANGE(int socket, std::string const& newNickname){
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::RPL_QUIT(int socket) {
+void Server::RPL_QUIT(int socket){
     std::stringstream ss;
     ss << socket;
     log_success("QUIT message send to socket#" + ss.str());
@@ -51,15 +50,15 @@ void Server::RPL_QUIT(int socket) {
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::RPL_PING(int socket) {
+void Server::RPL_PING(int socket, std::string const& servername){
     std::stringstream ss;
     ss << socket;
     log_success("PONG message send to socket#" + ss.str());
-    std::string str = "PONG :" + m_parameters[0] + "\r\n";
+    std::string str = "PONG :" + servername + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::RPL_WELCOME(int socket) {
+void Server::RPL_WELCOME(int socket, std::string const& username){
     std::stringstream ss;
     ss << socket;
     log_success("Welcome message send to socket#" + ss.str());
@@ -67,7 +66,7 @@ void Server::RPL_WELCOME(int socket) {
                       " 001 " + um.getNickname(socket) +
                       " :Welcome to the ft_irc network " +
                       um.getNickname(socket) + "!" +
-                      m_parameters[0] + "@" + HOST + "\r\n";
+                      username + "@" + HOST + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
@@ -91,9 +90,8 @@ void Server::ERR_NICKNAMEINUSE(int socket, std::string const& nickname){
 	um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::ERR_NEEDMOREPARAMS(int socket){
+void Server::ERR_NEEDMOREPARAMS(int socket, std::string const& command){
     log_err("Not enough parameters");
-    std::string command = m_parameters[0];
     std::string str = "461 " + command + " :Not enough parameters\r\n";
 	um.appendToBuffer(str, socket, OUTPUT);
 }

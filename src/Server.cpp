@@ -181,40 +181,23 @@ void Server::receiveMessages(int socket) {
 
 void Server::Messages(int socket){
     
-    if (m_command == "CAP")
-    {
+    if (m_command == "CAP"){
         CMD_CAP(socket);
     }
-    else if (m_command == "NICK")
-    {
+    else if (m_command == "NICK"){
         CMD_NICK(socket);
     }
-    else if (m_command == "USER")
-    {
-        /* @note will this be send everytime someone changes his USER name? */
-        if (m_parameters.empty() == true){
-            ERR_NEEDMOREPARAMS(socket);
-        }
-        if (um.checkForUser(socket) == true
-            && um.getUsername(socket).empty() == false){
-            ERR_ALREADYREGISTRED(socket);
-        }
-        else{
-            RPL_WELCOME(socket);
-            um.setUsername(socket, m_parameters[0]);
-        }
+    else if (m_command == "USER"){
+        CMD_USER(socket);
     }
-    else if (m_command == "PING")
-    {
-        RPL_PING(socket);
+    else if (m_command == "PING"){
+        CMD_PING(socket);
     }
-    else if (m_command == "QUIT")
-    {
-        RPL_QUIT(socket);
+    else if (m_command == "QUIT"){
+        CMD_QUIT(socket);
     }
-    else if (m_command == "JOIN")
-    {
-        RPL_JOIN(socket);
+    else if (m_command == "JOIN"){
+        CMD_JOIN(socket);
     }
   // else if (m_command == "PASS") {
   //   comparePassword();
