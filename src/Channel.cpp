@@ -171,6 +171,11 @@ void Channel::eraseUser(int socket)
 	m_users.erase(socket);
 }
 
+bool Channel::isMember(int socket) const
+{
+    return m_users.find(socket) != m_users.end();
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 
 Channel& Channel::operator=(Channel const& src)
