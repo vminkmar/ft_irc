@@ -16,12 +16,13 @@ void Server::RPL_CAP(int socket) {
 }
 
 void Server::RPL_JOIN(int socket,
-                      std::string const& channelName,
-                      std::string const& username){
+                      std::string const& channelName){
     std::stringstream ss;
     ss << socket;
     log("JOIN message send to socket#" + ss.str());
-    std::string str  = ":" + um.getNickname(socket) + "!" +
+    std::string const& username = um.getUsername(socket);
+    std::string const& nickname = um.getNickname(socket);
+    std::string str  = ":" + nickname + "!" +
                        username + "@" + HOST + " JOIN " +
                        channelName + " * :" + username + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);

@@ -91,12 +91,12 @@ class Server{
         void CMD_PING(int socket);
         void CMD_QUIT(int socket);
         void CMD_JOIN(int socket);
+        void CMD_PART(int socket);
 
         /* <------ server replies -----> */
         void RPL_CAP       (int socket);
         void RPL_JOIN      (int socket,
-                            std::string const& channelName,
-                            std::string const& username);
+                            std::string const& channelName);
         void RPL_NAMREPLY  (int socket,
                             std::string const& channelName,
                             std::string const& members);
@@ -108,6 +108,9 @@ class Server{
                             std::string const& channelName,
                             std::string const& channelTopic);
         void RPL_WELCOME   (int socket, std::string const& username);
+        void RPL_PART      (int socket,
+                            std::string const& channelName,
+                            std::string const& partMessage);
 
         /* <------ server errors -----> */
         void ERR_NOSUCHCHANNEL   (int socket, std::string const& channelName);
