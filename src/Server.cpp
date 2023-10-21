@@ -125,28 +125,27 @@ void Server::cleanUpSockets(){
 	}
 }
 
-
 void Server::socketClosed(int socket){
     um.setOnlineStatus(socket, false);
 }
 
 void Server::sendMessages(int socket){
-    if (!um.getBuffer(socket, OUTPUT).empty()){
-        while (!um.getBuffer(socket, OUTPUT).empty()){
-            std::string message = um.getBuffer(socket, OUTPUT);
-            
-            int sending = send(socket, message.data(), message.length(), 0);
-            if (sending < 0){
-                log_err("Send return < 0?");
-            }
-            std::stringstream ss;
-            ss << socket;
-            log_send(socket, message.substr(0, message.find_first_of("\r")));
-            size_t end = um.getBuffer(socket, OUTPUT).find("\r\n");
-            if (end != std::string::npos){
-            um.eraseBuffer(socket, OUTPUT, 0, end + 2);
-            }
+    
+    while (um.getBuffer(socket, OUTPUT).empty() == false){
+        
+        std::string const& outputBuffer = um.getBuffer(socket, OUTPUT);
+        size_t messageEnd = outputBuffer.find("\r\n");
+        if (messageEnd == std::string::npos){
+            log_err("no \r\n found in OUTPUT Buffer!");
         }
+        std::string const& message = outputBuffer.substr(0, messageEnd);
+        
+        log_send(socket, message);
+        int sending = send(socket, message.data(), message.length(), 0);
+        if (sending < 0){
+            log_err("Send return < 0?");
+        }
+        um.eraseBuffer(socket, OUTPUT, 0, messageEnd + 2);
     }
 }
 
@@ -216,8 +215,7 @@ void Server::parseIncomingMessage(std::string message, int socket){
         message = buffer;
     }
 
-    /* @note might be error prone */
-    log_inc(socket, message.substr(0, message.find_first_of("\r")));
+    log_inc(socket, message.substr(0, message.find("\r\n")));
     
     size_t pos = message.find("\r\n");
     while (pos != std::string::npos)
