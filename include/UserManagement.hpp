@@ -43,10 +43,10 @@ class UserManagement{
         bool checkForNickname(std::string const& nickname) const;
 
         /* <---- user map setters */
-        void setUsername    (int socket, std::string newUsername);
-        void setNickname    (int socket, std::string newNickname);
+        void setUsername    (int socket, std::string const& newUsername);
+        void setNickname    (int socket, std::string const& newNickname);
         void setOnlineStatus(int socket, bool flag);
-        void appendToBuffer (std::string message, int socket, int flag);
+        void appendToBuffer (std::string const& message, int socket, int flag);
         void eraseBuffer    (int socket, int flag, int start, int end);
 
         /* <---- user map getters */
@@ -58,23 +58,26 @@ class UserManagement{
         bool        getOnlineStatus(int socket)           const;
 
         /* <------ channel map operations-----> */
-        void addChannel      (std::string channelName);
-        void eraseChannel    (std::string channelName);
-        bool checkForChannel (std::string channelName) const;
-        void printChannelInfo(std::string channelName) const;
+        void addChannel      (std::string const& channelName);
+        void eraseChannel    (std::string const& channelName);
+        bool checkForChannel (std::string const& channelName) const;
+        void printChannelInfo(std::string const& channelName) const;
         void listChannels    ()                        const;
 
         /* <---- channel map setters */
         void addUserToChannel    (int socket,
                                   UserPrivilege up,
-                                  std::string channelName);
-        void eraseUserFromChannel(int socket, std::string channelName);
+                                  std::string const& channelName);
+        void eraseUserFromChannel(int socket,
+                                  std::string const& channelName);
 
         /* <---- channel map getters */
-        Channel const& getChannel(std::string channelName)          const;
+        Channel const& getChannel(std::string const& channelName)   const;
         std::string    getChannelNames()                            const;
-        std::string    getChannelUsernames(std::string channelName) const;
-        std::string    getChannelNicknames(std::string channelName) const;
+        std::string    getChannelUsernames
+                                        (std::string const& channelName) const;
+        std::string    getChannelNicknames
+                                        (std::string const& channelName) const;
 
 };
 

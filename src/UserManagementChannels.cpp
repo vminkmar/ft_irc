@@ -7,11 +7,11 @@
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> channel map operations */
 
-void UserManagement::addChannel(std::string channelName){
+void UserManagement::addChannel(std::string const& channelName){
   m_channels[channelName] = Channel(channelName);
 }
 
-void UserManagement::eraseChannel(std::string channelName){
+void UserManagement::eraseChannel(std::string const& channelName){
 	for (t_um_channels_it it = m_channels.begin();
                           it != m_channels.end();
                           ++it){
@@ -22,11 +22,11 @@ void UserManagement::eraseChannel(std::string channelName){
 	}
 }
 
-bool UserManagement::checkForChannel(std::string channelName) const{
+bool UserManagement::checkForChannel(std::string const& channelName) const{
     return m_channels.find(channelName) != m_channels.end();
 }
 
-void UserManagement::printChannelInfo(std::string channelName) const{
+void UserManagement::printChannelInfo(std::string const& channelName) const{
     
     t_um_channels_cit it = m_channels.find(channelName);
     if (it != m_channels.end()){
@@ -48,7 +48,7 @@ void UserManagement::listChannels() const {
 
 void UserManagement::addUserToChannel(int socket,
                                       UserPrivilege up,
-                                      std::string channelName){
+                                      std::string const& channelName){
 	
     t_um_channels_it it = m_channels.find(channelName);
     if (it != m_channels.end()){
@@ -59,7 +59,8 @@ void UserManagement::addUserToChannel(int socket,
     }
 }
 
-void UserManagement::eraseUserFromChannel(int socket, std::string channelName){
+void UserManagement::eraseUserFromChannel(int socket,
+                                          std::string const& channelName){
     
     t_um_channels_it it = m_channels.find(channelName);
     if (it != m_channels.end()){
@@ -72,7 +73,7 @@ void UserManagement::eraseUserFromChannel(int socket, std::string channelName){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> channel map getters */
 
-Channel const& UserManagement::getChannel(std::string channelName) const{
+Channel const& UserManagement::getChannel(std::string const& channelName) const{
 	
     t_um_channels_cit it = m_channels.find(channelName);
     if (it == m_channels.end()){
@@ -99,7 +100,8 @@ std::string UserManagement::getChannelNames() const{
     return ss.str();
 }
 
-std::string UserManagement::getChannelUsernames(std::string channelName) const{
+std::string UserManagement::getChannelUsernames
+                                        (std::string const& channelName) const{
     std::stringstream ss;
     Channel::t_channel_users UserMap = getChannel(channelName).getUserMap();
     
@@ -120,7 +122,8 @@ std::string UserManagement::getChannelUsernames(std::string channelName) const{
     return ss.str();
 }
 
-std::string UserManagement::getChannelNicknames(std::string channelName) const{
+std::string UserManagement::getChannelNicknames
+                                        (std::string const& channelName) const{
     std::stringstream ss;
     Channel::t_channel_users UserMap = getChannel(channelName).getUserMap();
     

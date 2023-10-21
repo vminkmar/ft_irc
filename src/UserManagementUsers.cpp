@@ -50,14 +50,14 @@ bool UserManagement::checkForNickname(std::string const& nickname) const{
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user map setters */
 
-void UserManagement::setUsername(int socket, std::string newUsername){
+void UserManagement::setUsername(int socket, std::string const& newUsername){
     t_um_users_it it = m_users.find(socket);
     if (it != m_users.end()){
         it->second.setUsername(newUsername);
     }
 }
 
-void UserManagement::setNickname(int socket, std::string newNickname){
+void UserManagement::setNickname(int socket, std::string const& newNickname){
     t_um_users_it it = m_users.find(socket);
     if (it != m_users.end()){
         it->second.setNickname(newNickname);
@@ -76,7 +76,7 @@ void UserManagement::setOnlineStatus(int socket, bool flag){
     throw std::runtime_error("setOnlineStatus: User not found!");
 }
 
-void UserManagement::appendToBuffer(std::string message, int socket, int flag){
+void UserManagement::appendToBuffer(std::string const& message, int socket, int flag){
     if (flag == INPUT){
         m_users.find(socket)->second.appendInputBuffer(message);
     }
