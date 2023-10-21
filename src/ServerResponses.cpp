@@ -106,6 +106,22 @@ void Server::RPL_WELCOME(int socket, std::string const& username){
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
+void Server::RPL_PART(int socket,
+                      std::string const& channelName,
+                      std::string const& partMessage){
+    
+    std::stringstream ss;
+    ss << socket;
+    log("Part message send to socket#" + ss.str());
+
+    std::string str = "";
+    (void) channelName;
+    (void) partMessage;
+    um.appendToBuffer(str, socket, OUTPUT);
+
+}
+
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
 
 void Server::ERR_NOSUCHCHANNEL(int socket, std::string const& channelName){
@@ -141,6 +157,14 @@ void Server::ERR_NEEDMOREPARAMS(int socket, std::string const& command){
 void Server::ERR_ALREADYREGISTRED(int socket){
     log_err("Unauthorized command (already registered)!");
     std::string str = "462 :Unauthorized command (already registered)\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::ERR_NOTONCHANNEL(int socket, std::string const& channelName){
+    log_err("User not on channel!");
+    std::string str = "401 " + um.getNickname(socket)
+                      +  " " + channelName
+                      + ":You're not on that channel\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 

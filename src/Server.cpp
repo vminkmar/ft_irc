@@ -94,9 +94,9 @@ void Server::acceptClients(){
 }
 
 void Server::runServer(){
-    for (std::vector<pollfd>::iterator it = m_pollfds.begin() + 1;
-                                       it != m_pollfds.end();
-                                       ++it){
+    for (t_vec_pollfd_it it = m_pollfds.begin() + 1;
+                         it != m_pollfds.end();
+                         ++it){
         if (it->revents == 0){
             continue;
 	    }
@@ -115,8 +115,7 @@ void Server::runServer(){
 }
 
 void Server::cleanUpSockets(){
-    for(std::vector<pollfd>::iterator it = m_pollfds.begin() + 1;
-                                      it != m_pollfds.end();){
+    for(t_vec_pollfd_it it = m_pollfds.begin() + 1; it != m_pollfds.end();){
         if(um.getOnlineStatus(it->fd) == false){
             it = m_pollfds.erase(it);
         }
@@ -229,24 +228,24 @@ void Server::parseIncomingMessage(std::string message, int socket){
 
         tmp = getParameter(tmp);
 
-        log("<command> " + this->m_command);
-        for (std::vector<std::string>::iterator it = this->m_parameters.begin();
-                                                it != this->m_parameters.end();
-                                                ++it){
+        log("<command> " + m_command);
+        for (t_vec_str_cit it = m_parameters.begin();
+                           it != m_parameters.end();
+                           ++it){
             log("<param>   " + *it);
         }
-        this->m_trail = tmp;
-        log("<trail>   " + this->m_trail);
+        m_trail = tmp;
+        log("<trail>   " + m_trail);
 
         message.erase(message.begin(), message.begin() + pos + 2);
         if (!(um.getBuffer(socket, INPUT).empty())){
             um.eraseBuffer(socket, INPUT, 0, pos + 2);
         }
         Messages(socket);
-        this->m_parameters.clear();
+        m_parameters.clear();
         pos = message.find("\r\n");
     }
-    if (!message.empty()) {
+    if (!message.empty()){
         um.appendToBuffer(message, socket, INPUT);
     }
 }
@@ -321,24 +320,19 @@ void Server::log_err(std::string const& message) const{
     std::cout << COLOUR_ERR << "Error: " << message << RESET << std::endl;
 }
 
-void Server::log_vector(std::string const& name,
-                        std::vector<std::string> const& vec) const{
-    
+void Server::log_vector(std::string const& name, t_vec_str const& v) const{
     std::cout << COLOUR_LOG << "vec<" + name + "> ";
-    for (std::vector<std::string>::const_iterator it = vec.begin();
-                                                  it != vec.end();
-                                                  ++it){
+    for (t_vec_str_cit it = v.begin(); it != v.end(); ++it){
         std::cout << "[" << *it << "] ";
     }
     std::cout << RESET << std::endl;
-
 }
 
-std::vector<std::string> Server::split(std::string parameter,
+Server::t_vec_str Server::split(std::string parameter,
                                        char delimiter){
-    std::vector<std::string> split;
-    std::string              token;
-    std::stringstream        ss(parameter);
+    t_vec_str          split;
+    std::string        token;
+    std::stringstream  ss(parameter);
     while (std::getline(ss, token, delimiter)){
         split.push_back(token);
     }

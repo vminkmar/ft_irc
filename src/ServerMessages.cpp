@@ -2,6 +2,8 @@
 
 #include "../include/Server.hpp" // needed for Server class
 
+#include <sstream> // needed for std::stringstream
+
 void Server::CMD_CAP(int socket){
     if (m_parameters[0] == "LS"){
         RPL_CAP(socket);
@@ -69,6 +71,7 @@ void Server::CMD_JOIN(int socket){
 
     if (m_parameters.empty() == true){
         ERR_NEEDMOREPARAMS(socket, m_command);
+        /* @note return? */
     }
 
     if (m_parameters[0] == "0"){
@@ -86,12 +89,12 @@ void Server::CMD_JOIN(int socket){
             log_vector("channelKeys", channelKeys);
         }
 
-        std::vector<std::string>::const_iterator key;
+        t_vec_str_cit key;
         key = channelKeys.begin();
 
-        for (std::vector<std::string>::const_iterator it = channelNames.begin();
-                                                      it != channelNames.end();
-                                                      ++it){
+        for (t_vec_str_cit it = channelNames.begin();
+                           it != channelNames.end();
+                           ++it){
             if (um.checkForChannel(*it) == false){
                 
                 /* @note if no channel is found... */
@@ -104,6 +107,7 @@ void Server::CMD_JOIN(int socket){
                 ERR_NOSUCHCHANNEL(socket, *it);
                 um.addChannel(*it);
                 um.addUserToChannel(socket, OPERATOR, *it);
+                RPL_JOIN(socket, *it);
                 RPL_NOTOPIC(socket, *it);
                 RPL_NAMREPLY(socket, *it, um.getNickname(socket));
             }
@@ -137,6 +141,49 @@ void Server::CMD_JOIN(int socket){
             }
         }
         //RPL_JOIN(socket, channelName, um.getUsername(socket));
+    }
+}
+
+void Server::CMD_PART(int socket){
+
+    /* PART */
+    /* Channel, Channel, Channel */
+    
+    if (m_parameters.empty() == true){
+        ERR_NEEDMOREPARAMS(socket, m_command);
+    }
+
+
+    std::vector<std::string> channels = split(m_parameters[0], ',');
+
+    for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
+        if (um.checkForChannel(*it) == false){
+            ERR_NOSUCHCHANNEL(socket, *it);
+        }
+        else{
+            Channel const& channel = um.getChannel(*it);
+            if (channel.isMember(socket) == false){
+                ERR_NOTONCHANNEL(socket, *it);
+            }
+            um.eraseUserFromChannel(socket, *it);
+
+            std::string partMessage;
+            if (m_parameters.size() >= 2){
+
+                std::stringstream ss;
+                
+                for (t_vec_str_cit it = m_parameters.begin();
+                                   it != m_parameters.end();
+                                   ++it){
+                    ss << *it;
+                }
+                partMessage = ss.str();
+            }
+            else{
+                partMessage = DEFMSG_PART;
+            }
+            RPL_PART(socket, *it, partMessage);
+        }
     }
 }
 

@@ -31,13 +31,21 @@
 /* UNALLOWED CHARACTERS */
 #define UNALLOWED_NICK " !@#$%^&*()[]{}<>:;,/"
 
+/* DEFAULT MESSAGES */
+#define DEFMSG_PART "Goodbye!"
+
 class Server{
     
     private:
 
-        std::vector<int>         m_clients;    /* saves fd/sockets of clients */
-        std::vector<std::string> m_parameters;
-        std::vector<pollfd>      m_pollfds;    /* holds server and client fds */
+        typedef std::vector<std::string>  t_vec_str;
+        typedef t_vec_str::const_iterator t_vec_str_cit;
+
+        typedef std::vector<pollfd>       t_vec_pollfd;
+        typedef t_vec_pollfd::iterator    t_vec_pollfd_it;
+
+        t_vec_str                m_parameters;
+        std::vector<pollfd>      m_pollfds;
 
         struct      sockaddr_in  address;
 
@@ -119,21 +127,20 @@ class Server{
         void ERR_NICKNAMEINUSE   (int socket, std::string const& nickname);
         void ERR_NEEDMOREPARAMS  (int socket, std::string const& command);
         void ERR_ALREADYREGISTRED(int socket);
-        
+        void ERR_NOTONCHANNEL    (int socket, std::string const& channelName);
+
         /* <------ server logs -----> */
         void log            (std::string const& message) const;
         void log_inc        (int socket, std::string const& message) const; 
         void log_send       (int socket, std::string const& message) const;
         void log_err        (std::string const& message) const;
-        void log_vector     (std::string const& name,
-                             std::vector<std::string> const& vec) const;
+        void log_vector     (std::string const& name, t_vec_str const& v) const;
         void log_interaction(int socket,
                              std::string const& message) const;
 
         /* <------ else -----> */
         void printCommand();
-        std::vector<std::string> split(std::string parameter,
-                                       char delimiter);
+        t_vec_str split(std::string parameter, char delimiter);
 
 };
 
