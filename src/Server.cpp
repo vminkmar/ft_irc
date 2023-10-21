@@ -115,14 +115,15 @@ void Server::runServer(){
 }
 
 void Server::cleanUpSockets(){
-	for(std::vector<pollfd>::iterator it = m_pollfds.begin() + 1;
+    for(std::vector<pollfd>::iterator it = m_pollfds.begin() + 1;
                                       it != m_pollfds.end();){
-		if(um.getOnlineStatus(it->fd) == false){
-			it = m_pollfds.erase(it);
-		}
-		else
-			++it;
-	}
+        if(um.getOnlineStatus(it->fd) == false){
+            it = m_pollfds.erase(it);
+        }
+        else{
+            ++it;
+        }
+    }
 }
 
 void Server::socketClosed(int socket){
@@ -137,7 +138,9 @@ void Server::sendMessages(int socket){
         size_t messageEnd = outputBuffer.find("\r\n");
         if (messageEnd == std::string::npos){
             log_err("no \r\n found in OUTPUT Buffer!");
+            break ;
         }
+        messageEnd += 2;
         std::string const& message = outputBuffer.substr(0, messageEnd);
         
         log_send(socket, message);
@@ -145,7 +148,7 @@ void Server::sendMessages(int socket){
         if (sending < 0){
             log_err("Send return < 0?");
         }
-        um.eraseBuffer(socket, OUTPUT, 0, messageEnd + 2);
+        um.eraseBuffer(socket, OUTPUT, 0, messageEnd);
     }
 }
 
