@@ -17,7 +17,7 @@ Server::~Server(){};
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
-void Server::createSocket() {
+void Server::createSocket(){
   
     /* get sizeof of struct sockaddr_in address */
     this->m_addrlen = sizeof(this->address);
@@ -150,15 +150,16 @@ void Server::sendMessages(int socket){
     }
 }
 
-void Server::receiveMessages(int socket) {
+void Server::receiveMessages(int socket){
     char buffer[30000];
     memset(buffer, 0, sizeof(buffer));
-    int valread = read(socket, buffer, sizeof(buffer));
-    (void)valread; /* for linux compilation! (unused var) */
-    valread = 0;   // error
+    int reading = read(socket, buffer, sizeof(buffer));
+    if (reading < 0){
+        log_err("Reading error in receiveMessages()");
+    }
     std::string message = buffer;
     parseIncomingMessage(message, socket);
-    memset(buffer, 0, sizeof(buffer));
+    memset(buffer, 0, sizeof(buffer)); /* @note unneccessary? */
 }
 
 void Server::Messages(int socket){
@@ -194,7 +195,8 @@ void Server::Messages(int socket){
 // 		writeToOutputBuffer(ERR_PASSWD)
 // }
 
-bool Server::checkUnallowedCharacters(std::string const& stringToCheck, std::string const& unallowedChars) const{
+bool Server::checkUnallowedCharacters(std::string const& stringToCheck,
+                                      std::string const& unallowedChars) const{
 	for(size_t i = 0; i < unallowedChars.length(); ++i){
 		size_t find = stringToCheck.find(unallowedChars[i]);
 		if(find != std::string::npos){
@@ -204,7 +206,7 @@ bool Server::checkUnallowedCharacters(std::string const& stringToCheck, std::str
 	return false;
 }
 
-void Server::parseIncomingMessage(std::string message, int socket) {
+void Server::parseIncomingMessage(std::string message, int socket){
   
     /* if buffer isnt empty, append message to buffer and use that as new msg */
     if (!um.getBuffer(socket, INPUT).empty())
@@ -248,7 +250,7 @@ void Server::parseIncomingMessage(std::string message, int socket) {
     }
 }
 
-std::string Server::getParameter(std::string const& message) {
+std::string Server::getParameter(std::string const& message){
   size_t colon = message.find(":");
   if (colon != std::string::npos) {
     std::string before = message.substr(0, colon);
@@ -269,7 +271,7 @@ std::string Server::getParameter(std::string const& message) {
   }
 }
 
-void Server::printCommand() {
+void Server::printCommand(){
     if (!this->m_command.empty()){
         log("Command: " + this->m_command);
     }
@@ -281,7 +283,7 @@ void Server::getCommand(std::string& message){
   message.erase(message.begin(), message.begin() + end + 1);
 }
 
-void Server::error(std::string str) {
+void Server::error(std::string str){
   std::cerr << str << std::endl;
   exit(1);
 }
