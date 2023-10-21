@@ -141,8 +141,7 @@ void Server::sendMessages(int socket){
             }
             std::stringstream ss;
             ss << socket;
-            log_send(socket,
-                     message.substr(0, message.find_first_of("\r")) + ss.str());
+            log_send(socket, message.substr(0, message.find_first_of("\r")));
             size_t end = um.getBuffer(socket, OUTPUT).find("\r\n");
             if (end != std::string::npos){
             um.eraseBuffer(socket, OUTPUT, 0, end + 2);
