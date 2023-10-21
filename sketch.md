@@ -10,9 +10,6 @@
 # Todos
 
     @jakob  JOIN
-        --> RPL_NOTOPIC
-        --> RPL_TOPIC
-        --> RPL_NAMREPLY
 
 # Commands
     
