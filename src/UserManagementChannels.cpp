@@ -44,7 +44,7 @@ void UserManagement::listChannels() const {
   std::cout << getChannelNames() << std::endl;
 }
 
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> setters */
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> channel map setters */
 
 void UserManagement::addUserToChannel(int socket,
                                       UserPrivilege up,
@@ -70,7 +70,7 @@ void UserManagement::eraseUserFromChannel(int socket, std::string channelName){
     }
 }
 
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> getters */
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> channel map getters */
 
 Channel const& UserManagement::getChannel(std::string channelName) const{
 	

@@ -48,7 +48,7 @@ bool UserManagement::checkForNickname(std::string const& nickname) const{
 	return false;
 }
 
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> setters */
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user map setters */
 
 void UserManagement::setUsername(int socket, std::string newUsername){
     t_um_users_it it = m_users.find(socket);
@@ -94,7 +94,7 @@ void UserManagement::eraseBuffer(int socket, int flag, int start, int end){
     }
 }
 
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> getters */
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user map getters */
 
 std::string UserManagement::getNickname(int socket) const{
     t_um_users_cit it = m_users.find(socket);

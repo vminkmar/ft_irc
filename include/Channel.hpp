@@ -38,9 +38,9 @@ class Channel
     public:
   
         /* <------ constructors -----> */
-        Channel(std::string const& name);
-        Channel(Channel const& src);
-        Channel& operator=(Channel const& src);
+        Channel           (std::string const& name);
+        Channel           (Channel const&     src);
+        Channel& operator=(Channel const&     src);
         Channel();
         ~Channel();
 

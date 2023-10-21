@@ -42,20 +42,20 @@ class UserManagement{
         bool checkForUsername(std::string const& username) const;
         bool checkForNickname(std::string const& nickname) const;
 
-            /* <---- setters */
-            void setUsername    (int socket, std::string newUsername);
-            void setNickname    (int socket, std::string newNickname);
-            void setOnlineStatus(int socket, bool flag);
-            void appendToBuffer (std::string message, int socket, int flag);
-            void eraseBuffer    (int socket, int flag, int start, int end);
+        /* <---- user map setters */
+        void setUsername    (int socket, std::string newUsername);
+        void setNickname    (int socket, std::string newNickname);
+        void setOnlineStatus(int socket, bool flag);
+        void appendToBuffer (std::string message, int socket, int flag);
+        void eraseBuffer    (int socket, int flag, int start, int end);
 
-            /* <---- getters */
-            std::string getNickname    (int socket)           const;
-            std::string getNicknames   ()                     const;
-            std::string getUsername    (int socket)           const;
-            std::string getUsernames   ()                     const;
-            std::string getBuffer      (int socket, int flag) const;
-            bool        getOnlineStatus(int socket)           const;
+        /* <---- user map getters */
+        std::string getNickname    (int socket)           const;
+        std::string getNicknames   ()                     const;
+        std::string getUsername    (int socket)           const;
+        std::string getUsernames   ()                     const;
+        std::string getBuffer      (int socket, int flag) const;
+        bool        getOnlineStatus(int socket)           const;
 
         /* <------ channel map operations-----> */
         void addChannel      (std::string channelName);
@@ -64,17 +64,17 @@ class UserManagement{
         void printChannelInfo(std::string channelName) const;
         void listChannels    ()                        const;
             
-            /* <---- setters */
-            void addUserToChannel    (int socket,
-                                      UserPrivilege up,
-                                      std::string channelName);
-            void eraseUserFromChannel(int socket, std::string channelName);
-            
-            /* <---- getters */
-            Channel const& getChannel(std::string channelName)          const;
-            std::string    getChannelNames()                            const;
-            std::string    getChannelUsernames(std::string channelName) const;
-            std::string    getChannelNicknames(std::string channelName) const;
+        /* <---- channel map setters */
+        void addUserToChannel    (int socket,
+                               UserPrivilege up,
+                               std::string channelName);
+        void eraseUserFromChannel(int socket, std::string channelName);
+
+        /* <---- channel map getters */
+        Channel const& getChannel(std::string channelName)          const;
+        std::string    getChannelNames()                            const;
+        std::string    getChannelUsernames(std::string channelName) const;
+        std::string    getChannelNicknames(std::string channelName) const;
 
 };
 

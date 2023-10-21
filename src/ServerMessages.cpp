@@ -2,145 +2,142 @@
 
 #include "../include/Server.hpp" // needed for Server class
 
-#include <sstream>  // needed for std::stringstream
-#include <iostream> // needed for std::cout, std::endl
-
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server replies */
-
-void Server::RPL_CAP(int socket) {
-    std::stringstream ss;
-    ss << socket;
-    log("CAP message send to socket#" + ss.str());
-    std::string str = "CAP * LS :cap reply...\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
+void Server::CMD_CAP(int socket){
+    if (m_parameters[0] == "LS"){
+        RPL_CAP(socket);
+    }
 }
 
-void Server::RPL_JOIN(int socket,
-                      std::string const& channelName,
-                      std::string const& username){
-    std::stringstream ss;
-    ss << socket;
-    log("JOIN message send to socket#" + ss.str());
-    std::string str  = ":" + um.getNickname(socket) + "!" +
-                       username + "@" + HOST + " JOIN " +
-                       channelName + " * :" + username + "\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-}
+void Server::CMD_NICK(int socket){
+    
+    if (m_parameters.empty() == true){
+        ERR_NONICKNAMEGIVEN(socket);
+    }
+    
+    std::string const& newNickname= m_parameters[0];
 
-void Server::RPL_NICKCHANGE(int socket, std::string const& newNickname){
-    std::string oldNickname = um.getNickname(socket);
-    if (oldNickname.empty() == true){
-        log("UNSET_NICKNAME got changed to " + newNickname);
+    if (checkUnallowedCharacters(newNickname, UNALLOWED_NICK) == true){
+        ERR_ERRONEUSNICKNAME(socket, newNickname);
+    }
+    else if (um.checkForNickname(newNickname) == true){
+        ERR_NICKNAMEINUSE(socket, newNickname);
     }
     else{
-        log(oldNickname + " got changed to " + newNickname);
+        if (um.getNickname(socket).empty() == false){
+            RPL_NICKCHANGE(socket, newNickname);
+        }
+        um.setNickname(socket, newNickname);
     }
-    std::string str = ":"   + oldNickname
-                      + "!" + um.getUsername(socket)
-                      + "@" + "localhost" + " " + "NICK"
-                      + " :" + newNickname + "\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::RPL_NOTOPIC(int socket, std::string const& channelName){
-    std::stringstream ss;
-    ss << socket;
-    log("NOTOPIC message sent to socket#" + ss.str());
-    std::string str = "331 "
-                      + um.getNickname(socket) + " "
-                      + channelName + " :No topic is set\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
+void Server::CMD_USER(int socket){
+    
+    if (m_parameters.empty() == true){
+        ERR_NEEDMOREPARAMS(socket, m_command);
+    }
+
+    if (um.checkForUser(socket) == true
+        && um.getUsername(socket).empty() == false){
+        ERR_ALREADYREGISTRED(socket);
+    }
+    else{
+        std::string const& username = m_parameters[0];
+        RPL_WELCOME(socket, username);
+        um.setUsername(socket, username);
+    }
 }
 
-void Server::RPL_PING(int socket, std::string const& serverName){
-    std::stringstream ss;
-    ss << socket;
-    log("PONG message send to socket#" + ss.str());
-    std::string str = "PONG :" + serverName + "\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
+void Server::CMD_PING(int socket){
+    std::string const& servername = m_parameters[0];
+    RPL_PING(socket, servername);
 }
 
-void Server::RPL_QUIT(int socket){
-    std::stringstream ss;
-    ss << socket;
-    log("QUIT message send to socket#" + ss.str());
-    std::string str = um.getNickname(socket) + "!" +
-                      um.getUsername(socket) + "@" + "localhost" +
-                      " QUIT :Goodbye!\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
+void Server::CMD_QUIT(int socket){
+    RPL_QUIT(socket);
 }
 
-void Server::RPL_TOPIC(int socket,
-                       std::string const& channelName,
-                       std::string const& channelTopic){
-    std::stringstream ss;
-    ss << socket;
-    log("TOPIC message send to socket#" + ss.str());
-    std::string str = "332 " + um.getNickname(socket)
-                      + " " + channelName + " :"
-                      + channelTopic + "\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-}
+void Server::CMD_JOIN(int socket){
+    
+    /* JOIN */
+    /* channel */ /* , */ /* channel */
+    /* key */ /* , */ /* key */
 
-void Server::RPL_NAMREPLY(int socket,
-                          std::string const& channelName,
-                          std::string const& members){
-    std::stringstream ss;
-    ss << socket;
-    log("NAMREPLY message send to socket#" + ss.str());
-    std::string str = "353 " + um.getNickname(socket)
-                      + " = " + channelName + " : " + members + "\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-}
+    /* channelnames */
+    /* must begin with "&, #, + or !" */
+    /* up to 50 length */
+    /* shall not contain: ' ', ^G, ',' */
 
-void Server::RPL_WELCOME(int socket, std::string const& username){
-    std::stringstream ss;
-    ss << socket;
-    log("Welcome message send to socket#" + ss.str());
-    std::string str = ":" + SERVERNAME +
-                      " 001 " + um.getNickname(socket) +
-                      " :Welcome to the ft_irc network " +
-                      um.getNickname(socket) + "!" +
-                      username + "@" + HOST + "\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-}
+    if (m_parameters.empty() == true){
+        ERR_NEEDMOREPARAMS(socket, m_command);
+    }
 
-/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
+    if (m_parameters[0] == "0"){
+        /* @note leave all channels */
+        /* handle like PART command and reply accordingly */
+    }
+    else{
+            
+        std::vector<std::string>channelNames = split(m_parameters[0], ',');
+        log_vector("channelNames", channelNames);
+       
+        std::vector<std::string>channelKeys;
+        if (m_parameters.size() >= 2){
+            channelKeys = split(m_parameters[1], ',');
+            log_vector("channelKeys", channelKeys);
+        }
 
-void Server::ERR_NOSUCHCHANNEL(int socket, std::string const& channelName){
-    log_err("No such channel!");
-    std::string str = "403 " + channelName + " :No such channel\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
-}
+        std::vector<std::string>::const_iterator key;
+        key = channelKeys.begin();
 
-void Server::ERR_NONICKNAMEGIVEN(int socket){
-    log_err("No Nickname given!");
-    std::string str = "431 :No nickname given\r\n";
-	um.appendToBuffer(str, socket, OUTPUT);
-}
+        for (std::vector<std::string>::const_iterator it = channelNames.begin();
+                                                      it != channelNames.end();
+                                                      ++it){
+            if (um.checkForChannel(*it) == false){
+                
+                /* @note if no channel is found... */
+                    /* ERR message */
+                    /* add Channel */
+                    /* add user to channel as operator */
+                    /* RPL_NOTOPIC */
+                    /* RPL_NAMRELPY */
 
-void Server::ERR_ERRONEUSNICKNAME(int socket, std::string const& nickname){
-    log_err("Nickname has unallowed characters!");
-    std::string str = "432 " + nickname + " :Erroneous nickname\r\n";
-	um.appendToBuffer(str, socket, OUTPUT);
-}
+                ERR_NOSUCHCHANNEL(socket, *it);
+                um.addChannel(*it);
+                um.addUserToChannel(socket, OPERATOR, *it);
+                RPL_NOTOPIC(socket, *it);
+                RPL_NAMREPLY(socket, *it, um.getNickname(socket));
+            }
+            else{
+                
+                Channel const& channel = um.getChannel(*it);
+                std::string const& topic = channel.getTopic();
+                (void) topic;
 
-void Server::ERR_NICKNAMEINUSE(int socket, std::string const& nickname){
-	log_err("Nickname already in use!");
-	std::string str = "433 " + nickname + " :Nickname is already in use\r\n";
-	um.appendToBuffer(str, socket, OUTPUT);
-}
+                std::string passw;
+                if (key != channelKeys.end()){
+                    passw = *key;
+                    ++key;
+                }
 
-void Server::ERR_NEEDMOREPARAMS(int socket, std::string const& command){
-    log_err("Not enough parameters!");
-    std::string str = "461 " + command + " :Not enough parameters\r\n";
-	um.appendToBuffer(str, socket, OUTPUT);
-}
+                if (passw.empty() == false){
 
-void Server::ERR_ALREADYREGISTRED(int socket){
-    log_err("Unauthorized command (already registered)!");
-    std::string str = "462 :Unauthorized command (already registered)\r\n";
-    um.appendToBuffer(str, socket, OUTPUT);
+                    if (channel.isChannelKey() == false){
+                        /* some kind of error! */
+                    }
+                    else{
+                        if (channel.getPassword() != passw){
+                            /* ERR_BADCHANNELKEY */
+                        }
+                        um.addUserToChannel(socket, USER, *it);
+                    }
+                }
+                else{
+                    um.addUserToChannel(socket, USER, *it);
+                }
+            }
+        }
+        //RPL_JOIN(socket, channelName, um.getUsername(socket));
+    }
 }
 
 // -------------------------------------------------------------------------- //

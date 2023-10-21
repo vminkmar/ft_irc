@@ -17,8 +17,7 @@ static inline void print_log(std::string message)
 {
     if (DEBUG)
     {
-        std::cerr << YELLOW << "Channel: "
-                  << message << RESET << std::endl;
+        std::cerr << YELLOW << "Channel: " << message << RESET << std::endl;
     }
 }
 
@@ -73,7 +72,7 @@ Channel::Channel()
 
 Channel::Channel(Channel const& src){
 	print_log("copy constructor called");
-	this->m_name = src.getName();
+	m_name = src.getName();
 }
 
 Channel::~Channel()
@@ -93,12 +92,12 @@ void Channel::setTopic(std::string const& newTopic)
 	m_topic = newTopic;
 }
 
-void Channel::setPassword  (std::string const& newPassword)
+void Channel::setPassword(std::string const& newPassword)
 {
 	m_password = newPassword;
 }
 
-void Channel::setUserLimit (unsigned int newLimit)
+void Channel::setUserLimit(unsigned int newLimit)
 {
 	m_userLimit = newLimit;
 }

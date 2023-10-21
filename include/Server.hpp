@@ -130,7 +130,7 @@ class Server{
         /* <------ else -----> */
         void printCommand();
         std::vector<std::string> split(std::string parameter,
-                                          char delimiter);
+                                       char delimiter);
 
 };
 
