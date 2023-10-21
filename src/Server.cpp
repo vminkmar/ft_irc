@@ -252,24 +252,25 @@ void Server::parseIncomingMessage(std::string message, int socket){
 }
 
 std::string Server::getParameter(std::string const& message){
-  size_t colon = message.find(":");
-  if (colon != std::string::npos) {
-    std::string before = message.substr(0, colon);
-    std::string after = message.substr(colon + 1);
-    std::stringstream iss(before);
-    std::string token;
-    while (iss >> token) {
-      m_parameters.push_back(token);
+    size_t colon = message.find(":");
+    if (colon != std::string::npos){
+        std::string before = message.substr(0, colon);
+        std::string after = message.substr(colon + 1);
+        std::stringstream iss(before);
+        std::string token;
+        while (iss >> token){
+            m_parameters.push_back(token);
+        }
+        return (after);
     }
-    return (after);
-  } else {
-    std::stringstream iss(message);
-    std::string token;
-    while (iss >> token) {
-      this->m_parameters.push_back(token);
+    else{
+        std::stringstream iss(message);
+        std::string token;
+        while (iss >> token){
+        this->m_parameters.push_back(token);
+        }
+        return ("");
     }
-    return ("");
-  }
 }
 
 void Server::printCommand(){
@@ -279,14 +280,14 @@ void Server::printCommand(){
 }
 
 void Server::getCommand(std::string& message){
-  size_t end = message.find(" ");
-  this->m_command = message.substr(0, end);
-  message.erase(message.begin(), message.begin() + end + 1);
+    size_t end = message.find(" ");
+    this->m_command = message.substr(0, end);
+    message.erase(message.begin(), message.begin() + end + 1);
 }
 
 void Server::error(std::string str){
-  std::cerr << str << std::endl;
-  exit(1);
+    std::cerr << str << std::endl;
+    exit(1);
 }
 
 void Server::log(std::string const& message) const{

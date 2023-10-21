@@ -9,7 +9,9 @@
 
 # Todos
 
-    @jakob  JOIN
+    @jakob CAP Process - what if NICK is not set / already in USE
+    @jakob QUIT -- implement erasing/removing and fix fejoining
+    @jakob JOIN
 
 # Commands
     
