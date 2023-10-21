@@ -63,11 +63,11 @@ class UserManagement{
         bool checkForChannel (std::string channelName) const;
         void printChannelInfo(std::string channelName) const;
         void listChannels    ()                        const;
-            
+
         /* <---- channel map setters */
         void addUserToChannel    (int socket,
-                               UserPrivilege up,
-                               std::string channelName);
+                                  UserPrivilege up,
+                                  std::string channelName);
         void eraseUserFromChannel(int socket, std::string channelName);
 
         /* <---- channel map getters */
