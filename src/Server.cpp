@@ -63,7 +63,7 @@ void Server::createSocket(){
         /* waits for event on filedescriptor */
         int ret = poll(this->m_pollfds.data(), m_pollfds.size(), 100);
         if (ret < 0){
-            perror("poll"); /* @note perror instead of error? */
+            error("poll");
         }
 
         /* if there is some incoming event */
@@ -121,7 +121,7 @@ void Server::cleanUpSockets(){
 			it = m_pollfds.erase(it);
 		}
 		else
-			++it; /* @note could just be in the for condition */
+			++it;
 	}
 }
 

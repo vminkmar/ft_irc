@@ -2,8 +2,6 @@
 
 #include "../include/Server.hpp" // needed for Server class
 
-//#include <iostream> // @note debugging
-
 void Server::CMD_CAP(int socket){
     if (m_parameters[0] == "LS"){
         RPL_CAP(socket);

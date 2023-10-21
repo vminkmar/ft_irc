@@ -35,11 +35,9 @@ class Server{
     
     private:
 
-        // char buffer[1024]; /* @note needed ? */
-
         std::vector<int>         m_clients;    /* saves fd/sockets of clients */
         std::vector<std::string> m_parameters;
-        std::vector<pollfd>      m_pollfds; /* holds server and client fd's */
+        std::vector<pollfd>      m_pollfds;    /* holds server and client fds */
 
         struct      sockaddr_in  address;
 
