@@ -99,12 +99,16 @@ class Server{
         void RPL_JOIN      (int socket,
                             std::string const& channelName,
                             std::string const& username);
-        void RPL_NAMREPLY  (int socket);
+        void RPL_NAMREPLY  (int socket,
+                            std::string const& channelName,
+                            std::string const& members);
         void RPL_NICKCHANGE(int socket, std::string const& newNickname);
         void RPL_NOTOPIC   (int socket, std::string const& channelName);
-        void RPL_PING      (int socket, std::string const& servername);
+        void RPL_PING      (int socket, std::string const& serverName);
         void RPL_QUIT      (int socket);
-        void RPL_TOPIC     (int socket, std::string const& channelName);
+        void RPL_TOPIC     (int socket,
+                            std::string const& channelName,
+                            std::string const& channelTopic);
         void RPL_WELCOME   (int socket, std::string const& username);
 
         /* <------ server errors -----> */

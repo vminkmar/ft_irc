@@ -43,21 +43,20 @@ void Server::RPL_NICKCHANGE(int socket, std::string const& newNickname){
 }
 
 void Server::RPL_NOTOPIC(int socket, std::string const& channelName){
-    
     std::stringstream ss;
     ss << socket;
     log("NOTOPIC message sent to socket#" + ss.str());
-    std::string str = ":" + SERVERNAME + " 331 "
+    std::string str = "331 "
                       + um.getNickname(socket) + " "
                       + channelName + " :No topic is set\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::RPL_PING(int socket, std::string const& servername){
+void Server::RPL_PING(int socket, std::string const& serverName){
     std::stringstream ss;
     ss << socket;
     log("PONG message send to socket#" + ss.str());
-    std::string str = "PONG :" + servername + "\r\n";
+    std::string str = "PONG :" + serverName + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
@@ -71,16 +70,28 @@ void Server::RPL_QUIT(int socket){
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::RPL_TOPIC(int socket, std::string const& channelName){
-    (void) channelName;
+void Server::RPL_TOPIC(int socket,
+                       std::string const& channelName,
+                       std::string const& channelTopic){
     std::stringstream ss;
     ss << socket;
     log("TOPIC message send to socket#" + ss.str());
-    /* @note needs implementation */
+    std::string str = "332 " + um.getNickname(socket)
+                      + " " + channelName + " :"
+                      + channelTopic + "\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
 }
 
-void Server::RPL_NAMREPLY(int socket){(void) socket;};
-
+void Server::RPL_NAMREPLY(int socket,
+                          std::string const& channelName,
+                          std::string const& members){
+    std::stringstream ss;
+    ss << socket;
+    log("NAMREPLY message send to socket#" + ss.str());
+    std::string str = "353 " + um.getNickname(socket)
+                      + " = " + channelName + " : " + members + "\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
+}
 
 void Server::RPL_WELCOME(int socket, std::string const& username){
     std::stringstream ss;

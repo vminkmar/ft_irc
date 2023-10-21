@@ -107,11 +107,13 @@ void Server::CMD_JOIN(int socket){
                 um.addChannel(*it);
                 um.addUserToChannel(socket, OPERATOR, *it);
                 RPL_NOTOPIC(socket, *it);
-                RPL_NAMREPLY(socket);
+                RPL_NAMREPLY(socket, *it, um.getNickname(socket));
             }
             else{
                 
                 Channel const& channel = um.getChannel(*it);
+                std::string const& topic = channel.getTopic();
+                (void) topic;
 
                 std::string passw;
                 if (key != channelKeys.end()){
