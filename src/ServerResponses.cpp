@@ -170,7 +170,7 @@ void Server::ERR_BADCHANNELKEY(int socket, std::string const& channelName){
     log_err("Bad channel key for " + channelName + "!");
     std::string str = "475 " + um.getNickname(socket)
                       + " " + channelName
-                      + " :Cannot join channel (+k)";
+                      + " :Cannot join channel (+k)\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 

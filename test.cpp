@@ -73,6 +73,7 @@ void t_populate_channel(){
     s.um.addChannel("a1");
     Channel * a1 = s.um.getChannel("a1");
     a1->setPassword("123");
+    a1->toggleChannelKey();
 
     s.um.addChannel("b2");
     s.um.addChannel("c3");
