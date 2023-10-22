@@ -176,6 +176,11 @@ bool Channel::isMember(int socket) const
     return m_users.find(socket) != m_users.end();
 }
 
+bool Channel::isOperator(int socket) const{
+    return m_users.find(socket) != m_users.end() 
+           && m_users.find(socket)->second == OPERATOR;
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 
 Channel& Channel::operator=(Channel const& src)

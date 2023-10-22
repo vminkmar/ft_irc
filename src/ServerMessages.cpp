@@ -161,7 +161,7 @@ void Server::CMD_PART(int socket){
         return ;
     }
 
-    std::vector<std::string> channels = split(m_parameters[0], ',');
+    t_vec_str channels = split(m_parameters[0], ',');
     log_vector("channels", channels);
 
     for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
