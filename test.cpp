@@ -69,38 +69,35 @@ void t_bool(bool is, std::string const& message){
     }
 }
 
+void t_populate_channel(){
+    s.um.addChannel("a1");
+    Channel * a1 = s.um.getChannel("a1");
+    a1->setPassword("123");
+
+    s.um.addChannel("b2");
+    s.um.addChannel("c3");
+}
+
+void t_show_channel(){
+    log("LISTING CHANNELS");
+    std::cout << "\nChannelnames: " << s.um.getChannelNames() << std::endl;
+}
+
 int main(void)
 {
     /* USAGE: */
-        /* Test commands with t_command(<full_message>, socket) */
-            /* needs \r\n !!! */
+        /* t_command(<full_message>, socket) <-- needs \r\n */
 
-    t_connect("Dummy-User", "Dummy-Nick", 1);
+    int t_socket = 1;
+
+    t_connect("Dummy-User", "Dummy-Nick", t_socket);
     t_show_users();
 
-    //t_command("JOIN channel,channel2,channel3 passw,passw1,passw2\r\n", 1);
-    
-    s.um.addChannel("b2");
-    s.um.addChannel("c3");
-    t_command("JOIN a1,b2 password\r\n", 1);
-
-    std::cout << "a1: " << s.um.getChannelNicknames("a1") << std::endl;
-    std::cout << "b2: " << s.um.getChannelNicknames("b2") << std::endl;
-    std::cout << "c3: " << s.um.getChannelNicknames("c3") << std::endl;
-    
-    Channel const& a1 = s.um.getChannel("a1");
-    t_bool(a1.isOperator(1), "Dummy User is a1 operator");
-    
-    Channel const& b2 = s.um.getChannel("b2");
-    t_bool(b2.isOperator(1), "Dummy User is b2 operator");
-
-    Channel const& c3 = s.um.getChannel("c3");
-    t_bool(c3.isOperator(1), "Dummy User is c3 operator");
-
-    t_command("JOIN 0\r\n", 1);
-
+    t_populate_channel();
+    t_show_channel();
+   
+    t_command("JOIN a1 passw\r\n", t_socket);
     return (EXIT_SUCCESS);
 }
-
 
 // -------------------------------------------------------------------------- //

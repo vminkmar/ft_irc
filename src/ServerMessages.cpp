@@ -75,11 +75,12 @@ void Server::CMD_JOIN(int socket){
     }
     else if (m_parameters[0] == "0"){
         t_vec_str channels = split(um.getChannelNames(), ',');
-        log_vector("channels", channels); 
+        log_vector("all channels", channels); 
         for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
-            if (um.getChannel(*it).isMember(socket)){
-                um.eraseUserFromChannel(socket, *it);
-                RPL_PART(socket, *it, getPartMessage());
+            std::string const& channelName = *it;
+            if (um.getChannel(channelName)->isMember(socket)){
+                um.eraseUserFromChannel(socket, channelName);
+                RPL_PART(socket, channelName, getPartMessage());
             }
         }
     }
@@ -93,54 +94,56 @@ void Server::CMD_JOIN(int socket){
             channelKeys = split(m_parameters[1], ',');
             log_vector("channelKeys", channelKeys);
         }
-
-        t_vec_str_cit key;
-        key = channelKeys.begin();
+        t_vec_str_cit key = channelKeys.begin();
 
         for (t_vec_str_cit it = channelNames.begin();
                            it != channelNames.end();
                            ++it){
-            if (um.checkForChannel(*it) == false){
+            
+            std::string const& channelName = *it;
+
+            if (um.checkForChannel(channelName) == false){
                 
-                ERR_NOSUCHCHANNEL(socket, *it);
-                um.addChannel(*it);
-                log("Channel "+ *it + " created");
-                um.addUserToChannel(socket, OPERATOR, *it);
-                RPL_JOIN(socket, *it);
-                RPL_NOTOPIC(socket, *it);
-                RPL_NAMREPLY(socket, *it, um.getNickname(socket));
+                ERR_NOSUCHCHANNEL(socket, channelName);
+                um.addChannel(channelName);
+                log("Channel "+ channelName + " created");
+                um.addUserToChannel(socket, OPERATOR, channelName);
+                RPL_JOIN(socket, channelName);
+                RPL_NOTOPIC(socket, channelName);
+                RPL_NAMREPLY(socket, channelName, um.getNickname(socket));
+
             }
             else{
                 
-                Channel const& channel = um.getChannel(*it);
-                std::string const& topic = channel.getTopic();
+                Channel const*     channel = um.getChannel(channelName);
+                std::string const& topic = channel->getTopic();
+                std::string        passw;
 
-                std::string passw;
                 if (key != channelKeys.end()){
-                    passw = *key;
-                    ++key;
+                    passw = *key++;
                 }
+
                 if (passw.empty() == false){
-                    if (channel.isChannelKey() == false){
+                    if (channel->isChannelKey() == false){
                         log_err("Received password for non_pw channel");
                     }
                     else{
-                        if (channel.getPassword() != passw){
-                            ERR_BADCHANNELKEY(socket, channel.getName());
+                        if (channel->getPassword() != passw){
+                            ERR_BADCHANNELKEY(socket, channel->getName());
                             return ;
                         }
-                        um.addUserToChannel(socket, USER, *it);
+                        um.addUserToChannel(socket, USER, channelName);
                     }
                 }
                 else{
-                    um.addUserToChannel(socket, USER, *it);
+                    um.addUserToChannel(socket, USER, channelName);
                 }
-                RPL_JOIN(socket, channel.getName());
+                RPL_JOIN(socket, channel->getName());
                 if (topic.empty() == true){
-                    RPL_NOTOPIC(socket, channel.getName());
+                    RPL_NOTOPIC(socket, channel->getName());
                 }
                 else{
-                    RPL_TOPIC(socket, channel.getName(), topic);
+                    RPL_TOPIC(socket, channel->getName(), topic);
                 }
             }
         }
@@ -162,8 +165,8 @@ void Server::CMD_PART(int socket){
             ERR_NOSUCHCHANNEL(socket, *it);
         }
         else{
-            Channel const& channel = um.getChannel(*it);
-            if (channel.isMember(socket) == false){
+            Channel const* channel = um.getChannel(*it);
+            if (channel->isMember(socket) == false){
                 ERR_NOTONCHANNEL(socket, *it);
             }
             else{
