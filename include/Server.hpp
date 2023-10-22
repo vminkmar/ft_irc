@@ -151,7 +151,14 @@ class Server{
         std::string const sumParameters(t_vec_str_cit start)          const;
         /* combines all parameters (except first) as std::string */
         std::string const getPartMessage()                            const;
-
+        void eraseUserFromAllChannels(int socket);
+        void createChannelBy(int socket, std::string const& channelName);
+        void addUserToChannels(int socket,
+                               t_vec_str const& channelNames,
+                               t_vec_str const& channelKeys);
+        void RPL_TOPIC_OR_NOTOPIC(int socket,
+                                  std::string const& channelName,
+                                  std::string const& topic);
 };
 
 #endif // SERVER_HPP

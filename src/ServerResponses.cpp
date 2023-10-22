@@ -119,6 +119,18 @@ void Server::RPL_PART(int socket,
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
+void Server::RPL_TOPIC_OR_NOTOPIC(int socket,
+                                  std::string const& channelName,
+                                  std::string const& topic){
+
+        if (topic.empty() == true){
+            RPL_NOTOPIC(socket, channelName);
+        }
+        else{
+            RPL_TOPIC(socket, channelName, topic);
+        }
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
 
 void Server::ERR_NOSUCHCHANNEL(int socket, std::string const& channelName){

@@ -340,6 +340,7 @@ Server::t_vec_str Server::split(std::string const& parameter,
     while (std::getline(ss, token, delimiter)){
         split.push_back(token);
     }
+    log_vector("split", split);
     return split;
 }
 
@@ -365,6 +366,79 @@ std::string const Server::getPartMessage() const{
         return sumParameters(m_parameters.begin() + 1);
     }
     return DEFMSG_PART;
+}
+
+void Server::eraseUserFromAllChannels(int socket){
+
+    t_vec_str channels = split(um.getChannelNames(), ',');
+    log_vector("all channels", channels); 
+    for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
+        std::string const& channelName = *it;
+        if (um.getChannel(channelName)->isMember(socket)){
+            um.eraseUserFromChannel(socket, channelName);
+            RPL_PART(socket, channelName, getPartMessage());
+        }
+    }
+}
+
+void Server::createChannelBy(int socket, std::string const& channelName){
+
+    ERR_NOSUCHCHANNEL(socket, channelName);
+    um.addChannel(channelName);
+    log("Channel "+ channelName + " created");
+    um.addUserToChannel(socket, OPERATOR, channelName);
+    RPL_JOIN(socket, channelName);
+    RPL_NOTOPIC(socket, channelName);
+    RPL_NAMREPLY(socket, channelName, um.getNickname(socket));
+}
+
+void Server::addUserToChannels(int socket,
+                               t_vec_str const& channelNames,
+                               t_vec_str const& channelKeys){
+
+    t_vec_str_cit key = channelKeys.begin();
+
+    for (t_vec_str_cit it = channelNames.begin();
+               it != channelNames.end();
+               ++it){
+    
+        std::string const& channelName = *it;
+
+        if (um.checkForChannel(channelName) == false){
+       
+            createChannelBy(socket, channelName);
+            continue ;
+
+        }
+        Channel const* channel = um.getChannel(channelName);
+        if (channel->isInviteOnly() == true){
+            
+            ERR_INVITEONLYCHAN(socket, channelName);
+            continue ;
+
+        }
+
+        std::string enteredKey;
+        if (key != channelKeys.end()){
+            enteredKey = *key++;
+        }
+
+        if (enteredKey.empty() == false && channel->isChannelKey() == false){
+            log_err("Received password for non_pw channel");
+        }
+        else if (channel->isChannelKey() == true){
+            if (channel->getPassword() != enteredKey){
+                ERR_BADCHANNELKEY(socket, channel->getName());
+                continue ;
+            }
+            um.addUserToChannel(socket, USER, channelName);
+        }
+        else{
+            um.addUserToChannel(socket, USER, channelName);
+        }
+        RPL_JOIN(socket, channel->getName());
+        RPL_TOPIC_OR_NOTOPIC(socket, channel->getName(), channel->getTopic());
+    }
 }
 
 // void Server::getPortAndPasswd(char **argv) {
