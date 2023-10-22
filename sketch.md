@@ -9,10 +9,10 @@
 
 # Todos
 
-    @jakob Channel Map: implement channel signs # & + !
     @jakob JOIN
-            --> add passw management
+        --> needs rigorous testing!
 
+    @jakob Channel Map: implement channel signs # & + !
     @jakob some way of broadcasting a channel message
 
     @jakob CAP Process - what if NICK is not set / already in USE
