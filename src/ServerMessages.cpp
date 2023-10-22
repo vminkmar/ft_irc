@@ -115,19 +115,15 @@ void Server::CMD_JOIN(int socket){
             }
             else{
                 
-                Channel const*     channel = um.getChannel(channelName);
-                
-
-                std::string const& topic = channel->getTopic();
-                std::string        passw;
-
-                if (key != channelKeys.end()){
-                    passw = *key++;
+                Channel const* channel = um.getChannel(channelName);
+                if (channel->isInviteOnly() == true){
+                    ERR_INVITEONLYCHAN(socket, channelName);
+                    continue ;
                 }
 
-                if (channel->isInviteOnly() == true){
-                    /* ERR_INVITEONLYCHAN */
-                    /* @note continue? */
+                std::string passw;
+                if (key != channelKeys.end()){
+                    passw = *key++;
                 }
                 else if (passw.empty() == false){
                     if (channel->isChannelKey() == false){
@@ -136,7 +132,7 @@ void Server::CMD_JOIN(int socket){
                     else{
                         if (channel->getPassword() != passw){
                             ERR_BADCHANNELKEY(socket, channel->getName());
-                            return ;
+                            continue ;
                         }
                         um.addUserToChannel(socket, USER, channelName);
                     }
@@ -145,6 +141,8 @@ void Server::CMD_JOIN(int socket){
                     um.addUserToChannel(socket, USER, channelName);
                 }
                 RPL_JOIN(socket, channel->getName());
+                
+                std::string const& topic = channel->getTopic();
                 if (topic.empty() == true){
                     RPL_NOTOPIC(socket, channel->getName());
                 }
