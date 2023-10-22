@@ -132,13 +132,13 @@ class Server{
         void ERR_NOTONCHANNEL    (int socket, std::string const& channelName);
 
         /* <------ server logs -----> */
-        void log            (std::string const& message) const;
-        void log_inc        (int socket, std::string const& message) const; 
-        void log_send       (int socket, std::string const& message) const;
-        void log_err        (std::string const& message) const;
+        void log            (std::string const& message)                  const;
+        void log_inc        (int socket, std::string const& message)      const; 
+        void log_send       (int socket, std::string const& message)      const;
+        void log_err        (std::string const& message)                  const;
         void log_vector     (std::string const& name, t_vec_str const& v) const;
         void log_interaction(int socket,
-                             std::string const& message) const;
+                             std::string const& message)                  const;
 
         /* <------ else -----> */
         void              printCommand()                              const;
