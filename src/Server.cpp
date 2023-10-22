@@ -183,6 +183,9 @@ void Server::Messages(int socket){
     else if (m_command == "JOIN"){
         CMD_JOIN(socket);
     }
+    else if (m_command == "PART"){
+        CMD_PART(socket);
+    }
     // else if (m_command == "PASS")
     //     comparePassword();
     // }
@@ -337,6 +340,23 @@ Server::t_vec_str Server::split(std::string parameter,
         split.push_back(token);
     }
     return split;
+}
+
+std::string const Server::sum_parameter(t_vec_str_cit start) const{
+    
+    std::stringstream ss;
+    if (start == m_parameters.end()){
+        /* @note not sure if even needed */
+        throw std::runtime_error("sum_parameter: Wrong iterator given!");
+    }
+    t_vec_str_cit     last = m_parameters.end() - 1;
+    for (t_vec_str_cit it = start; it != m_parameters.end(); ++it){
+        ss << *it;
+        if (it != last){
+            ss << " ";
+        }
+    }
+    return ss.str();
 }
 
 // void Server::getPortAndPasswd(char **argv) {

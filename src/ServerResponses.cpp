@@ -114,11 +114,10 @@ void Server::RPL_PART(int socket,
     ss << socket;
     log("Part message send to socket#" + ss.str());
 
-    std::string str = "";
-    (void) channelName;
-    (void) partMessage;
+    std::string str = ":" + um.getNickname(socket) + "!" 
+                      + um.getUsername(socket) + "@" + HOST + " PART "
+                      + channelName + " " + partMessage + "!" + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
-
 }
 
 

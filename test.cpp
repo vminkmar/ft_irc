@@ -69,6 +69,9 @@ int main(void)
     t_show_users();
 
     //t_command("JOIN channel,channel2,channel3 passw,passw1,passw2\r\n", 1);
+    
+    t_command("JOIN Channel1\r\n", 1);
+
     t_command("PART Channel1,Channel2,Channel3 Bye my friends! \r\n", 1);
 
     return (EXIT_SUCCESS);

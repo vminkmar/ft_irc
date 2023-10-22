@@ -139,9 +139,12 @@ class Server{
                              std::string const& message) const;
 
         /* <------ else -----> */
-        void printCommand();
-        t_vec_str split(std::string parameter, char delimiter);
-
+        void              printCommand()                              const;
+        /* splits parameters by a delimiter into a std::vector<std::string> */
+        t_vec_str         split        (std::string const& parameter,
+                                        char delimiter)               const;
+        /* summarizes parameters from given iterator to end as std::string */
+        std::string const sum_parameter(t_vec_str_cit start)          const;
 };
 
 #endif // SERVER_HPP

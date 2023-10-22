@@ -106,6 +106,7 @@ void Server::CMD_JOIN(int socket){
 
                 ERR_NOSUCHCHANNEL(socket, *it);
                 um.addChannel(*it);
+                log("Channel "+ *it + " created");
                 um.addUserToChannel(socket, OPERATOR, *it);
                 RPL_JOIN(socket, *it);
                 RPL_NOTOPIC(socket, *it);
@@ -138,23 +139,27 @@ void Server::CMD_JOIN(int socket){
                 else{
                     um.addUserToChannel(socket, USER, *it);
                 }
+                RPL_JOIN(socket, channel.getName());
+                if (topic.empty() == true){
+                    RPL_NOTOPIC(socket, channel.getName());
+                }
+                else{
+                    RPL_TOPIC(socket, channel.getName(), topic);
+                }
             }
         }
-        //RPL_JOIN(socket, channelName, um.getUsername(socket));
     }
 }
 
-void Server::CMD_PART(int socket){
-
-    /* PART */
-    /* Channel, Channel, Channel */
+void Server::CMD_PART(int socket){ 
     
     if (m_parameters.empty() == true){
         ERR_NEEDMOREPARAMS(socket, m_command);
+        return ;
     }
 
-
     std::vector<std::string> channels = split(m_parameters[0], ',');
+    log_vector("channels", channels);
 
     for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
         if (um.checkForChannel(*it) == false){
@@ -165,24 +170,18 @@ void Server::CMD_PART(int socket){
             if (channel.isMember(socket) == false){
                 ERR_NOTONCHANNEL(socket, *it);
             }
-            um.eraseUserFromChannel(socket, *it);
-
-            std::string partMessage;
-            if (m_parameters.size() >= 2){
-
-                std::stringstream ss;
-                
-                for (t_vec_str_cit it = m_parameters.begin();
-                                   it != m_parameters.end();
-                                   ++it){
-                    ss << *it;
-                }
-                partMessage = ss.str();
-            }
             else{
-                partMessage = DEFMSG_PART;
+                um.eraseUserFromChannel(socket, *it);
+                std::string partMessage;
+                if (m_parameters.size() >= 2){
+                    partMessage = sum_parameter(m_parameters.begin() + 1);
+                }
+                else{
+                    partMessage = DEFMSG_PART;
+                }
+                log("<part message> " + partMessage);
+                RPL_PART(socket, *it, partMessage);
             }
-            RPL_PART(socket, *it, partMessage);
         }
     }
 }
