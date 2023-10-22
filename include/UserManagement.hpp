@@ -71,8 +71,8 @@ class UserManagement{
                                   std::string const& channelName);
         
         /* <---- channel map getters */
-        Channel const* getChannel(std::string const& channelName)        const;
-        Channel *      getChannel(std::string const& channelName);
+        Channel const* getChannel       (std::string const& channelName) const;
+        Channel *      getChannel       (std::string const& channelName);
         std::string    getChannelNames()                                 const;
         std::string    getChannelUsernames
                                         (std::string const& channelName) const;

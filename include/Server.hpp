@@ -123,14 +123,15 @@ class Server{
                             std::string const& partMessage);
 
         /* <------ server errors -----> */
-        void ERR_NOSUCHCHANNEL   (int socket, std::string const& channelName);
-        void ERR_NONICKNAMEGIVEN (int socket);
-        void ERR_ERRONEUSNICKNAME(int socket, std::string const& nickname);
-        void ERR_NICKNAMEINUSE   (int socket, std::string const& nickname);
-        void ERR_NEEDMOREPARAMS  (int socket, std::string const& command);
-        void ERR_ALREADYREGISTRED(int socket);
-        void ERR_NOTONCHANNEL    (int socket, std::string const& channelName);
-        void ERR_BADCHANNELKEY   (int socket, std::string const& channelName);
+        void ERR_NOSUCHCHANNEL    (int socket, std::string const& channelName);
+        void ERR_NONICKNAMEGIVEN  (int socket);
+        void ERR_ERRONEUSNICKNAME (int socket, std::string const& nickname);
+        void ERR_NICKNAMEINUSE    (int socket, std::string const& nickname);
+        void ERR_NEEDMOREPARAMS   (int socket, std::string const& command);
+        void ERR_ALREADYREGISTRED (int socket);
+        void ERR_NOTONCHANNEL     (int socket, std::string const& channelName);
+        void ERR_BADCHANNELKEY    (int socket, std::string const& channelName);
+        void ERR_INVITEONLYCHAN   (int socket, std::string const& channelName);
 
         /* <------ server logs -----> */
         void log            (std::string const& message)                  const;

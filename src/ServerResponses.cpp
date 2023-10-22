@@ -174,4 +174,14 @@ void Server::ERR_BADCHANNELKEY(int socket, std::string const& channelName){
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
+void Server::ERR_INVITEONLYCHAN(int socket, std::string const& channelName){
+
+    log_err("Tried to join invite-only channel " + channelName + "!");
+    std::string str = "473 " + um.getNickname(socket)
+                      + " " + channelName
+                      + " :Cannot join channel (+j)\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
+}
+
+
 // -------------------------------------------------------------------------- //

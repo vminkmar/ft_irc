@@ -116,6 +116,8 @@ void Server::CMD_JOIN(int socket){
             else{
                 
                 Channel const*     channel = um.getChannel(channelName);
+                
+
                 std::string const& topic = channel->getTopic();
                 std::string        passw;
 
@@ -123,7 +125,11 @@ void Server::CMD_JOIN(int socket){
                     passw = *key++;
                 }
 
-                if (passw.empty() == false){
+                if (channel->isInviteOnly() == true){
+                    /* ERR_INVITEONLYCHAN */
+                    /* @note continue? */
+                }
+                else if (passw.empty() == false){
                     if (channel->isChannelKey() == false){
                         log_err("Received password for non_pw channel");
                     }
