@@ -90,7 +90,7 @@ std::string UserManagement::getChannelNames() const{
                            ++it){
 		ss << it->second.getName();
 		if (it != last){
-			ss << ", ";
+			ss << ",";
 		}
 	}
     return ss.str();
