@@ -3,16 +3,17 @@
 #include "../include/Server.hpp"         // needed for Server class
 #include "../include/UserManagement.hpp" // needed for UserManagement class
 
-#include <iostream> // needed for std::cout, std::endl
-#include <sstream>  // needed for std::stringstream
-#include <unistd.h> // needed for read()
-#include <cstring>  // needed for memset() (linux compilation)
-#include <stdio.h>  // needed for perror() (linux compilation)
-#include <cstdlib>  // needed for exit() (linux compilation)
+#include <iostream>  // needed for std::cout, std::endl
+#include <sstream>   // needed for std::stringstream
+#include <stdexcept> // needed for std::runtime_error
+#include <unistd.h>  // needed for read()
+#include <cstring>   // needed for memset() (linux compilation)
+#include <stdio.h>   // needed for perror() (linux compilation)
+#include <cstdlib>   // needed for exit() (linux compilation)
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-Server::Server() : m_maxClients(512), m_command(""), m_trail("") {}
+Server::Server() : m_maxClients(MAX_CLIENTS), m_command(""), m_trail("") {}
 Server::~Server(){};
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
@@ -275,7 +276,7 @@ std::string Server::getParameter(std::string const& message){
     }
 }
 
-void Server::printCommand(){
+void Server::printCommand() const{
     if (!this->m_command.empty()){
         log("Command: " + this->m_command);
     }
@@ -331,8 +332,8 @@ void Server::log_vector(std::string const& name, t_vec_str const& v) const{
     std::cout << RESET << std::endl;
 }
 
-Server::t_vec_str Server::split(std::string parameter,
-                                       char delimiter){
+Server::t_vec_str Server::split(std::string const& parameter,
+                                char               delimiter) const{
     t_vec_str          split;
     std::string        token;
     std::stringstream  ss(parameter);

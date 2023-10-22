@@ -74,9 +74,12 @@ void Server::CMD_JOIN(int socket){
         /* @note return? */
     }
 
-    if (m_parameters[0] == "0"){
+    else if (m_parameters[0] == "0"){
+        
         /* @note leave all channels */
         /* handle like PART command and reply accordingly */
+
+
     }
     else{
             
@@ -116,14 +119,12 @@ void Server::CMD_JOIN(int socket){
                 
                 Channel const& channel = um.getChannel(*it);
                 std::string const& topic = channel.getTopic();
-                (void) topic;
 
                 std::string passw;
                 if (key != channelKeys.end()){
                     passw = *key;
                     ++key;
                 }
-
                 if (passw.empty() == false){
 
                     if (channel.isChannelKey() == false){

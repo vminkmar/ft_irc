@@ -34,6 +34,8 @@
 /* DEFAULT MESSAGES */
 #define DEFMSG_PART "Goodbye!"
 
+#define MAX_CLIENTS 512
+
 class Server{
     
     private:
