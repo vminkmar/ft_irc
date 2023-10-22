@@ -67,9 +67,10 @@ class Channel
         
         /* <------ member functions -----> */
         /* also behaves like set_privilege */
-        void addUser  (int socket, UserPrivilege up); 
-        void eraseUser(int socket);
-        bool isMember (int socket) const;
+        void addUser   (int socket, UserPrivilege up); 
+        void eraseUser (int socket);
+        bool isMember  (int socket) const;
+        bool isOperator(int socket) const; /* @note needs testing */
 
 };
 
