@@ -10,7 +10,7 @@
 void Server::RPL_CAP(int socket) {
     std::stringstream ss;
     ss << socket;
-    log("CAP message send to socket#" + ss.str());
+    log("CAP message prepared for socket#" + ss.str());
     std::string str = "CAP * LS :cap reply...\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
@@ -19,7 +19,7 @@ void Server::RPL_JOIN(int socket,
                       std::string const& channelName){
     std::stringstream ss;
     ss << socket;
-    log("JOIN message send to socket#" + ss.str());
+    log("JOIN message for " + channelName + " prepared for socket#" + ss.str());
     std::string const& username = um.getUsername(socket);
     std::string const& nickname = um.getNickname(socket);
     std::string str  = ":" + nickname + "!" +
@@ -46,7 +46,7 @@ void Server::RPL_NICKCHANGE(int socket, std::string const& newNickname){
 void Server::RPL_NOTOPIC(int socket, std::string const& channelName){
     std::stringstream ss;
     ss << socket;
-    log("NOTOPIC message sent to socket#" + ss.str());
+    log("NOTOPIC message for " + channelName + " prepared for socket#" + ss.str());
     std::string str = "331 "
                       + um.getNickname(socket) + " "
                       + channelName + " :No topic is set\r\n";
@@ -56,7 +56,7 @@ void Server::RPL_NOTOPIC(int socket, std::string const& channelName){
 void Server::RPL_PING(int socket, std::string const& serverName){
     std::stringstream ss;
     ss << socket;
-    log("PONG message send to socket#" + ss.str());
+    log("PONG message prepared for socket#" + ss.str());
     std::string str = "PONG :" + serverName + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
@@ -64,7 +64,7 @@ void Server::RPL_PING(int socket, std::string const& serverName){
 void Server::RPL_QUIT(int socket){
     std::stringstream ss;
     ss << socket;
-    log("QUIT message send to socket#" + ss.str());
+    log("QUIT message prepared for socket#" + ss.str());
     std::string str = um.getNickname(socket) + "!" +
                       um.getUsername(socket) + "@" + "localhost" +
                       " QUIT :Goodbye!\r\n";
@@ -76,7 +76,7 @@ void Server::RPL_TOPIC(int socket,
                        std::string const& channelTopic){
     std::stringstream ss;
     ss << socket;
-    log("TOPIC message send to socket#" + ss.str());
+    log("TOPIC message for " + channelName + " prepared for socket#" + ss.str());
     std::string str = "332 " + um.getNickname(socket)
                       + " " + channelName + " :"
                       + channelTopic + "\r\n";
@@ -88,7 +88,7 @@ void Server::RPL_NAMREPLY(int socket,
                           std::string const& members){
     std::stringstream ss;
     ss << socket;
-    log("NAMREPLY message send to socket#" + ss.str());
+    log("NAMREPLY message for " + channelName + " prepared for socket#" + ss.str());
     std::string str = "353 " + um.getNickname(socket)
                       + " = " + channelName + " : " + members + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
@@ -97,7 +97,7 @@ void Server::RPL_NAMREPLY(int socket,
 void Server::RPL_WELCOME(int socket, std::string const& username){
     std::stringstream ss;
     ss << socket;
-    log("Welcome message send to socket#" + ss.str());
+    log("Welcome message prepared to socket#" + ss.str());
     std::string str = ":" + SERVERNAME +
                       " 001 " + um.getNickname(socket) +
                       " :Welcome to the ft_irc network " +
@@ -112,7 +112,7 @@ void Server::RPL_PART(int socket,
     
     std::stringstream ss;
     ss << socket;
-    log("Part message for " + channelName + " send to socket#" + ss.str());
+    log("Part message for " + channelName + " prepared for socket#" + ss.str());
 
     std::string str = ":" + um.getNickname(socket) + "!" 
                       + um.getUsername(socket) + "@" + HOST + " PART "

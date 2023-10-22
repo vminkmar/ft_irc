@@ -3,6 +3,8 @@
 #include "../include/Server.hpp" // needed for Server class
 
 //#include <sstream> // needed for std::stringstream
+#include <iostream> // @note debug
+
 
 void Server::CMD_CAP(int socket){
     if (m_parameters[0] == "LS"){
@@ -76,6 +78,10 @@ void Server::CMD_JOIN(int socket){
 
     else if (m_parameters[0] == "0"){
         
+        std::string const& channels = um.getChannelNames();
+        
+        log("Channels: " + channels);
+
         /* @note leave all channels */
         /* handle like PART command and reply accordingly */
 

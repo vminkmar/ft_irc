@@ -26,11 +26,11 @@ static inline void log(std::string const& message)
     std::cerr << GREEN << "\n>> " << message << " <<" << RESET << std::endl;
 }
 
-void t_incoming_message(std::string message, int socket){
+void t_incoming_message(std::string const& message, int socket){
     s.parseIncomingMessage(message.c_str(), socket);
 }
 
-void t_command(std::string message, int socket){
+void t_command(std::string const& message, int socket){
     log("TESTING COMMAND");
     s.parseIncomingMessage(message.c_str(), socket);
     s.sendMessages(socket);
@@ -59,6 +59,7 @@ void t_connect(std::string const& username,
     s.sendMessages(socket);
 }
 
+
 int main(void)
 {
     /* USAGE: */
@@ -70,9 +71,13 @@ int main(void)
 
     //t_command("JOIN channel,channel2,channel3 passw,passw1,passw2\r\n", 1);
     
-    t_command("JOIN Channel1\r\n", 1);
+    s.um.addChannel("a1");
+    s.um.addChannel("b2");
+    s.um.addChannel("c3");
 
-    t_command("PART Channel1,Channel2,Channel3 Bye my friends! \r\n", 1);
+    t_command("JOIN a1,b2,c3\r\n", 1);
+
+    t_command("JOIN 0\r\n", 1);
 
     return (EXIT_SUCCESS);
 }
