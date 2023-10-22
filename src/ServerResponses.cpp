@@ -112,7 +112,7 @@ void Server::RPL_PART(int socket,
     
     std::stringstream ss;
     ss << socket;
-    log("Part message send to socket#" + ss.str());
+    log("Part message for " + channelName + " send to socket#" + ss.str());
 
     std::string str = ":" + um.getNickname(socket) + "!" 
                       + um.getUsername(socket) + "@" + HOST + " PART "
@@ -124,7 +124,7 @@ void Server::RPL_PART(int socket,
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
 
 void Server::ERR_NOSUCHCHANNEL(int socket, std::string const& channelName){
-    log_err("No such channel!");
+    log_err(channelName + " No such channel!");
     std::string str = "403 " + channelName + " :No such channel\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
@@ -160,7 +160,7 @@ void Server::ERR_ALREADYREGISTRED(int socket){
 }
 
 void Server::ERR_NOTONCHANNEL(int socket, std::string const& channelName){
-    log_err("User not on channel!");
+    log_err("User not on channel " + channelName + " !");
     std::string str = "401 " + um.getNickname(socket)
                       +  " " + channelName
                       + ":You're not on that channel\r\n";

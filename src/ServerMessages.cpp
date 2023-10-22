@@ -2,7 +2,7 @@
 
 #include "../include/Server.hpp" // needed for Server class
 
-#include <sstream> // needed for std::stringstream
+//#include <sstream> // needed for std::stringstream
 
 void Server::CMD_CAP(int socket){
     if (m_parameters[0] == "LS"){
