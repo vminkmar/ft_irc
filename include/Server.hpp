@@ -146,7 +146,10 @@ class Server{
         t_vec_str         split        (std::string const& parameter,
                                         char delimiter)               const;
         /* summarizes parameters from given iterator to end as std::string */
-        std::string const sum_parameter(t_vec_str_cit start)          const;
+        std::string const sumParameters(t_vec_str_cit start)          const;
+        /* combines all parameters (except first) as std::string */
+        std::string const getPartMessage()                            const;
+
 };
 
 #endif // SERVER_HPP

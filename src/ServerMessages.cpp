@@ -3,8 +3,7 @@
 #include "../include/Server.hpp" // needed for Server class
 
 //#include <sstream> // needed for std::stringstream
-#include <iostream> // @note debug
-
+//#include <iostream> // @note debug
 
 void Server::CMD_CAP(int socket){
     if (m_parameters[0] == "LS"){
@@ -73,26 +72,23 @@ void Server::CMD_JOIN(int socket){
 
     if (m_parameters.empty() == true){
         ERR_NEEDMOREPARAMS(socket, m_command);
-        /* @note return? */
     }
-
     else if (m_parameters[0] == "0"){
-        
-        std::string const& channels = um.getChannelNames();
-        
-        log("Channels: " + channels);
-
-        /* @note leave all channels */
-        /* handle like PART command and reply accordingly */
-
-
+        t_vec_str channels = split(um.getChannelNames(), ',');
+        log_vector("channels", channels); 
+        for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
+            if (um.getChannel(*it).isMember(socket)){
+                um.eraseUserFromChannel(socket, *it);
+                RPL_PART(socket, *it, getPartMessage());
+            }
+        }
     }
     else{
-            
-        std::vector<std::string>channelNames = split(m_parameters[0], ',');
-        log_vector("channelNames", channelNames);
+        
+        t_vec_str channelNames = split(m_parameters[0], ',');
+        log_vector("channels", channelNames);
        
-        std::vector<std::string>channelKeys;
+        t_vec_str channelKeys;
         if (m_parameters.size() >= 2){
             channelKeys = split(m_parameters[1], ',');
             log_vector("channelKeys", channelKeys);
@@ -179,15 +175,7 @@ void Server::CMD_PART(int socket){
             }
             else{
                 um.eraseUserFromChannel(socket, *it);
-                std::string partMessage;
-                if (m_parameters.size() >= 2){
-                    partMessage = sum_parameter(m_parameters.begin() + 1);
-                }
-                else{
-                    partMessage = DEFMSG_PART;
-                }
-                log("<part message> " + partMessage);
-                RPL_PART(socket, *it, partMessage);
+                RPL_PART(socket, *it, getPartMessage());
             }
         }
     }

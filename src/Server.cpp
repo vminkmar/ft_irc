@@ -343,7 +343,7 @@ Server::t_vec_str Server::split(std::string const& parameter,
     return split;
 }
 
-std::string const Server::sum_parameter(t_vec_str_cit start) const{
+std::string const Server::sumParameters(t_vec_str_cit start) const{
     
     std::stringstream ss;
     if (start == m_parameters.end()){
@@ -358,6 +358,13 @@ std::string const Server::sum_parameter(t_vec_str_cit start) const{
         }
     }
     return ss.str();
+}
+
+std::string const Server::getPartMessage() const{
+    if (m_parameters.size() >= 2){
+        return sumParameters(m_parameters.begin() + 1);
+    }
+    return DEFMSG_PART;
 }
 
 // void Server::getPortAndPasswd(char **argv) {

@@ -109,17 +109,15 @@ void Server::RPL_WELCOME(int socket, std::string const& username){
 void Server::RPL_PART(int socket,
                       std::string const& channelName,
                       std::string const& partMessage){
-    
     std::stringstream ss;
     ss << socket;
+    log("<part message> " + partMessage);
     log("Part message for " + channelName + " prepared for socket#" + ss.str());
-
     std::string str = ":" + um.getNickname(socket) + "!" 
                       + um.getUsername(socket) + "@" + HOST + " PART "
-                      + channelName + " " + partMessage + "!" + "\r\n";
+                      + channelName + " :" + partMessage + "!" + "\r\n";
     um.appendToBuffer(str, socket, OUTPUT);
 }
-
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
 
