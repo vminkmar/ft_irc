@@ -62,7 +62,6 @@ class UserManagement{
         void eraseChannel    (std::string const& channelName);
         bool checkForChannel (std::string const& channelName) const;
         void printChannelInfo(std::string const& channelName) const;
-        void listChannels    ()                        const;
 
         /* <---- channel map setters */
         void addUserToChannel    (int socket,
@@ -70,7 +69,7 @@ class UserManagement{
                                   std::string const& channelName);
         void eraseUserFromChannel(int socket,
                                   std::string const& channelName);
-
+        
         /* <---- channel map getters */
         Channel const& getChannel(std::string const& channelName)   const;
         std::string    getChannelNames()                            const;

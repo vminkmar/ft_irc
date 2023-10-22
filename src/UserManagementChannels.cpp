@@ -40,10 +40,6 @@ void UserManagement::printChannelInfo(std::string const& channelName) const{
     }
 }
 
-void UserManagement::listChannels() const {
-  std::cout << getChannelNames() << std::endl;
-}
-
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> channel map setters */
 
 void UserManagement::addUserToChannel(int socket,
