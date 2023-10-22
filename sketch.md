@@ -13,6 +13,8 @@
     @jakob JOIN
             --> add passw management
 
+    @jakob some way of broadcasting a channel message
+
     @jakob CAP Process - what if NICK is not set / already in USE
     @jakob QUIT -- implement erasing/removing and fix fejoining
 

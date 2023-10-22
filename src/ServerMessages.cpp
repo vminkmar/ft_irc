@@ -128,9 +128,8 @@ void Server::CMD_JOIN(int socket){
                     ++key;
                 }
                 if (passw.empty() == false){
-
                     if (channel.isChannelKey() == false){
-                        /* some kind of error! */
+                        log_err("Received password for non_pw channel");
                     }
                     else{
                         if (channel.getPassword() != passw){

@@ -82,7 +82,7 @@ int main(void)
     
     s.um.addChannel("b2");
     s.um.addChannel("c3");
-    t_command("JOIN a1,b2\r\n", 1);
+    t_command("JOIN a1,b2 password\r\n", 1);
 
     std::cout << "a1: " << s.um.getChannelNicknames("a1") << std::endl;
     std::cout << "b2: " << s.um.getChannelNicknames("b2") << std::endl;
