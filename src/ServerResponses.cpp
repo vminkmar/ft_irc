@@ -161,7 +161,16 @@ void Server::ERR_NOTONCHANNEL(int socket, std::string const& channelName){
     log_err("User not on channel " + channelName + " !");
     std::string str = "401 " + um.getNickname(socket)
                       +  " " + channelName
-                      + ":You're not on that channel\r\n";
+                      + " :You're not on that channel\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
+}
+
+void Server::ERR_BADCHANNELKEY(int socket, std::string const& channelName){
+
+    log_err("Bad channel key for " + channelName + "!");
+    std::string str = "475 " + um.getNickname(socket)
+                      + " " + channelName
+                      + " :Cannot join channel (+k)";
     um.appendToBuffer(str, socket, OUTPUT);
 }
 

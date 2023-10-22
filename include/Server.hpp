@@ -130,6 +130,7 @@ class Server{
         void ERR_NEEDMOREPARAMS  (int socket, std::string const& command);
         void ERR_ALREADYREGISTRED(int socket);
         void ERR_NOTONCHANNEL    (int socket, std::string const& channelName);
+        void ERR_BADCHANNELKEY   (int socket, std::string const& channelName);
 
         /* <------ server logs -----> */
         void log            (std::string const& message)                  const;

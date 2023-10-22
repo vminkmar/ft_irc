@@ -102,13 +102,6 @@ void Server::CMD_JOIN(int socket){
                            ++it){
             if (um.checkForChannel(*it) == false){
                 
-                /* @note if no channel is found... */
-                    /* ERR message */
-                    /* add Channel */
-                    /* add user to channel as operator */
-                    /* RPL_NOTOPIC */
-                    /* RPL_NAMRELPY */
-
                 ERR_NOSUCHCHANNEL(socket, *it);
                 um.addChannel(*it);
                 log("Channel "+ *it + " created");
@@ -133,7 +126,8 @@ void Server::CMD_JOIN(int socket){
                     }
                     else{
                         if (channel.getPassword() != passw){
-                            /* ERR_BADCHANNELKEY */
+                            ERR_BADCHANNELKEY(socket, channel.getName());
+                            return ;
                         }
                         um.addUserToChannel(socket, USER, *it);
                     }
