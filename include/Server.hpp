@@ -109,7 +109,8 @@ class Server{
 
         /* <------ server messages helpers -----> */
         void      createChannelBy         (int socket,
-                                           t_str_c& channelName);
+                                           t_str_c& channelName,
+                                           t_str_c& channelKey);
         void      addUserToChannels       (int socket,
                                            t_vec_str_c& channelNames,
                                            t_vec_str_c& channelKeys);

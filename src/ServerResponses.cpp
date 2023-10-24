@@ -77,7 +77,8 @@ void Server::RPL_TOPIC(int socket,
                        t_str_c& topic){
     std::stringstream ss;
     ss << socket;
-    log("TOPIC message for " + channelName + " prepared for socket#" + ss.str());
+    log("TOPIC message for " + channelName
+        + " prepared for socket#" + ss.str());
     t_str str = "332 " + um.getNickname(socket)
                       + " " + channelName + " :"
                       + topic + "\r\n";
@@ -89,7 +90,8 @@ void Server::RPL_NAMREPLY(int socket,
                           t_str_c& members){
     std::stringstream ss;
     ss << socket;
-    log("NAMREPLY message for " + channelName + " prepared for socket#" + ss.str());
+    log("NAMREPLY message for " + channelName
+        + " prepared for socket#" + ss.str());
     t_str str = "353 " + um.getNickname(socket)
                       + " = " + channelName + " : " + members + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
