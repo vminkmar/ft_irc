@@ -90,7 +90,12 @@ void Server::acceptClients(){
     newClient.events = POLLIN | POLLOUT;
     this->m_pollfds.push_back(newClient);
 
-    um.addUser(newSocket);
+    try{
+			um.addUser(newSocket);
+		}
+		catch(std::exception &e){
+			log_err(e.what());
+		}
     this->m_pollfds[0].revents = 0; /* current event */
 }
 
@@ -127,7 +132,12 @@ void Server::cleanUpSockets(){
 }
 
 void Server::socketClosed(int socket){
-    um.setOnlineStatus(socket, false);
+    try{
+			um.setOnlineStatus(socket, false);
+		}
+		catch (std::exception &e){
+			log_err(e.what());
+		}
 }
 
 void Server::sendMessages(int socket){
