@@ -383,7 +383,14 @@ void Server::eraseUserFromAllChannels(int socket){
 
 void Server::createChannelBy(int socket, std::string const& channelName){
 
+    /* not sure if this... */
     ERR_NOSUCHCHANNEL(socket, channelName);
+    
+    if (channelName.find_first_of(CHAR_ALLOWED_CHANNEL) == std::string::npos){
+        /* ... should go here instead */
+        return ;
+    }
+
     um.addChannel(channelName);
     log("Channel "+ channelName + " created");
     um.addUserToChannel(socket, OPERATOR, channelName);
