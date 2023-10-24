@@ -28,8 +28,8 @@
 #define COLOUR_OUT         PINK
 #define COLOUR_ERR         RED
 
-/* UNALLOWED CHARACTERS */
-#define UNALLOWED_NICK " !@#$%^&*()[]{}<>:;,/"
+#define CHAR_UNALLOWED_NICK " !@#$%^&*()[]{}<>:;,/"
+#define CHAR_ALLOWED_CHANNEL "#&+!"
 
 /* DEFAULT MESSAGES */
 #define DEFMSG_PART "Goodbye!"

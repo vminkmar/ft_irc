@@ -19,7 +19,7 @@ void Server::CMD_NICK(int socket){
     
     std::string const& newNickname= m_parameters[0];
 
-    if (checkUnallowedCharacters(newNickname, UNALLOWED_NICK) == true){
+    if (checkUnallowedCharacters(newNickname, CHAR_UNALLOWED_NICK) == true){
         ERR_ERRONEUSNICKNAME(socket, newNickname);
     }
     else if (um.checkForNickname(newNickname) == true){
