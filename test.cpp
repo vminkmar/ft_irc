@@ -36,13 +36,12 @@ void t_command(std::string const& message, int socket){
     s.sendMessages(socket);
 }
 
-void t_show_users(size_t amount){
+void t_show_users(size_t no_users){
     log("LISTING USERS");
-    amount--;
-    for (size_t i = 1; i <= amount; ++i){
-        std::cout << s.um.getNickname(i)
-                  << "(" << s.um.getUsername(i) << ")";
-        if (i != amount){
+    for (size_t socket = 1; socket <= no_users; ++socket){
+        std::cout << s.um.getNickname(socket)
+                  << "(" << s.um.getUsername(socket) << ")";
+        if (socket != no_users){
             std::cout << ", ";
         }
     }
@@ -96,11 +95,11 @@ int main(void)
     /* USAGE: */
         /* t_command(<full_message>, socket) <-- needs \r\n */
 
-    int no_users = 1;
+    int no_users = 0;
 
-    t_connect("Dummy-User", "Dummy-Nick", no_users++);
-    t_connect("Test-User", "Test-Nick", no_users++);
-    t_connect("Foo-User", "Foo-Nick", no_users++);
+    t_connect("Dummy-User", "Dummy-Nick", ++no_users);
+    t_connect("Test-User", "Test-Nick", ++no_users);
+    t_connect("Foo-User", "Foo-Nick", ++no_users);
     t_show_users(no_users);
 
     t_populate_channel();
