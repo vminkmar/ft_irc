@@ -85,7 +85,7 @@ void UserManagement::appendToBuffer(int socket, t_str_c& message, int flag){
     }
 }
 
-void UserManagement::eraseBuffer(int socket, int flag, int start, int end){
+void UserManagement::eraseBuffer(int socket, int start, int end, int flag){
 	if (flag == INPUT)
     {
         m_users.find(socket)->second.eraseInputBuffer(start, end);
