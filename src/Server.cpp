@@ -250,7 +250,7 @@ void Server::parseIncomingMessage(t_str message, int socket){
         pos = message.find("\r\n");
     }
     if (!message.empty()){
-        um.appendToBuffer(message, socket, INPUT);
+        um.appendToBuffer(socket, message, INPUT);
     }
 }
 

@@ -76,7 +76,7 @@ void UserManagement::setOnlineStatus(int socket, bool flag){
     throw std::runtime_error("setOnlineStatus: User not found!");
 }
 
-void UserManagement::appendToBuffer(t_str_c& message, int socket, int flag){
+void UserManagement::appendToBuffer(int socket, t_str_c& message, int flag){
     if (flag == INPUT){
         m_users.find(socket)->second.appendInputBuffer(message);
     }
