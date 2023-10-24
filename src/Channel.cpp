@@ -144,6 +144,11 @@ std::map<int, UserPrivilege> const& Channel::getUserMap() const
     return m_users;
 }
 
+unsigned int Channel::getNumberOfUsers() const
+{
+    return m_users.size();
+}
+
 bool Channel::isInviteOnly() const
 {
 	return m_inviteOnly;
@@ -157,6 +162,11 @@ bool Channel::isTopicEditable() const
 bool Channel::isChannelKey() const
 {
 	return m_channelKey;
+}
+
+bool Channel::isFull() const
+{
+    return m_users.size() >= m_userLimit;
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
@@ -180,6 +190,7 @@ bool Channel::isOperator(int socket) const{
     return m_users.find(socket) != m_users.end() 
            && m_users.find(socket)->second == OPERATOR;
 }
+
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 

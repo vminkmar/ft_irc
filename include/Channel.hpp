@@ -6,7 +6,7 @@
 #include <string>   // needed for std::string
 #include <map>      // needed for std::map <-- C11 would be unordered_map
 
-#define USER_LIMIT 10
+#define USER_LIMIT 2
 
 enum UserPrivilege
 {
@@ -60,10 +60,12 @@ class Channel
         std::string const&     getPassword()     const;
         unsigned int           getUserLimit()    const;
         t_channel_users const& getUserMap()      const;
+        unsigned int           getNumberOfUsers()const;
         
         bool isInviteOnly()    const;
         bool isTopicEditable() const;
         bool isChannelKey()    const;
+        bool isFull()          const;
         
         /* <------ member functions -----> */
         /* also behaves like set_privilege */

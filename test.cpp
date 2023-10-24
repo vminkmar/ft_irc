@@ -36,11 +36,17 @@ void t_command(std::string const& message, int socket){
     s.sendMessages(socket);
 }
 
-void t_show_users(){
+void t_show_users(size_t amount){
     log("LISTING USERS");
-    std::cout << "\nUsernames: " << s.um.getUsernames() << "\n"
-              << "Nicknames: " << s.um.getNicknames() 
-              << std::endl;
+    amount--;
+    for (size_t i = 1; i <= amount; ++i){
+        std::cout << s.um.getNickname(i)
+                  << "(" << s.um.getUsername(i) << ")";
+        if (i != amount){
+            std::cout << ", ";
+        }
+    }
+    std::cout << std::endl;
 }
 
 void t_connect(std::string const& username,
@@ -74,8 +80,9 @@ void t_populate_channel(){
     Channel * a1 = s.um.getChannel("a1");
     a1->setPassword("123");
     a1->toggleChannelKey();
-
+    
     s.um.addChannel("b2");
+    
     s.um.addChannel("c3");
 }
 
@@ -89,15 +96,23 @@ int main(void)
     /* USAGE: */
         /* t_command(<full_message>, socket) <-- needs \r\n */
 
-    int t_socket = 1;
+    int no_users = 1;
 
-    t_connect("Dummy-User", "Dummy-Nick", t_socket);
-    t_show_users();
+    t_connect("Dummy-User", "Dummy-Nick", no_users++);
+    t_connect("Test-User", "Test-Nick", no_users++);
+    t_connect("Foo-User", "Foo-Nick", no_users++);
+    t_show_users(no_users);
 
     t_populate_channel();
     t_show_channel();
    
-    t_command("JOIN a1 passw\r\n", t_socket);
+    t_command("JOIN b2\r\n", 1);
+    t_command("JOIN b2\r\n", 2);
+    t_command("JOIN b2\r\n", 3);
+
+    t_command("JOIN 0\r\n", 2);
+    t_command("JOIN b2\r\n", 3);
+
     return (EXIT_SUCCESS);
 }
 
