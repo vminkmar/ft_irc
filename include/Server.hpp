@@ -40,7 +40,11 @@ class Server{
     
     private:
 
-        typedef std::vector<std::string>  t_vec_str;
+        typedef std::string               t_str;
+        typedef t_str const               t_str_c;
+
+        typedef std::vector<t_str>        t_vec_str;
+        typedef t_vec_str const           t_vec_str_c;
         typedef t_vec_str::const_iterator t_vec_str_cit;
 
         typedef std::vector<pollfd>       t_vec_pollfd;
@@ -56,9 +60,9 @@ class Server{
         int         m_addrlen;
         int         m_port;
 
-        std::string m_command;
-        std::string m_trail;
-        std::string m_passwd;
+        t_str m_command;
+        t_str m_trail;
+        t_str m_passwd;
 
     public:
 	
@@ -68,18 +72,18 @@ class Server{
         Server();
         ~Server();
 
-        /* @note essentially all of this could be private at some point */
+/* @note essentially all of this could be private at some point */
 
         /* <------ getters -----> */
-        std::string getParameter(std::string const& message);
-        void        getCommand  (std::string&       message);
+        t_str getParameter(t_str_c& message);
+        void  getCommand  (t_str&   message);
         // void getPortAndPasswd(char **argv); /* @note no implement. */
 
         void createSocket(); /* this function essent. runs the whole server */
         
         /* <------ setup -----> */
         void runServer     ();
-        void error         (std::string str);
+        void error         (t_str str);
         void socketClosed  (int i);
         void acceptClients ();
         void cleanUpSockets();
@@ -89,12 +93,12 @@ class Server{
         void checkCompleteMessage    (int socket);
         void sendMessages            (int i);
         void receiveMessages         (int i);
-        void parseIncomingMessage    (std::string message, int socket);
+        void parseIncomingMessage    (t_str message, int socket);
         void comparePassword         ();
-        bool checkUnallowedCharacters(std::string const& strToCheck,
-                                      std::string const& unallowedChars) const;
+        bool checkUnallowedCharacters(t_str_c& strToCheck,
+                                      t_str_c& unallowedChars) const;
 
-        /* <------ server commands -----> */
+        /* <------ server messages -----> */
         void CMD_CAP (int socket);
         void CMD_NICK(int socket);
         void CMD_USER(int socket);
@@ -103,63 +107,54 @@ class Server{
         void CMD_JOIN(int socket);
         void CMD_PART(int socket);
 
+        /* <------ server messages helpers -----> */
+        void      createChannelBy         (int socket,
+                                           t_str_c& channelName);
+        void      addUserToChannels       (int socket,
+                                           t_vec_str_c& channelNames,
+                                           t_vec_str_c& channelKeys);
+        void      eraseUserFromAllChannels(int socket);
+        t_vec_str split                   (t_str_c& parameter,
+                                           char delimiter)            const;
+        t_str_c   sumParameters           (t_vec_str_cit start)       const;
+        t_str_c   getPartMessage()                                    const;
+        
         /* <------ server replies -----> */
         void RPL_CAP       (int socket);
-        void RPL_JOIN      (int socket,
-                            std::string const& channelName);
-        void RPL_NAMREPLY  (int socket,
-                            std::string const& channelName,
-                            std::string const& members);
-        void RPL_NICKCHANGE(int socket, std::string const& newNickname);
-        void RPL_NOTOPIC   (int socket, std::string const& channelName);
-        void RPL_PING      (int socket, std::string const& serverName);
+        void RPL_JOIN      (int socket, t_str_c& channelName);
+        void RPL_NAMREPLY  (int socket, t_str_c& channelName, t_str_c& members);
+        void RPL_NICKCHANGE(int socket, t_str_c& newNickname);
+        void RPL_NOTOPIC   (int socket, t_str_c& channelName);
+        void RPL_PING      (int socket, t_str_c& serverName);
         void RPL_QUIT      (int socket);
-        void RPL_TOPIC     (int socket,
-                            std::string const& channelName,
-                            std::string const& channelTopic);
-        void RPL_WELCOME   (int socket, std::string const& username);
-        void RPL_PART      (int socket,
-                            std::string const& channelName,
-                            std::string const& partMessage);
+        void RPL_TOPIC     (int socket, t_str_c& channelName, t_str_c& topic);
+        void RPL_WELCOME   (int socket, t_str_c& username);
+        void RPL_PART      (int socket, t_str_c& channelName, t_str_c& message);
+        void RPL_IFTOPIC   (int socket, t_str_c& channelName, t_str_c& topic);
 
         /* <------ server errors -----> */
-        void ERR_NOSUCHCHANNEL    (int socket, std::string const& channelName);
-        void ERR_NONICKNAMEGIVEN  (int socket);
-        void ERR_ERRONEUSNICKNAME (int socket, std::string const& nickname);
-        void ERR_NICKNAMEINUSE    (int socket, std::string const& nickname);
-        void ERR_NEEDMOREPARAMS   (int socket, std::string const& command);
-        void ERR_ALREADYREGISTRED (int socket);
-        void ERR_NOTONCHANNEL     (int socket, std::string const& channelName);
-        void ERR_BADCHANNELKEY    (int socket, std::string const& channelName);
-        void ERR_INVITEONLYCHAN   (int socket, std::string const& channelName);
-        void ERR_CHANNELISFULL    (int socket, std::string const& channelName);
+        void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);
+        void ERR_NONICKNAMEGIVEN (int socket);
+        void ERR_ERRONEUSNICKNAME(int socket, t_str_c& nickname);
+        void ERR_NICKNAMEINUSE   (int socket, t_str_c& nickname);
+        void ERR_NEEDMOREPARAMS  (int socket, t_str_c& command);
+        void ERR_ALREADYREGISTRED(int socket);
+        void ERR_NOTONCHANNEL    (int socket, t_str_c& channelName);
+        void ERR_BADCHANNELKEY   (int socket, t_str_c& channelName);
+        void ERR_INVITEONLYCHAN  (int socket, t_str_c& channelName);
+        void ERR_CHANNELISFULL   (int socket, t_str_c& channelName);
 
         /* <------ server logs -----> */
-        void log            (std::string const& message)                  const;
-        void log_inc        (int socket, std::string const& message)      const; 
-        void log_send       (int socket, std::string const& message)      const;
-        void log_err        (std::string const& message)                  const;
-        void log_vector     (std::string const& name, t_vec_str const& v) const;
-        void log_interaction(int socket,
-                             std::string const& message)                  const;
+        void log            (t_str_c& message)                  const;
+        void log_inc        (int socket, t_str_c& message)      const; 
+        void log_send       (int socket, t_str_c& message)      const;
+        void log_err        (t_str_c& message)                  const;
+        void log_vector     (t_str_c& name, t_vec_str_c& v)     const;
+        void log_interaction(int socket, t_str_c& message)      const;
 
         /* <------ else -----> */
-        void              printCommand()                              const;
-        /* splits parameters by a delimiter into a std::vector<std::string> */
-        t_vec_str         split        (std::string const& parameter,
-                                        char delimiter)               const;
-        /* summarizes parameters from given iterator to end as std::string */
-        std::string const sumParameters(t_vec_str_cit start)          const;
-        /* combines all parameters (except first) as std::string */
-        std::string const getPartMessage()                            const;
-        void eraseUserFromAllChannels(int socket);
-        void createChannelBy(int socket, std::string const& channelName);
-        void addUserToChannels(int socket,
-                               t_vec_str const& channelNames,
-                               t_vec_str const& channelKeys);
-        void RPL_TOPIC_OR_NOTOPIC(int socket,
-                                  std::string const& channelName,
-                                  std::string const& topic);
+        void              printCommand()                        const;
+
 };
 
 #endif // SERVER_HPP

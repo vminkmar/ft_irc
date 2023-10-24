@@ -2,8 +2,7 @@
 
 #include "../include/Server.hpp" // needed for Server class
 
-//#include <sstream> // needed for std::stringstream
-//#include <iostream> // @note debug
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages */
 
 void Server::CMD_CAP(int socket){
     if (m_parameters[0] == "LS"){
@@ -17,7 +16,7 @@ void Server::CMD_NICK(int socket){
         ERR_NONICKNAMEGIVEN(socket);
     }
     
-    std::string const& newNickname= m_parameters[0];
+    t_str_c& newNickname= m_parameters[0];
 
     if (checkUnallowedCharacters(newNickname, CHAR_UNALLOWED_NICK) == true){
         ERR_ERRONEUSNICKNAME(socket, newNickname);
@@ -44,14 +43,14 @@ void Server::CMD_USER(int socket){
         ERR_ALREADYREGISTRED(socket);
     }
     else{
-        std::string const& username = m_parameters[0];
+        t_str_c& username = m_parameters[0];
         RPL_WELCOME(socket, username);
         um.setUsername(socket, username);
     }
 }
 
 void Server::CMD_PING(int socket){
-    std::string const& servername = m_parameters[0];
+    t_str_c& servername = m_parameters[0];
     RPL_PING(socket, servername);
 }
 
@@ -61,15 +60,6 @@ void Server::CMD_QUIT(int socket){
 
 void Server::CMD_JOIN(int socket){
     
-    /* JOIN */
-    /* channel */ /* , */ /* channel */
-    /* key */ /* , */ /* key */
-
-    /* channelnames */
-    /* must begin with "&, #, + or !" */
-    /* up to 50 length */
-    /* shall not contain: ' ', ^G, ',' */
-
     if (m_parameters.empty() == true){
         ERR_NEEDMOREPARAMS(socket, m_command);
         return ;
@@ -112,6 +102,100 @@ void Server::CMD_PART(int socket){
         }
         um.eraseUserFromChannel(socket, *it);
         RPL_PART(socket, *it, getPartMessage());
+    }
+}
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */
+
+void Server::createChannelBy(int socket, t_str_c& channelName){
+
+    /* not sure if this... */
+    ERR_NOSUCHCHANNEL(socket, channelName);
+    
+    if (channelName.size() >= 50
+        || channelName.find_first_of(CHAR_ALLOWED_CHANNEL) != 0
+        || channelName.find_first_of(" ,\a") != t_str::npos){
+        /* ... should go here instead */
+        return ;
+    }
+
+    um.addChannel(channelName);
+    log("Channel "+ channelName + " created");
+    um.addUserToChannel(socket, OPERATOR, channelName);
+    RPL_JOIN(socket, channelName);
+    RPL_NOTOPIC(socket, channelName);
+    RPL_NAMREPLY(socket, channelName, um.getNickname(socket));
+
+}
+
+void Server::addUserToChannels(int socket,
+                               t_vec_str_c& channelNames,
+                               t_vec_str_c& channelKeys){
+
+    t_vec_str_cit key = channelKeys.begin();
+
+    for (t_vec_str_cit it = channelNames.begin();
+                       it != channelNames.end();
+                       ++it){
+        
+        /* @note possibly need to update this on an error */
+        /* @note should be fine though if its here */
+        t_str enteredKey;
+        if (key != channelKeys.end()){
+            enteredKey = *key++;
+        }
+    
+        t_str_c& channelName = *it;
+        if (um.checkForChannel(channelName) == false){
+       
+            createChannelBy(socket, channelName);
+            continue ;
+
+        }
+        
+        Channel const* channel = um.getChannel(channelName);
+        if (channel->isInviteOnly() == true){
+            
+            ERR_INVITEONLYCHAN(socket, channelName);
+            continue ;
+
+        }
+
+        if (channel->isFull() == true){
+            
+            ERR_CHANNELISFULL(socket, channelName);
+            continue;
+
+        }
+
+        if (enteredKey.empty() == false && channel->isChannelKey() == false){
+            log_err("Received password for non_pw channel");
+        }
+        else if (channel->isChannelKey() == true){
+            if (channel->getPassword() != enteredKey){
+                ERR_BADCHANNELKEY(socket, channel->getName());
+                continue ;
+            }
+            um.addUserToChannel(socket, USER, channelName);
+        }
+        else{
+            um.addUserToChannel(socket, USER, channelName);
+        }
+        RPL_JOIN(socket, channel->getName());
+        RPL_IFTOPIC(socket, channel->getName(), channel->getTopic());
+    }
+}
+
+void Server::eraseUserFromAllChannels(int socket){
+
+    t_vec_str channels = split(um.getChannelNames(), ',');
+    log_vector("all channels", channels); 
+    for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
+        t_str_c& channelName = *it;
+        if (um.getChannel(channelName)->isMember(socket)){
+            um.eraseUserFromChannel(socket, channelName);
+            RPL_PART(socket, channelName, getPartMessage());
+        }
     }
 }
 

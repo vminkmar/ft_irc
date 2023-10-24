@@ -134,14 +134,14 @@ void Server::sendMessages(int socket){
     
     while (um.getBuffer(socket, OUTPUT).empty() == false){
         
-        std::string const& outputBuffer = um.getBuffer(socket, OUTPUT);
+        t_str_c& outputBuffer = um.getBuffer(socket, OUTPUT);
         size_t messageEnd = outputBuffer.find("\r\n");
-        if (messageEnd == std::string::npos){
+        if (messageEnd == t_str::npos){
             log_err("no \r\n found in OUTPUT Buffer!");
             break ;
         }
         messageEnd += 2;
-        std::string const& message = outputBuffer.substr(0, messageEnd);
+        t_str_c& message = outputBuffer.substr(0, messageEnd);
         
         log_send(socket, message);
         int sending = send(socket, message.data(), message.length(), 0);
@@ -159,7 +159,7 @@ void Server::receiveMessages(int socket){
     if (reading < 0){
         log_err("Reading error in receiveMessages()");
     }
-    std::string message = buffer;
+    t_str message = buffer;
     parseIncomingMessage(message, socket);
     memset(buffer, 0, sizeof(buffer)); /* @note unneccessary? */
 }
@@ -200,23 +200,23 @@ void Server::Messages(int socket){
 // 		writeToOutputBuffer(ERR_PASSWD)
 // }
 
-bool Server::checkUnallowedCharacters(std::string const& stringToCheck,
-                                      std::string const& unallowedChars) const{
+bool Server::checkUnallowedCharacters(t_str_c& stringToCheck,
+                                      t_str_c& unallowedChars) const{
 	for(size_t i = 0; i < unallowedChars.length(); ++i){
 		size_t find = stringToCheck.find(unallowedChars[i]);
-		if(find != std::string::npos){
+		if(find != t_str::npos){
 			return true;
         }
 	}
 	return false;
 }
 
-void Server::parseIncomingMessage(std::string message, int socket){
+void Server::parseIncomingMessage(t_str message, int socket){
   
     /* if buffer isnt empty, append message to buffer and use that as new msg */
     if (!um.getBuffer(socket, INPUT).empty())
     {
-        std::string buffer = um.getBuffer(socket, INPUT);
+        t_str buffer = um.getBuffer(socket, INPUT);
         buffer.append(message);
         message = buffer;
     }
@@ -224,9 +224,9 @@ void Server::parseIncomingMessage(std::string message, int socket){
     log_inc(socket, message.substr(0, message.find("\r\n")));
     
     size_t pos = message.find("\r\n");
-    while (pos != std::string::npos)
+    while (pos != t_str::npos)
     {
-        std::string tmp = message.substr(0, pos);
+        t_str tmp = message.substr(0, pos);
 
         getCommand(tmp);
 
@@ -254,13 +254,13 @@ void Server::parseIncomingMessage(std::string message, int socket){
     }
 }
 
-std::string Server::getParameter(std::string const& message){
+Server::t_str Server::getParameter(t_str_c& message){
     size_t colon = message.find(":");
-    if (colon != std::string::npos){
-        std::string before = message.substr(0, colon);
-        std::string after = message.substr(colon + 1);
+    if (colon != t_str::npos){
+        t_str before = message.substr(0, colon);
+        t_str after = message.substr(colon + 1);
         std::stringstream iss(before);
-        std::string token;
+        t_str token;
         while (iss >> token){
             m_parameters.push_back(token);
         }
@@ -268,7 +268,7 @@ std::string Server::getParameter(std::string const& message){
     }
     else{
         std::stringstream iss(message);
-        std::string token;
+        t_str token;
         while (iss >> token){
         this->m_parameters.push_back(token);
         }
@@ -282,29 +282,29 @@ void Server::printCommand() const{
     }
 }
 
-void Server::getCommand(std::string& message){
+void Server::getCommand(t_str& message){
     size_t end = message.find(" ");
     this->m_command = message.substr(0, end);
     message.erase(message.begin(), message.begin() + end + 1);
 }
 
-void Server::error(std::string str){
+void Server::error(t_str str){
     std::cerr << str << std::endl;
     exit(1);
 }
 
-void Server::log(std::string const& message) const{
+void Server::log(t_str_c& message) const{
     std::cout << COLOUR_LOG << message << RESET << std::endl;
 }
 
-void Server::log_interaction(int socket, std::string const& message) const{
+void Server::log_interaction(int socket, t_str_c& message) const{
     (void) socket;
     std::cout << COLOUR_INTERACTION
               << message
               << RESET << std::endl;
 }
 
-void Server::log_inc(int socket, std::string const& message) const{
+void Server::log_inc(int socket, t_str_c& message) const{
     std::stringstream ss;
     ss << socket;
     std::cout << COLOUR_IN
@@ -312,7 +312,7 @@ void Server::log_inc(int socket, std::string const& message) const{
               << RESET << std::endl;
 }
 
-void Server::log_send(int socket, std::string const& message) const{
+void Server::log_send(int socket, t_str_c& message) const{
     std::stringstream ss;
     ss << socket;
     std::cout << COLOUR_OUT
@@ -320,11 +320,11 @@ void Server::log_send(int socket, std::string const& message) const{
               << RESET << std::endl;
 }
 
-void Server::log_err(std::string const& message) const{
+void Server::log_err(t_str_c& message) const{
     std::cout << COLOUR_ERR << "Error: " << message << RESET << std::endl;
 }
 
-void Server::log_vector(std::string const& name, t_vec_str const& v) const{
+void Server::log_vector(t_str_c& name, t_vec_str_c& v) const{
     std::cout << COLOUR_LOG << "vec<" + name + "> ";
     for (t_vec_str_cit it = v.begin(); it != v.end(); ++it){
         std::cout << "[" << *it << "] ";
@@ -332,10 +332,10 @@ void Server::log_vector(std::string const& name, t_vec_str const& v) const{
     std::cout << RESET << std::endl;
 }
 
-Server::t_vec_str Server::split(std::string const& parameter,
+Server::t_vec_str Server::split(t_str_c& parameter,
                                 char               delimiter) const{
     t_vec_str          split;
-    std::string        token;
+    t_str        token;
     std::stringstream  ss(parameter);
     while (std::getline(ss, token, delimiter)){
         split.push_back(token);
@@ -344,14 +344,15 @@ Server::t_vec_str Server::split(std::string const& parameter,
     return split;
 }
 
-std::string const Server::sumParameters(t_vec_str_cit start) const{
+Server::t_str_c Server::sumParameters(t_vec_str_cit start) const{
     
     std::stringstream ss;
     if (start == m_parameters.end()){
         /* @note not sure if even needed */
         throw std::runtime_error("sum_parameter: Wrong iterator given!");
     }
-    t_vec_str_cit     last = m_parameters.end() - 1;
+
+    t_vec_str_cit last = m_parameters.end() - 1;
     for (t_vec_str_cit it = start; it != m_parameters.end(); ++it){
         ss << *it;
         if (it != last){
@@ -359,110 +360,14 @@ std::string const Server::sumParameters(t_vec_str_cit start) const{
         }
     }
     return ss.str();
+
 }
 
-std::string const Server::getPartMessage() const{
+Server::t_str_c Server::getPartMessage() const{
     if (m_parameters.size() >= 2){
         return sumParameters(m_parameters.begin() + 1);
     }
     return DEFMSG_PART;
-}
-
-void Server::eraseUserFromAllChannels(int socket){
-
-    t_vec_str channels = split(um.getChannelNames(), ',');
-    log_vector("all channels", channels); 
-    for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
-        std::string const& channelName = *it;
-        if (um.getChannel(channelName)->isMember(socket)){
-            um.eraseUserFromChannel(socket, channelName);
-            RPL_PART(socket, channelName, getPartMessage());
-        }
-    }
-}
-
-void Server::createChannelBy(int socket, std::string const& channelName){
-
-    /* not sure if this... */
-    ERR_NOSUCHCHANNEL(socket, channelName);
-    
-    if (channelName.find_first_of(CHAR_ALLOWED_CHANNEL) != 0){
-        /* ... should go here instead */
-        return ;
-    }
-
-    if (channelName.size() >= 50){
-        return ;
-    }
-
-    if (channelName.find_first_of(" ,\a") != std::string::npos){
-        return ;
-    }
-
-    um.addChannel(channelName);
-    log("Channel "+ channelName + " created");
-    um.addUserToChannel(socket, OPERATOR, channelName);
-    RPL_JOIN(socket, channelName);
-    RPL_NOTOPIC(socket, channelName);
-    RPL_NAMREPLY(socket, channelName, um.getNickname(socket));
-}
-
-void Server::addUserToChannels(int socket,
-                               t_vec_str const& channelNames,
-                               t_vec_str const& channelKeys){
-
-    t_vec_str_cit key = channelKeys.begin();
-
-    for (t_vec_str_cit it = channelNames.begin();
-                       it != channelNames.end();
-                       ++it){
-        
-        /* @note possibly need to update this on an error */
-        /* @note should be fine though if its here */
-        std::string enteredKey;
-        if (key != channelKeys.end()){
-            enteredKey = *key++;
-        }
-    
-        std::string const& channelName = *it;
-        if (um.checkForChannel(channelName) == false){
-       
-            createChannelBy(socket, channelName);
-            continue ;
-
-        }
-        
-        Channel const* channel = um.getChannel(channelName);
-        if (channel->isInviteOnly() == true){
-            
-            ERR_INVITEONLYCHAN(socket, channelName);
-            continue ;
-
-        }
-
-        if (channel->isFull() == true){
-            
-            ERR_CHANNELISFULL(socket, channelName);
-            continue;
-
-        }
-
-        if (enteredKey.empty() == false && channel->isChannelKey() == false){
-            log_err("Received password for non_pw channel");
-        }
-        else if (channel->isChannelKey() == true){
-            if (channel->getPassword() != enteredKey){
-                ERR_BADCHANNELKEY(socket, channel->getName());
-                continue ;
-            }
-            um.addUserToChannel(socket, USER, channelName);
-        }
-        else{
-            um.addUserToChannel(socket, USER, channelName);
-        }
-        RPL_JOIN(socket, channel->getName());
-        RPL_TOPIC_OR_NOTOPIC(socket, channel->getName(), channel->getTopic());
-    }
 }
 
 // void Server::getPortAndPasswd(char **argv) {
