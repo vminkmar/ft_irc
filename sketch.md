@@ -9,12 +9,11 @@
 
 # Todos
 
+    @jakob update Channel, User class with typedefs
+
     @jakob JOIN
         --> needs rigorous testing!
 
-    @jakob Clean up Server class again
-
-    @jakob Channel Map: implement channel signs # & + !
     @jakob some way of broadcasting a channel message
 
     @jakob CAP Process - what if NICK is not set / already in USE

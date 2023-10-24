@@ -30,7 +30,7 @@ bool UserManagement::checkForUser(int socket) const{
     return m_users.find(socket) != m_users.end();
 }
 
-bool UserManagement::checkForUsername(std::string const& username) const{
+bool UserManagement::checkForUsername(t_str_c& username) const{
     for (t_um_users_cit it = m_users.begin(); it != m_users.end(); ++it){
         if(it->second.getUsername() == username){
             return true;
@@ -39,7 +39,7 @@ bool UserManagement::checkForUsername(std::string const& username) const{
     return false;
 }
 
-bool UserManagement::checkForNickname(std::string const& nickname) const{
+bool UserManagement::checkForNickname(t_str_c& nickname) const{
 	for(t_um_users_cit it = m_users.begin(); it != m_users.end(); ++it){
 		if(it->second.getNickname() == nickname){
 			return true;
@@ -50,14 +50,14 @@ bool UserManagement::checkForNickname(std::string const& nickname) const{
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user map setters */
 
-void UserManagement::setUsername(int socket, std::string const& newUsername){
+void UserManagement::setUsername(int socket, t_str_c& newUsername){
     t_um_users_it it = m_users.find(socket);
     if (it != m_users.end()){
         it->second.setUsername(newUsername);
     }
 }
 
-void UserManagement::setNickname(int socket, std::string const& newNickname){
+void UserManagement::setNickname(int socket, t_str_c& newNickname){
     t_um_users_it it = m_users.find(socket);
     if (it != m_users.end()){
         it->second.setNickname(newNickname);
@@ -76,7 +76,7 @@ void UserManagement::setOnlineStatus(int socket, bool flag){
     throw std::runtime_error("setOnlineStatus: User not found!");
 }
 
-void UserManagement::appendToBuffer(std::string const& message, int socket, int flag){
+void UserManagement::appendToBuffer(t_str_c& message, int socket, int flag){
     if (flag == INPUT){
         m_users.find(socket)->second.appendInputBuffer(message);
     }
@@ -96,7 +96,7 @@ void UserManagement::eraseBuffer(int socket, int flag, int start, int end){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user map getters */
 
-std::string UserManagement::getNickname(int socket) const{
+UserManagement::t_str UserManagement::getNickname(int socket) const{
     t_um_users_cit it = m_users.find(socket);
     if (it != m_users.end()){
         return it->second.getNickname();
@@ -104,7 +104,7 @@ std::string UserManagement::getNickname(int socket) const{
     throw std::runtime_error("getNickname: User not found!");
 }
 
-std::string UserManagement::getNicknames() const{
+UserManagement::t_str UserManagement::getNicknames() const{
     if (m_users.empty()){
         return "";
     }
@@ -119,7 +119,7 @@ std::string UserManagement::getNicknames() const{
     return ss.str();
 }
 
-std::string UserManagement::getUsername(int socket) const {
+UserManagement::t_str UserManagement::getUsername(int socket) const {
     t_um_users_cit it = m_users.find(socket);
     if (it != m_users.end()){
         return it->second.getUsername();
@@ -127,7 +127,7 @@ std::string UserManagement::getUsername(int socket) const {
     throw std::runtime_error("getUsername: User not found!");
 }
 
-std::string UserManagement::getUsernames() const{
+UserManagement::t_str UserManagement::getUsernames() const{
     if (m_users.empty()){
         return "";
     }
@@ -142,7 +142,7 @@ std::string UserManagement::getUsernames() const{
     return ss.str();
 }
 
-std::string UserManagement::getBuffer(int socket, int flag) const{
+UserManagement::t_str UserManagement::getBuffer(int socket, int flag) const{
     if (flag == INPUT){
         return m_users.find(socket)->second.getInputBuffer();
     }
