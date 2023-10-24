@@ -148,7 +148,7 @@ void Server::sendMessages(int socket){
         if (sending < 0){
             log_err("Send return < 0?");
         }
-        um.eraseBuffer(socket, OUTPUT, 0, messageEnd);
+        um.eraseBuffer(socket, 0, messageEnd, OUTPUT);
     }
 }
 
@@ -243,7 +243,7 @@ void Server::parseIncomingMessage(t_str message, int socket){
 
         message.erase(message.begin(), message.begin() + pos + 2);
         if (!(um.getBuffer(socket, INPUT).empty())){
-            um.eraseBuffer(socket, INPUT, 0, pos + 2);
+            um.eraseBuffer(socket, 0, pos + 2, INPUT);
         }
         Messages(socket);
         m_parameters.clear();

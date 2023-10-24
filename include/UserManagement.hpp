@@ -49,7 +49,7 @@ class UserManagement{
         void setNickname    (int socket, t_str_c& newNickname);
         void setOnlineStatus(int socket, bool flag);
         void appendToBuffer (int socket, t_str_c& message, int flag);
-        void eraseBuffer    (int socket, int flag, int start, int end);
+        void eraseBuffer    (int socket, int start, int end, int flag);
 
         /* <---- user map getters */
         t_str getNickname    (int socket)           const;
