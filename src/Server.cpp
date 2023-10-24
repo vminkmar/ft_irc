@@ -109,10 +109,10 @@ void Server::runServer(){
         if (it->revents & (POLLERR | POLLHUP | POLLNVAL)){
             socketClosed(it->fd);
         }
-        if (it->revents & POLLIN){
+        else if (it->revents & POLLIN){
             receiveMessages(it->fd);
         }
-        if (it->revents & POLLOUT){
+        else if (it->revents & POLLOUT){
             sendMessages(it->fd);
         }
         it->revents = 0;
