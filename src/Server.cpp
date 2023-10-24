@@ -386,8 +386,16 @@ void Server::createChannelBy(int socket, std::string const& channelName){
     /* not sure if this... */
     ERR_NOSUCHCHANNEL(socket, channelName);
     
-    if (channelName.find_first_of(CHAR_ALLOWED_CHANNEL) == std::string::npos){
+    if (channelName.find_first_of(CHAR_ALLOWED_CHANNEL) != 0){
         /* ... should go here instead */
+        return ;
+    }
+
+    if (channelName.size() >= 50){
+        return ;
+    }
+
+    if (channelName.find_first_of(" ,\a") != std::string::npos){
         return ;
     }
 
@@ -406,8 +414,15 @@ void Server::addUserToChannels(int socket,
     t_vec_str_cit key = channelKeys.begin();
 
     for (t_vec_str_cit it = channelNames.begin();
-               it != channelNames.end();
-               ++it){
+                       it != channelNames.end();
+                       ++it){
+        
+        /* @note possibly need to update this on an error */
+        /* @note should be fine though if its here */
+        std::string enteredKey;
+        if (key != channelKeys.end()){
+            enteredKey = *key++;
+        }
     
         std::string const& channelName = *it;
         if (um.checkForChannel(channelName) == false){
@@ -430,11 +445,6 @@ void Server::addUserToChannels(int socket,
             ERR_CHANNELISFULL(socket, channelName);
             continue;
 
-        }
-
-        std::string enteredKey;
-        if (key != channelKeys.end()){
-            enteredKey = *key++;
         }
 
         if (enteredKey.empty() == false && channel->isChannelKey() == false){
