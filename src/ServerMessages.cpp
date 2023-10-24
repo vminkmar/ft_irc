@@ -192,7 +192,7 @@ void Server::eraseUserFromAllChannels(int socket){
     log_vector("all channels", channels); 
     for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
         t_str_c& channelName = *it;
-        if (um.getChannel(channelName)->isMember(socket)){
+        if (um.getChannel(channelName)->isMember(socket) == true){
             um.eraseUserFromChannel(socket, channelName);
             RPL_PART(socket, channelName, getPartMessage());
         }

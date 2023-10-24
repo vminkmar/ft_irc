@@ -14,7 +14,6 @@
 
 class UserManagement{
     
-    
     private:
 
         typedef std::string                    t_str;

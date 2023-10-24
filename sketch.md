@@ -9,8 +9,6 @@
 
 # Todos
 
-    @jakob update Channel, User class with typedefs
-
     @jakob JOIN
         --> needs rigorous testing!
 
