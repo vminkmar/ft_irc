@@ -7,7 +7,8 @@
 #include "User.hpp"    // needed for User class
 
 #include <map>    // needed for std::map
-#include <string> // needed for std::string
+#include <string>
+#include <iostream> // needed for std::string
 
 #define INPUT  1
 #define OUTPUT 2

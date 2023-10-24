@@ -70,8 +70,8 @@ void UserManagement::setOnlineStatus(int socket, bool flag){
     if (it != m_users.end()){
         if (it->second.getOnlineStatus() != flag){
             it->second.toggleOnlineStatus();
-            return ;
         }
+      return ;
     }
     throw std::runtime_error("setOnlineStatus: User not found!");
 }
