@@ -46,8 +46,8 @@ class Server{
         typedef std::vector<pollfd>       t_vec_pollfd;
         typedef t_vec_pollfd::iterator    t_vec_pollfd_it;
 
-        t_vec_str                m_parameters;
-        std::vector<pollfd>      m_pollfds;
+        t_vec_str    m_parameters;
+        t_vec_pollfd m_pollfds;
 
         struct      sockaddr_in  address;
 
@@ -132,6 +132,7 @@ class Server{
         void ERR_NOTONCHANNEL     (int socket, std::string const& channelName);
         void ERR_BADCHANNELKEY    (int socket, std::string const& channelName);
         void ERR_INVITEONLYCHAN   (int socket, std::string const& channelName);
+        void ERR_CHANNELISFULL    (int socket, std::string const& channelName);
 
         /* <------ server logs -----> */
         void log            (std::string const& message)                  const;

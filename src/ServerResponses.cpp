@@ -195,5 +195,13 @@ void Server::ERR_INVITEONLYCHAN(int socket, std::string const& channelName){
     um.appendToBuffer(str, socket, OUTPUT);
 }
 
+void Server::ERR_CHANNELISFULL(int socket, std::string const& channelName){
+
+    log_err("Tried to join full channel " + channelName + "!");
+    std::string str =  "471 " + um.getNickname(socket)
+                       + " " + channelName
+                       + " :Cannot join channel (+l)\r\n";
+    um.appendToBuffer(str, socket, OUTPUT);
+}
 
 // -------------------------------------------------------------------------- //

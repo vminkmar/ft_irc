@@ -403,18 +403,25 @@ void Server::addUserToChannels(int socket,
                ++it){
     
         std::string const& channelName = *it;
-
         if (um.checkForChannel(channelName) == false){
        
             createChannelBy(socket, channelName);
             continue ;
 
         }
+        
         Channel const* channel = um.getChannel(channelName);
         if (channel->isInviteOnly() == true){
             
             ERR_INVITEONLYCHAN(socket, channelName);
             continue ;
+
+        }
+
+        if (channel->isFull() == true){
+            
+            ERR_CHANNELISFULL(socket, channelName);
+            continue;
 
         }
 
