@@ -105,6 +105,53 @@ void Server::CMD_PART(int socket){
     }
 }
 
+void Server::CMD_INVITE(int socket){
+
+    if (m_parameters.empty() == true || m_parameters.size() < 2){
+        ERR_NEEDMOREPARAMS(socket, m_command);
+        return ;
+    }
+
+    t_str_c nickname = m_parameters[0];
+
+    if (um.checkForNickname(nickname) == false){
+        ERR_NOSUCHNICK(socket, nickname);
+        return ;
+    }
+
+    t_str_c channelName = m_parameters[1];
+
+    if (um.checkForChannel(channelName) == false){
+    
+        um.addChannel(channelName);
+        um.addUserToChannel(socket, OPERATOR, channelName);
+        um.addUserToChannel(um.getSocket(nickname), OPERATOR, channelName);
+
+    }
+    else{
+        
+        Channel *channel = um.getChannel(channelName);
+        
+        if (channel->isMember(socket) == false){
+            ERR_NOTONCHANNEL(socket, channelName);
+            return ;
+        }
+        if (channel->isMember(um.getSocket(nickname)) == true){
+            ERR_USERONCHANNEL(socket, nickname, channelName);
+            return ;
+        }
+        if (channel->isInviteOnly() == true){
+            if (channel->isOperator(socket) == false){
+                ERR_CHANOPRIVSNEEDED(socket, channelName);
+                return ;
+            }
+        }
+    }
+
+    RPL_INVITING(socket, channelName, nickname);
+
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */
 
 void Server::createChannelBy(int socket, t_str_c& channelName){

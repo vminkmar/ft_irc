@@ -196,6 +196,9 @@ void Server::Messages(int socket){
     else if (m_command == "PART"){
         CMD_PART(socket);
     }
+    else if (m_command == "INVITE"){
+        CMD_INVITE(socket);
+    }
     // else if (m_command == "PASS")
     //     comparePassword();
     // }
