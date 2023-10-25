@@ -147,6 +147,7 @@ class Server{
         void ERR_CHANNELISFULL   (int socket, t_str_c& channelName);
         void ERR_CHANOPRIVSNEEDED(int socket, t_str_c& channelName);
         void ERR_NOSUCHNICK      (int socket, t_str_c& nickname);
+        void ERR_USERONCHANNEL   (int socket, t_str_c& nickname, t_str_c& channelName);
 
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;

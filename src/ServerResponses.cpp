@@ -188,4 +188,12 @@ void Server::ERR_NOSUCHNICK(int socket, t_str_c& nickname){
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
+void Server::ERR_USERONCHANNEL(int socket, t_str_c& nickname, t_str_c& channelName){
+    log_err("User " + nickname + " is already member of the channel " + channelName);
+    /* @note nick or user name of target? */
+    t_str str = "443 " + um.getNickname(socket) + " "
+                + nickname + " " + channelName + " :is already on channel";
+    um.appendToBuffer(socket, str, OUTPUT);
+}
+
 // -------------------------------------------------------------------------- //
