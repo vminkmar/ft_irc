@@ -111,6 +111,14 @@ void Server::RPL_PRIVMSG(int socket, t_str_c& target, t_str_c& message){
     um.appendToBuffer(um.getSocket(target), str, OUTPUT);
 }
 
+void Server::RPL_INVITING(int socket, t_str_c& channelName, t_str_c& target){
+    log(um.getUsername(socket) + " invited "
+        + target + " to channel " + channelName);
+    t_str str = ": 341 " + um.getNickname(socket) + " "
+        + target + " " + channelName + "\r\n";
+    um.appendToBuffer(socket, str, OUTPUT);
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
 
 void Server::ERR_NOSUCHCHANNEL(int socket, t_str_c& channelName){
