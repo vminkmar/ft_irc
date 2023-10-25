@@ -143,7 +143,7 @@ void Server::ERR_ALREADYREGISTRED(int socket){
 }
 
 void Server::ERR_NOTONCHANNEL(int socket, t_str_c& channelName){
-    log_err("User not on channel " + channelName + " !");
+    log_err("User not on channel " + channelName + "!");
     t_str str = "401 " + um.getNickname(socket)
                 +  " " + channelName
                 + " :You're not on that channel\r\n";
