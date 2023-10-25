@@ -199,6 +199,9 @@ void Server::Messages(int socket){
     else if (m_command == "PRIVMSG"){
         CMD_PRIVMSG(socket);
     }
+    else if (m_command == "TOPIC"){
+        CMD_TOPIC(socket);
+    }
     // else if (m_command == "PASS")
     //     comparePassword();
     // }
