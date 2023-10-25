@@ -19,7 +19,7 @@ void UserManagement::eraseChannel(std::string const& channelName){
                           ++it){
 		if (it->second.getName() == channelName){
 			m_channels.erase(it);
-            break ;
+            return ;
 		}
 	}
     throw std::runtime_error("eraseChannel(): Channel "
