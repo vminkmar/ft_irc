@@ -15,9 +15,9 @@ void Server::RPL_JOIN(int socket, t_str_c& channelName){
         + " prepared for socket#" + itostr(socket));
     t_str_c& username = um.getUsername(socket);
     t_str_c& nickname = um.getNickname(socket);
-    t_str str  = ":" + nickname + "!" +
-                       username + "@" + HOST + " JOIN " +
-                       channelName + " * :" + username + "\r\n";
+    t_str str  = ":" + nickname + "!"
+                 + username + "@" + HOST + " JOIN "
+                 + channelName + " * :" + username + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
@@ -29,10 +29,10 @@ void Server::RPL_NICKCHANGE(int socket, t_str_c& newNickname){
     else{
         log(oldNickname + " got changed to " + newNickname);
     }
-    t_str str = ":"   + oldNickname
-                      + "!" + um.getUsername(socket)
-                      + "@" + "localhost" + " " + "NICK"
-                      + " :" + newNickname + "\r\n";
+    t_str str = ":" + oldNickname
+                + "!" + um.getUsername(socket)
+                + "@" + "localhost" + " " + "NICK"
+                + " :" + newNickname + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
@@ -53,8 +53,8 @@ void Server::RPL_PING(int socket, t_str_c& serverName){
 void Server::RPL_QUIT(int socket){
     log("QUIT message prepared for socket#" + itostr(socket));
     t_str str = um.getNickname(socket) + "!" +
-                      um.getUsername(socket) + "@" + "localhost" +
-                      " QUIT :Goodbye!\r\n";
+                um.getUsername(socket) + "@" + "localhost" +
+                " QUIT :Goodbye!\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
@@ -62,8 +62,8 @@ void Server::RPL_TOPIC(int socket, t_str_c& channelName, t_str_c& topic){
     log("TOPIC message for " + channelName
         + " prepared for socket#" + itostr(socket));
     t_str str = "332 " + um.getNickname(socket)
-                      + " " + channelName + " :"
-                      + topic + "\r\n";
+                + " " + channelName + " :"
+                + topic + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
@@ -71,17 +71,17 @@ void Server::RPL_NAMREPLY(int socket, t_str_c& channelName, t_str_c& members){
     log("NAMREPLY message for " + channelName
         + " prepared for socket#" + itostr(socket));
     t_str str = "353 " + um.getNickname(socket)
-                      + " = " + channelName + " : " + members + "\r\n";
+                + " = " + channelName + " : " + members + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
 void Server::RPL_WELCOME(int socket, t_str_c& username){
     log("Welcome message prepared to socket#" + itostr(socket));
     t_str str = ":" + SERVERNAME +
-                      " 001 " + um.getNickname(socket) +
-                      " :Welcome to the ft_irc network " +
-                      um.getNickname(socket) + "!" +
-                      username + "@" + HOST + "\r\n";
+                " 001 " + um.getNickname(socket) +
+                " :Welcome to the ft_irc network "
+                + um.getNickname(socket) + "!"
+                + username + "@" + HOST + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
@@ -90,8 +90,8 @@ void Server::RPL_PART(int socket, t_str_c& channelName, t_str_c& message){
     log("Part message for " + channelName
         + " prepared for socket#" + itostr(socket));
     t_str str = ":" + um.getNickname(socket) + "!" 
-                      + um.getUsername(socket) + "@" + HOST + " PART "
-                      + channelName + " :" + message + "!" + "\r\n";
+                + um.getUsername(socket) + "@" + HOST + " PART "
+                + channelName + " :" + message + "!" + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
@@ -145,32 +145,39 @@ void Server::ERR_ALREADYREGISTRED(int socket){
 void Server::ERR_NOTONCHANNEL(int socket, t_str_c& channelName){
     log_err("User not on channel " + channelName + " !");
     t_str str = "401 " + um.getNickname(socket)
-                      +  " " + channelName
-                      + " :You're not on that channel\r\n";
+                +  " " + channelName
+                + " :You're not on that channel\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
 void Server::ERR_BADCHANNELKEY(int socket, t_str_c& channelName){
     log_err("Bad channel key for " + channelName + "!");
     t_str str = "475 " + um.getNickname(socket)
-                      + " " + channelName
-                      + " :Cannot join channel (+k)\r\n";
+                + " " + channelName
+                + " :Cannot join channel (+k)\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
 void Server::ERR_INVITEONLYCHAN(int socket, t_str_c& channelName){
     log_err("Tried to join invite-only channel " + channelName + "!");
     t_str str = "473 " + um.getNickname(socket)
-                      + " " + channelName
-                      + " :Cannot join channel (+j)\r\n";
+                + " " + channelName
+                + " :Cannot join channel (+j)\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
 void Server::ERR_CHANNELISFULL(int socket, t_str_c& channelName){
     log_err("Tried to join full channel " + channelName + "!");
     t_str str =  "471 " + um.getNickname(socket)
-                       + " " + channelName
-                       + " :Cannot join channel (+l)\r\n";
+                 + " " + channelName
+                 + " :Cannot join channel (+l)\r\n";
+    um.appendToBuffer(socket, str, OUTPUT);
+}
+
+void Server::ERR_CHANOPRIVSNEEDED(int socket, t_str_c& channelName){
+    log_err("Operator Privileges are needed in " + channelName + "!");
+    t_str str = "482 " + um.getNickname(socket) + 
+                + " " + channelName + " :You're not channel operator\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 

@@ -145,6 +145,7 @@ class Server{
         void ERR_BADCHANNELKEY   (int socket, t_str_c& channelName);
         void ERR_INVITEONLYCHAN  (int socket, t_str_c& channelName);
         void ERR_CHANNELISFULL   (int socket, t_str_c& channelName);
+        void ERR_CHANOPRIVSNEEDED(int socket, t_str_c& channelName);
 
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;
