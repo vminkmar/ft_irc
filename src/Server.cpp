@@ -3,13 +3,12 @@
 #include "../include/Server.hpp"         // needed for Server class
 #include "../include/UserManagement.hpp" // needed for UserManagement class
 
-#include <iostream>  // needed for std::cout, std::endl
-#include <sstream>   // needed for std::stringstream
-#include <stdexcept> // needed for std::runtime_error
 #include <unistd.h>  // needed for read()
 #include <cstring>   // needed for memset() (linux compilation)
 #include <stdio.h>   // needed for perror() (linux compilation)
 #include <cstdlib>   // needed for exit() (linux compilation)
+#include <iostream>  // needed for std::cout, std::endl
+#include <sstream>   // needed for std::stringstream
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 

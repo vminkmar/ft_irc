@@ -22,7 +22,7 @@ void UserManagement::eraseChannel(std::string const& channelName){
             break ;
 		}
 	}
-    throw std::runtime_error("getChannel(): Channel "
+    throw std::runtime_error("eraseChannel(): Channel "
                              + channelName + " not found!");
 }
 
@@ -40,7 +40,7 @@ void UserManagement::printChannelInfo(std::string const& channelName) const{
                   << std::endl;
         return ;
     }
-    throw std::runtime_error("getChannel(): Channel "
+    throw std::runtime_error("printChannelInfo(): Channel "
                              + channelName + " not found!");
 }
 
@@ -55,7 +55,7 @@ void UserManagement::addUserToChannel(int socket,
         it->second.addUser(socket, up);
         return ;
     }
-    throw std::runtime_error("getChannel(): Channel "
+    throw std::runtime_error("addUserToChannel(): Channel "
                              + channelName + " not found!");
 }
 
@@ -67,7 +67,7 @@ void UserManagement::eraseUserFromChannel(int socket,
         it->second.eraseUser(socket);
         return ;
     }
-    throw std::runtime_error("getChannel(): Channel "
+    throw std::runtime_error("eraseUserFromChannel(): Channel "
                              + channelName + " not found!");
 }
 
