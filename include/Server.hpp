@@ -108,6 +108,7 @@ class Server{
         void CMD_PART(int socket);
         void CMD_PRIVMSG(int socket);
         void CMD_TOPIC(int socket);
+        void CMD_INVITE(int socket);
 
         /* <------ server messages helpers -----> */
         void      createChannelBy         (int socket,
