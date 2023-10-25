@@ -2,24 +2,17 @@
 
 #include "../include/Server.hpp" // needed for Server class
 
-#include <sstream>  // needed for std::stringstream
-#include <iostream> // needed for std::cout, std::endl
-
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server replies */
 
-void Server::RPL_CAP(int socket) {
-    std::stringstream ss;
-    ss << socket;
-    log("CAP message prepared for socket#" + ss.str());
+void Server::RPL_CAP(int socket){
+    log("CAP message prepared for socket#" + itostr(socket));
     t_str str = "CAP * LS :cap reply...\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::RPL_JOIN(int socket,
-                      t_str_c& channelName){
-    std::stringstream ss;
-    ss << socket;
-    log("JOIN message for " + channelName + " prepared for socket#" + ss.str());
+void Server::RPL_JOIN(int socket, t_str_c& channelName){
+    log("JOIN message for " + channelName 
+        + " prepared for socket#" + itostr(socket));
     t_str_c& username = um.getUsername(socket);
     t_str_c& nickname = um.getNickname(socket);
     t_str str  = ":" + nickname + "!" +
@@ -44,61 +37,46 @@ void Server::RPL_NICKCHANGE(int socket, t_str_c& newNickname){
 }
 
 void Server::RPL_NOTOPIC(int socket, t_str_c& channelName){
-    std::stringstream ss;
-    ss << socket;
     log("NOTOPIC message for " + channelName
-        + " prepared for socket#" + ss.str());
-    t_str str = "331 "
-                      + um.getNickname(socket) + " "
-                      + channelName + " :No topic is set\r\n";
+        + " prepared for socket#" + itostr(socket));
+    t_str str = "331 " + um.getNickname(socket) + " "
+                + channelName + " :No topic is set\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
 void Server::RPL_PING(int socket, t_str_c& serverName){
-    std::stringstream ss;
-    ss << socket;
-    log("PONG message prepared for socket#" + ss.str());
+    log("PONG message prepared for socket#" + itostr(socket));
     t_str str = "PONG :" + serverName + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
 void Server::RPL_QUIT(int socket){
-    std::stringstream ss;
-    ss << socket;
-    log("QUIT message prepared for socket#" + ss.str());
+    log("QUIT message prepared for socket#" + itostr(socket));
     t_str str = um.getNickname(socket) + "!" +
                       um.getUsername(socket) + "@" + "localhost" +
                       " QUIT :Goodbye!\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::RPL_TOPIC(int socket,
-                       t_str_c& channelName,
-                       t_str_c& topic){
-    std::stringstream ss;
-    ss << socket;
-    log("TOPIC message for " + channelName + " prepared for socket#" + ss.str());
+void Server::RPL_TOPIC(int socket, t_str_c& channelName, t_str_c& topic){
+    log("TOPIC message for " + channelName
+        + " prepared for socket#" + itostr(socket));
     t_str str = "332 " + um.getNickname(socket)
                       + " " + channelName + " :"
                       + topic + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::RPL_NAMREPLY(int socket,
-                          t_str_c& channelName,
-                          t_str_c& members){
-    std::stringstream ss;
-    ss << socket;
-    log("NAMREPLY message for " + channelName + " prepared for socket#" + ss.str());
+void Server::RPL_NAMREPLY(int socket, t_str_c& channelName, t_str_c& members){
+    log("NAMREPLY message for " + channelName
+        + " prepared for socket#" + itostr(socket));
     t_str str = "353 " + um.getNickname(socket)
                       + " = " + channelName + " : " + members + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
 void Server::RPL_WELCOME(int socket, t_str_c& username){
-    std::stringstream ss;
-    ss << socket;
-    log("Welcome message prepared to socket#" + ss.str());
+    log("Welcome message prepared to socket#" + itostr(socket));
     t_str str = ":" + SERVERNAME +
                       " 001 " + um.getNickname(socket) +
                       " :Welcome to the ft_irc network " +
@@ -107,29 +85,23 @@ void Server::RPL_WELCOME(int socket, t_str_c& username){
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::RPL_PART(int socket,
-                      t_str_c& channelName,
-                      t_str_c& message){
-    std::stringstream ss;
-    ss << socket;
+void Server::RPL_PART(int socket, t_str_c& channelName, t_str_c& message){
     log("<part message> " + message);
-    log("Part message for " + channelName + " prepared for socket#" + ss.str());
+    log("Part message for " + channelName
+        + " prepared for socket#" + itostr(socket));
     t_str str = ":" + um.getNickname(socket) + "!" 
                       + um.getUsername(socket) + "@" + HOST + " PART "
                       + channelName + " :" + message + "!" + "\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::RPL_IFTOPIC(int socket,
-                                  t_str_c& channelName,
-                                  t_str_c& topic){
-
-        if (topic.empty() == true){
-            RPL_NOTOPIC(socket, channelName);
-        }
-        else{
-            RPL_TOPIC(socket, channelName, topic);
-        }
+void Server::RPL_IFTOPIC(int socket, t_str_c& channelName, t_str_c& topic){
+    if (topic.empty() == true){
+        RPL_NOTOPIC(socket, channelName);
+    }
+    else{
+        RPL_TOPIC(socket, channelName, topic);
+    }
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
@@ -179,7 +151,6 @@ void Server::ERR_NOTONCHANNEL(int socket, t_str_c& channelName){
 }
 
 void Server::ERR_BADCHANNELKEY(int socket, t_str_c& channelName){
-
     log_err("Bad channel key for " + channelName + "!");
     t_str str = "475 " + um.getNickname(socket)
                       + " " + channelName
@@ -188,7 +159,6 @@ void Server::ERR_BADCHANNELKEY(int socket, t_str_c& channelName){
 }
 
 void Server::ERR_INVITEONLYCHAN(int socket, t_str_c& channelName){
-
     log_err("Tried to join invite-only channel " + channelName + "!");
     t_str str = "473 " + um.getNickname(socket)
                       + " " + channelName
@@ -197,7 +167,6 @@ void Server::ERR_INVITEONLYCHAN(int socket, t_str_c& channelName){
 }
 
 void Server::ERR_CHANNELISFULL(int socket, t_str_c& channelName){
-
     log_err("Tried to join full channel " + channelName + "!");
     t_str str =  "471 " + um.getNickname(socket)
                        + " " + channelName

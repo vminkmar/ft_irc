@@ -113,7 +113,6 @@ std::string UserManagement::getChannelNames() const{
 
 std::string UserManagement::getChannelUsernames
                                         (std::string const& channelName) const{
-    
     std::stringstream ss;
     Channel::t_channel_users UserMap = getChannel(channelName)->getUserMap();
     

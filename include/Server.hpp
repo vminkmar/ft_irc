@@ -118,7 +118,9 @@ class Server{
                                            char delimiter)            const;
         t_str_c   sumParameters           (t_vec_str_cit start)       const;
         t_str_c   getPartMessage()                                    const;
-        
+        t_str_c   itostr                  (int i)                     const;
+
+
         /* <------ server replies -----> */
         void RPL_CAP       (int socket);
         void RPL_JOIN      (int socket, t_str_c& channelName);
@@ -150,7 +152,6 @@ class Server{
         void log_send       (int socket, t_str_c& message)      const;
         void log_err        (t_str_c& message)                  const;
         void log_vector     (t_str_c& name, t_vec_str_c& v)     const;
-        void log_interaction(int socket, t_str_c& message)      const;
 
         /* <------ else -----> */
         void              printCommand()                        const;

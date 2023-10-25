@@ -279,7 +279,7 @@ Server::t_str Server::getParameter(t_str_c& message){
         std::stringstream iss(message);
         t_str token;
         while (iss >> token){
-        this->m_parameters.push_back(token);
+            this->m_parameters.push_back(token);
         }
         return ("");
     }
@@ -306,26 +306,15 @@ void Server::log(t_str_c& message) const{
     std::cout << COLOUR_LOG << message << RESET << std::endl;
 }
 
-void Server::log_interaction(int socket, t_str_c& message) const{
-    (void) socket;
-    std::cout << COLOUR_INTERACTION
-              << message
-              << RESET << std::endl;
-}
-
 void Server::log_inc(int socket, t_str_c& message) const{
-    std::stringstream ss;
-    ss << socket;
     std::cout << COLOUR_IN
-              << "\nIncoming: " << message << " <-- socket#" << ss.str()
+              << "\nIncoming: " << message << " <-- socket#" << itostr(socket)
               << RESET << std::endl;
 }
 
 void Server::log_send(int socket, t_str_c& message) const{
-    std::stringstream ss;
-    ss << socket;
     std::cout << COLOUR_OUT
-              << "Sending: "<< message << " --> socket#" << ss.str()
+              << "Sending: "<< message << " --> socket#" << itostr(socket)
               << RESET << std::endl;
 }
 
@@ -334,7 +323,7 @@ void Server::log_err(t_str_c& message) const{
 }
 
 void Server::log_vector(t_str_c& name, t_vec_str_c& v) const{
-    std::cout << COLOUR_LOG << "vec<" + name + "> ";
+    std::cout << COLOUR_LOG << "<" + name + "> ";
     for (t_vec_str_cit it = v.begin(); it != v.end(); ++it){
         std::cout << "[" << *it << "] ";
     }
@@ -342,25 +331,25 @@ void Server::log_vector(t_str_c& name, t_vec_str_c& v) const{
 }
 
 Server::t_vec_str Server::split(t_str_c& parameter,
-                                char               delimiter) const{
+                                char delimiter) const{
     t_vec_str          split;
-    t_str        token;
+    t_str              token;
     std::stringstream  ss(parameter);
+
     while (std::getline(ss, token, delimiter)){
         split.push_back(token);
     }
-    log_vector("split", split);
+
+    log_vector("splitted vec", split);
     return split;
 }
 
 Server::t_str_c Server::sumParameters(t_vec_str_cit start) const{
-    
-    std::stringstream ss;
     if (start == m_parameters.end()){
-        /* @note not sure if even needed */
         throw std::runtime_error("sum_parameter: Wrong iterator given!");
     }
 
+    std::stringstream ss;
     t_vec_str_cit last = m_parameters.end() - 1;
     for (t_vec_str_cit it = start; it != m_parameters.end(); ++it){
         ss << *it;
@@ -369,7 +358,6 @@ Server::t_str_c Server::sumParameters(t_vec_str_cit start) const{
         }
     }
     return ss.str();
-
 }
 
 Server::t_str_c Server::getPartMessage() const{
@@ -377,6 +365,12 @@ Server::t_str_c Server::getPartMessage() const{
         return sumParameters(m_parameters.begin() + 1);
     }
     return DEFMSG_PART;
+}
+
+Server::t_str_c Server::itostr(int i) const{
+    std::stringstream ss;
+    ss << i;
+    return ss.str();
 }
 
 // void Server::getPortAndPasswd(char **argv) {
