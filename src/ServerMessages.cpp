@@ -105,6 +105,40 @@ void Server::CMD_PART(int socket){
     }
 }
 
+void Server::CMD_TOPIC(int socket){
+
+    if (m_parameters.empty()){
+        ERR_NEEDMOREPARAMS(socket, m_command);
+        return ;
+    }
+    
+    t_str_c       channelName = m_parameters[0];
+    Channel       *channel    = um.getChannel(channelName);
+
+    if (channel->isMember(socket) == false){
+        ERR_NOTONCHANNEL(socket, channelName);
+        return ;
+    }
+    
+    /* @note how to check if trail is an empty string and not just empty? */
+
+    if (m_trail.empty() == true){
+        RPL_IFTOPIC(socket, channelName, channel->getTopic());
+        return ;
+    }
+
+    t_str_c topic = m_trail;
+
+    if (channel->isTopicEditable() == false){
+        if (channel->isOperator(socket) == false){
+            ERR_CHANOPRIVSNEEDED(socket, channelName);
+            return ;
+        }
+    }
+    channel->setTopic(topic);
+    RPL_TOPIC(socket, channelName, topic);
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */
 
 void Server::createChannelBy(int socket, t_str_c& channelName){
