@@ -123,9 +123,7 @@ void Server::runServer(){
 bool Server::isErasable(int socket) const{
     if (um.checkForUser(socket) == true){
         if (um.getOnlineStatus(socket) == OFFLINE){
-            if (um.getBuffer(socket, OUTPUT).empty() == true){
-                return true;
-            }
+            return true;
         }
     }
     return false;
