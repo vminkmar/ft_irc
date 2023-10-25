@@ -9,7 +9,7 @@
 
 void UserManagement::addUser(int socket){
     m_users[socket] = User(); /* c11 std::map.emplace */
-    setOnlineStatus(socket, true);
+    setOnlineStatus(socket, ONLINE);
 }
 
 void UserManagement::eraseUser(int socket){

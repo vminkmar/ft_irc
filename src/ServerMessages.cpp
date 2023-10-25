@@ -55,6 +55,9 @@ void Server::CMD_PING(int socket){
 }
 
 void Server::CMD_QUIT(int socket){
+    um.setOnlineStatus(socket, OFFLINE);
+    log("Socket #" + itostr(socket) + " has gone offline ("
+        + um.getNickname(socket) +")");
     RPL_QUIT(socket);
 }
 
