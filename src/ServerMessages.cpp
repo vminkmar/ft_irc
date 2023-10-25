@@ -149,6 +149,7 @@ void Server::CMD_INVITE(int socket){
     }
 
     RPL_INVITING(socket, channelName, nickname);
+    /* @note not sure if another RPL to target is needed, need to test */
 
 }
 
