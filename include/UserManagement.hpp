@@ -51,6 +51,7 @@ class UserManagement{
         void eraseBuffer    (int socket, int start, int end, int flag);
 
         /* <---- user map getters */
+        int   getSocket      (t_str_c& nickname)    const;
         t_str getNickname    (int socket)           const;
         t_str getNicknames   ()                     const;
         t_str getUsername    (int socket)           const;

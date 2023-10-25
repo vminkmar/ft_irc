@@ -96,6 +96,15 @@ void UserManagement::eraseBuffer(int socket, int start, int end, int flag){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user map getters */
 
+int UserManagement::getSocket(t_str_c& nickname) const{
+    for (t_um_users_cit it = m_users.begin(); it != m_users.end(); ++it){
+        if (it->second.getNickname() == nickname){
+            return it->first;
+        }
+    }
+    throw std::runtime_error("getSocket: User not found!");
+}
+
 UserManagement::t_str UserManagement::getNickname(int socket) const{
     t_um_users_cit it = m_users.find(socket);
     if (it != m_users.end()){
