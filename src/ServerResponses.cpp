@@ -53,8 +53,8 @@ void Server::RPL_PING(int socket, t_str_c& serverName){
 void Server::RPL_QUIT(int socket){
     log("QUIT message prepared for socket#" + itostr(socket));
     t_str str = um.getNickname(socket) + "!" +
-                um.getUsername(socket) + "@" + "localhost" +
-                " QUIT :Goodbye!\r\n";
+                um.getUsername(socket) + "@" + "localhost" 
+                + " QUIT :Goodbye!\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 

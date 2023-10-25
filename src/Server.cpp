@@ -119,10 +119,27 @@ void Server::runServer(){
     cleanUpSockets();
 }
 
+bool Server::isErasable(int socket) const{
+    if (um.checkForUser(socket) == true){
+        if (um.getOnlineStatus(socket) == OFFLINE){
+            if (um.getBuffer(socket, OUTPUT).empty() == true){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void Server::cleanUpSockets(){
     for(t_vec_pollfd_it it = m_pollfds.begin() + 1; it != m_pollfds.end();){
-        if(um.getOnlineStatus(it->fd) == false){
+        int     socket = it->fd;
+        t_str_c nickname = um.getNickname(it->fd);
+        
+        if (isErasable(socket) == true){
+            um.eraseUser(socket);
             it = m_pollfds.erase(it);
+            log("Socket #" + itostr(socket) + " has been removed ("
+                + nickname + ")");
         }
         else{
             ++it;
@@ -132,7 +149,7 @@ void Server::cleanUpSockets(){
 
 void Server::socketClosed(int socket){
     try{
-			um.setOnlineStatus(socket, false);
+			um.setOnlineStatus(socket, OFFLINE);
 		}
 		catch (std::exception &e){
 			log_err(e.what());

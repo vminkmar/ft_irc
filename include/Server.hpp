@@ -124,6 +124,7 @@ class Server{
         t_str_c   itostr                  (int i)                     const;
         void broadcast       (t_str_c& sender, t_str_c& channelName, t_str_c& message);
         void      cleanEmptyChannels();
+        bool      isErasable              (int socket)     const;
 
         /* <------ server replies -----> */
         void RPL_CAP       (int socket);
