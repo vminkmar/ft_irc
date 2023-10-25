@@ -109,6 +109,7 @@ void Server::runServer(){
             socketClosed(it->fd);
         }
         else if (it->revents & POLLIN){
+            /* @note BUG: when just using /disconnect this condition is set */
             receiveMessages(it->fd);
         }
         else if (it->revents & POLLOUT){
