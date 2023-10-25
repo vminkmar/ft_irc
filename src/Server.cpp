@@ -205,6 +205,10 @@ void Server::Messages(int socket){
     // else if (m_command == "PASS")
     //     comparePassword();
     // }
+    
+    /* @note error prone, if you access empty channels afterwards */
+    cleanEmptyChannels();
+
 }
 
 // void Server::comparePassword(){
@@ -214,6 +218,25 @@ void Server::Messages(int socket){
 // 		throw sendError()
 // 		writeToOutputBuffer(ERR_PASSWD)
 // }
+
+void Server::cleanEmptyChannels(){
+    
+
+    t_vec_str_c channelNames = split(um.getChannelNames(), ',');
+    log_vector("channelNames", channelNames);
+
+    for (t_vec_str_cit it = channelNames.begin();
+                       it != channelNames.end();
+                       ++it){
+        
+        t_str_c channelName = *it;
+        Channel const* channel = um.getChannel(channelName);
+        if (channel->getNumberOfUsers() == 0){
+            um.eraseChannel(channelName);
+            log(channelName + " has been removed (no Users)");
+        }
+    }
+}
 
 bool Server::checkUnallowedCharacters(t_str_c& stringToCheck,
                                       t_str_c& unallowedChars) const{
