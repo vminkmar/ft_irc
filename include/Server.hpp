@@ -146,6 +146,7 @@ class Server{
         void ERR_INVITEONLYCHAN  (int socket, t_str_c& channelName);
         void ERR_CHANNELISFULL   (int socket, t_str_c& channelName);
         void ERR_CHANOPRIVSNEEDED(int socket, t_str_c& channelName);
+        void ERR_NOSUCHNICK      (int socket, t_str_c& nickname);
 
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;
