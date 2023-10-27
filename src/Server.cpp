@@ -212,6 +212,9 @@ void Server::Messages(int socket){
     else if (m_command == "PART"){
         CMD_PART(socket);
     }
+    else if (m_command == "TOPIC"){
+        CMD_TOPIC(socket);
+    }
     else if (m_command == "INVITE"){
         CMD_INVITE(socket);
     }
