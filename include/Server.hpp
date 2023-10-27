@@ -122,6 +122,7 @@ class Server{
         t_str_c   getPartMessage()                                    const;
         t_str_c   itostr                  (int i)                     const;
         void broadcast       (t_str_c& sender, t_str_c& channelName, t_str_c& message);
+        bool      isErasable              (int socket)     const;
         void      cleanEmptyChannels();
 
         /* <------ server replies -----> */

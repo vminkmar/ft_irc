@@ -12,6 +12,9 @@
 #define INPUT  1
 #define OUTPUT 2
 
+#define OFFLINE false
+#define ONLINE  true
+
 class UserManagement{
     
     private:
