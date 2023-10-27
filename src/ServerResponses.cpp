@@ -104,6 +104,13 @@ void Server::RPL_IFTOPIC(int socket, t_str_c& channelName, t_str_c& topic){
     }
 }
 
+void Server::RPL_PRIVMSG(int socket, t_str_c& target, t_str_c& message){
+    log("Private message prepared for " + target);
+    t_str str = ":" + um.getNickname(socket) + "!" + um.getUsername(socket)
+                + "@" + HOST " PRIVMSG " + target + ":" + message + "\r\n";
+    um.appendToBuffer(um.getSocket(target), str, OUTPUT);
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
 
 void Server::ERR_NOSUCHCHANNEL(int socket, t_str_c& channelName){
