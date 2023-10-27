@@ -203,4 +203,11 @@ void Server::ERR_NORECIPIENT(int socket, t_str_c& command){
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
+void Server::ERR_NOTEXTTOSEND(int socket){
+    log_err("No text to send was given!");
+    t_str str = "412 " + um.getNickname(socket)
+                + " :No text to send";
+    um.appendToBuffer(socket, str, OUTPUT);
+}
+
 // -------------------------------------------------------------------------- //

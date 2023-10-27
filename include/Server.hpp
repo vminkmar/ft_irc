@@ -149,6 +149,7 @@ class Server{
         void ERR_NOSUCHNICK      (int socket, t_str_c& nickname);
         void ERR_USERONCHANNEL   (int socket, t_str_c& nickname, t_str_c& channelName);
         void ERR_NORECIPIENT     (int socket, t_str_c& command);
+        void ERR_NOTEXTTOSEND    (int socket);
 
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;
