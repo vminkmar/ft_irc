@@ -373,6 +373,17 @@ Server::t_str_c Server::itostr(int i) const{
     return ss.str();
 }
 
+void Server::broadcast(t_str_c& sender, t_str_c& channelName, t_str_c& message){
+    t_vec_str_c nicknames = split(um.getChannelNicknames(channelName), ',');
+    for (t_vec_str_cit it = nicknames.begin(); it != nicknames.end(); ++it){
+        if (sender.empty() == false && *it == sender){
+            continue ;
+        }
+        int socket = um.getSocket(*it);
+        um.appendToBuffer(socket, message, OUTPUT);
+    }
+}
+
 // void Server::getPortAndPasswd(char **argv) {
 //   std::string str = argv[1];
 //   for (size_t i = 0; i < str.size() - 1; i++)
