@@ -72,7 +72,7 @@ class Channel
         void addUser   (int socket, UserPrivilege up); 
         void eraseUser (int socket);
         bool isMember  (int socket) const;
-        bool isOperator(int socket) const; /* @note needs testing */
+        bool isOperator(int socket) const;
 
 };
 
