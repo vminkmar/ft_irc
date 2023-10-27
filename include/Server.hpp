@@ -107,10 +107,12 @@ class Server{
         void CMD_JOIN(int socket);
         void CMD_PART(int socket);
         void CMD_TOPIC(int socket);
+        void CMD_INVITE(int socket);
 
         /* <------ server messages helpers -----> */
         void      createChannelBy         (int socket,
-                                           t_str_c& channelName);
+                                           t_str_c& channelName,
+                                           t_str_c& channelKey);
         void      addUserToChannels       (int socket,
                                            t_vec_str_c& channelNames,
                                            t_vec_str_c& channelKeys);
@@ -121,6 +123,8 @@ class Server{
         t_str_c   getPartMessage()                                    const;
         t_str_c   itostr                  (int i)                     const;
         void broadcast       (t_str_c& sender, t_str_c& channelName, t_str_c& message);
+        bool      isErasable              (int socket)     const;
+        void      cleanEmptyChannels();
 
         /* <------ server replies -----> */
         void RPL_CAP       (int socket);
@@ -134,6 +138,7 @@ class Server{
         void RPL_WELCOME   (int socket, t_str_c& username);
         void RPL_PART      (int socket, t_str_c& channelName, t_str_c& message);
         void RPL_IFTOPIC   (int socket, t_str_c& channelName, t_str_c& topic);
+        void RPL_INVITING  (int socket, t_str_c& channelName, t_str_c& target);
 
         /* <------ server errors -----> */
         void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);
