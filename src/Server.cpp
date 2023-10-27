@@ -109,6 +109,7 @@ void Server::runServer(){
             socketClosed(it->fd);
         }
         else if (it->revents & POLLIN){
+            /* @note BUG: when just using /disconnect this condition is set */
             receiveMessages(it->fd);
         }
         else if (it->revents & POLLOUT){
@@ -119,10 +120,25 @@ void Server::runServer(){
     cleanUpSockets();
 }
 
+bool Server::isErasable(int socket) const{
+    if (um.checkForUser(socket) == true){
+        if (um.getOnlineStatus(socket) == OFFLINE){
+            return true;
+        }
+    }
+    return false;
+}
+
 void Server::cleanUpSockets(){
     for(t_vec_pollfd_it it = m_pollfds.begin() + 1; it != m_pollfds.end();){
-        if(um.getOnlineStatus(it->fd) == false){
+        int     socket = it->fd;
+        t_str_c nickname = um.getNickname(it->fd);
+        
+        if (isErasable(socket) == true){
+            um.eraseUser(socket);
             it = m_pollfds.erase(it);
+            log("Socket #" + itostr(socket) + " has been removed ("
+                + nickname + ")");
         }
         else{
             ++it;
@@ -132,7 +148,7 @@ void Server::cleanUpSockets(){
 
 void Server::socketClosed(int socket){
     try{
-			um.setOnlineStatus(socket, false);
+			um.setOnlineStatus(socket, OFFLINE);
 		}
 		catch (std::exception &e){
 			log_err(e.what());
@@ -199,9 +215,19 @@ void Server::Messages(int socket){
     else if (m_command == "PRIVMSG"){
         CMD_PRIVMSG(socket);
     }
+    else if (m_command == "TOPIC"){
+        CMD_TOPIC(socket);
+    }
+    else if (m_command == "INVITE"){
+        CMD_INVITE(socket);
+    }
     // else if (m_command == "PASS")
     //     comparePassword();
     // }
+    
+    /* @note error prone, if you access empty channels afterwards */
+    cleanEmptyChannels();
+
 }
 
 // void Server::comparePassword(){
@@ -211,6 +237,25 @@ void Server::Messages(int socket){
 // 		throw sendError()
 // 		writeToOutputBuffer(ERR_PASSWD)
 // }
+
+void Server::cleanEmptyChannels(){
+    
+
+    t_vec_str_c channelNames = split(um.getChannelNames(), ',');
+    log_vector("channelNames", channelNames);
+
+    for (t_vec_str_cit it = channelNames.begin();
+                       it != channelNames.end();
+                       ++it){
+        
+        t_str_c channelName = *it;
+        Channel const* channel = um.getChannel(channelName);
+        if (channel->getNumberOfUsers() == 0){
+            um.eraseChannel(channelName);
+            log(channelName + " has been removed (no Users)");
+        }
+    }
+}
 
 bool Server::checkUnallowedCharacters(t_str_c& stringToCheck,
                                       t_str_c& unallowedChars) const{

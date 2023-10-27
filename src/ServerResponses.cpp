@@ -53,8 +53,8 @@ void Server::RPL_PING(int socket, t_str_c& serverName){
 void Server::RPL_QUIT(int socket){
     log("QUIT message prepared for socket#" + itostr(socket));
     t_str str = um.getNickname(socket) + "!" +
-                um.getUsername(socket) + "@" + "localhost" +
-                " QUIT :Goodbye!\r\n";
+                um.getUsername(socket) + "@" + "localhost" 
+                + " QUIT :Goodbye!\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
@@ -104,11 +104,20 @@ void Server::RPL_IFTOPIC(int socket, t_str_c& channelName, t_str_c& topic){
     }
 }
 
+
 void Server::RPL_PRIVMSG(int socket, t_str_c& target, t_str_c& message){
     log("Private message prepared for " + target);
     t_str str = ":" + um.getNickname(socket) + "!" + um.getUsername(socket)
                 + "@" + HOST " PRIVMSG " + target + ":" + message + "\r\n";
     um.appendToBuffer(um.getSocket(target), str, OUTPUT);
+}
+
+void Server::RPL_INVITING(int socket, t_str_c& channelName, t_str_c& target){
+    log(um.getUsername(socket) + " invited "
+        + target + " to channel " + channelName);
+    t_str str = ": 341 " + um.getNickname(socket) + " "
+        + target + " " + channelName + "\r\n";
+    um.appendToBuffer(socket, str, OUTPUT);
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
