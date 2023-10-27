@@ -58,6 +58,18 @@ void Server::CMD_QUIT(int socket){
     um.setOnlineStatus(socket, OFFLINE);
     log("Socket #" + itostr(socket) + " has gone offline ("
         + um.getNickname(socket) +")");
+
+    //eraseUserFromAllChannels(socket);
+    /* @note prob need to use broadcast() on all channels instead */
+
+    t_vec_str channels = split(um.getChannelNames(), ',');
+    for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
+        t_str_c& channelName = *it;
+        if (um.getChannel(channelName)->isMember(socket) == true){
+            um.eraseUserFromChannel(socket, channelName);
+            //broadcast(um.getNickname(socket), channelName, );
+        }
+    }
     RPL_QUIT(socket);
 }
 

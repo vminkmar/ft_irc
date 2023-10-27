@@ -240,7 +240,6 @@ void Server::Messages(int socket){
 
 void Server::cleanEmptyChannels(){
     
-
     t_vec_str_c channelNames = split(um.getChannelNames(), ',');
     log_vector("channelNames", channelNames);
 
