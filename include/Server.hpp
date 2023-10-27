@@ -146,7 +146,7 @@ class Server{
         void ERR_INVITEONLYCHAN  (int socket, t_str_c& channelName);
         void ERR_CHANNELISFULL   (int socket, t_str_c& channelName);
         void ERR_CHANOPRIVSNEEDED(int socket, t_str_c& channelName);
-        void ERR_NOSUCHNICK      (int socket, t_str_c& nickname);
+        void ERR_NOSUCHNICK      (int socket, t_str_c& nicknameOrChannelName);
         void ERR_USERONCHANNEL   (int socket, t_str_c& nickname, t_str_c& channelName);
         void ERR_NORECIPIENT     (int socket, t_str_c& command);
         void ERR_NOTEXTTOSEND    (int socket);

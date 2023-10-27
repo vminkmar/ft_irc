@@ -181,10 +181,11 @@ void Server::ERR_CHANOPRIVSNEEDED(int socket, t_str_c& channelName){
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::ERR_NOSUCHNICK(int socket, t_str_c& nickname){
-    log_err("No such nickname on server (" + nickname + ")!");
-    t_str str = "401 " + um.getNickname(socket) 
-                + " " + nickname + " :No such nick/channel\r\n";
+void Server::ERR_NOSUCHNICK(int socket, t_str_c& nicknameOrchannelName){
+    log_err("No such nickname/channel on server ("
+            + nicknameOrchannelName + ")!");
+    t_str str = "401 " + um.getNickname(socket)
+                + " " + nicknameOrchannelName + " :No such nick/channel\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
