@@ -122,13 +122,14 @@ void Server::CMD_PRIVMSG(int socket){
     /* @note and now somehow send messages to everyone */
     /* @note what if nickname starts with a channel sign like # & */
     if (um.checkForNickname(target) == true){
+        RPL_PRIVMSG(socket, target, m_trail);
         return ;
     }
     else if (um.checkForChannel(target) == true){
+        broadcast(um.getNickname(socket), target, m_trail);
         return ;
     }
     ERR_NOSUCHNICK(socket, target);
-
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */

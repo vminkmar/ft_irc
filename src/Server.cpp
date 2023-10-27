@@ -377,13 +377,17 @@ Server::t_str_c Server::itostr(int i) const{
 }
 
 void Server::broadcast(t_str_c& sender, t_str_c& channelName, t_str_c& message){
-    t_vec_str_c nicknames = split(um.getChannelNicknames(channelName), ',');
-    for (t_vec_str_cit it = nicknames.begin(); it != nicknames.end(); ++it){
-        if (sender.empty() == false && *it == sender){
+    
+    int socketSender = um.getSocket(sender);
+    Channel const* channel = um.getChannel(channelName);
+    Channel::t_channel_users members = channel->getUserMap();
+
+    for (Channel::t_channel_users_cit it = members.begin(); it != members.end(); ++it){
+        t_str_c& nickname = um.getNickname(it->first);
+        if (sender.empty() == false && sender == nickname){
             continue ;
         }
-        int socket = um.getSocket(*it);
-        um.appendToBuffer(socket, message, OUTPUT);
+        RPL_PRIVMSG(socketSender, nickname, message);
     }
 }
 
