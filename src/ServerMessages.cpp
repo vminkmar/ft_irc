@@ -105,6 +105,32 @@ void Server::CMD_PART(int socket){
     }
 }
 
+void Server::CMD_PRIVMSG(int socket){
+
+    if (m_parameters.empty() == true){
+        ERR_NORECIPIENT(socket, m_command);
+        return ;
+    }
+
+    if (m_trail.empty() == true){
+        ERR_NOTEXTTOSEND(socket);
+        return ;
+    }
+
+    t_str_c& target = m_parameters[0];
+
+    /* @note and now somehow send messages to everyone */
+    /* @note what if nickname starts with a channel sign like # & */
+    if (um.checkForNickname(target) == true){
+        return ;
+    }
+    else if (um.checkForChannel(target) == true){
+        return ;
+    }
+    ERR_NOSUCHNICK(socket, target);
+
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */
 
 void Server::createChannelBy(int socket, t_str_c& channelName){

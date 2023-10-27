@@ -106,6 +106,7 @@ class Server{
         void CMD_QUIT(int socket);
         void CMD_JOIN(int socket);
         void CMD_PART(int socket);
+        void CMD_PRIVMSG(int socket);
 
         /* <------ server messages helpers -----> */
         void      createChannelBy         (int socket,
