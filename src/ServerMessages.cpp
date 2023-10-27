@@ -108,9 +108,59 @@ void Server::CMD_PART(int socket){
     }
 }
 
+void Server::CMD_INVITE(int socket){
+
+    if (m_parameters.empty() == true || m_parameters.size() < 2){
+        ERR_NEEDMOREPARAMS(socket, m_command);
+        return ;
+    }
+
+    t_str_c nickname = m_parameters[0];
+
+    if (um.checkForNickname(nickname) == false){
+        ERR_NOSUCHNICK(socket, nickname);
+        return ;
+    }
+
+    t_str_c channelName = m_parameters[1];
+
+    if (um.checkForChannel(channelName) == false){
+    
+        um.addChannel(channelName);
+        um.addUserToChannel(socket, OPERATOR, channelName);
+        um.addUserToChannel(um.getSocket(nickname), OPERATOR, channelName);
+
+    }
+    else{
+        
+        Channel *channel = um.getChannel(channelName);
+        
+        if (channel->isMember(socket) == false){
+            ERR_NOTONCHANNEL(socket, channelName);
+            return ;
+        }
+        if (channel->isMember(um.getSocket(nickname)) == true){
+            ERR_USERONCHANNEL(socket, nickname, channelName);
+            return ;
+        }
+        if (channel->isInviteOnly() == true){
+            if (channel->isOperator(socket) == false){
+                ERR_CHANOPRIVSNEEDED(socket, channelName);
+                return ;
+            }
+        }
+    }
+
+    RPL_INVITING(socket, channelName, nickname);
+    /* @note not sure if another RPL to target is needed, need to test */
+
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */
 
-void Server::createChannelBy(int socket, t_str_c& channelName){
+void Server::createChannelBy(int socket,
+                             t_str_c& channelName,
+                             t_str_c& channelKey){
 
     /* not sure if this... */
     ERR_NOSUCHCHANNEL(socket, channelName);
@@ -123,8 +173,20 @@ void Server::createChannelBy(int socket, t_str_c& channelName){
     }
 
     um.addChannel(channelName);
-    log("Channel "+ channelName + " created");
     um.addUserToChannel(socket, OPERATOR, channelName);
+
+    if (channelKey.empty() == false){
+        Channel *c = um.getChannel(channelName);
+        c->setPassword(channelKey);
+        c->toggleChannelKey();
+        log("Channel "+ channelName
+            + " created by " + um.getNickname(socket) +
+            " (password-protected)");
+    }
+    else{
+        log("Channel "+ channelName + " created by " + um.getNickname(socket));
+    }
+
     RPL_JOIN(socket, channelName);
     RPL_NOTOPIC(socket, channelName);
     RPL_NAMREPLY(socket, channelName, um.getNickname(socket));
@@ -151,7 +213,7 @@ void Server::addUserToChannels(int socket,
         t_str_c& channelName = *it;
         if (um.checkForChannel(channelName) == false){
        
-            createChannelBy(socket, channelName);
+            createChannelBy(socket, channelName, enteredKey);
             continue ;
 
         }

@@ -105,12 +105,7 @@ int main(void)
     t_populate_channel();
     t_show_channel();
    
-    t_command("JOIN b2\r\n", 1);
-    t_command("JOIN b2\r\n", 2);
-    t_command("JOIN b2\r\n", 3);
-
-    t_command("JOIN 0\r\n", 2);
-    t_command("JOIN b2\r\n", 3);
+    t_command("JOIN #abc 123\r\n", 1);
 
     return (EXIT_SUCCESS);
 }
