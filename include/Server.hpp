@@ -106,6 +106,7 @@ class Server{
         void CMD_QUIT(int socket);
         void CMD_JOIN(int socket);
         void CMD_PART(int socket);
+        void CMD_INVITE(int socket);
 
         /* <------ server messages helpers -----> */
         void      createChannelBy         (int socket,
@@ -135,6 +136,7 @@ class Server{
         void RPL_WELCOME   (int socket, t_str_c& username);
         void RPL_PART      (int socket, t_str_c& channelName, t_str_c& message);
         void RPL_IFTOPIC   (int socket, t_str_c& channelName, t_str_c& topic);
+        void RPL_INVITING  (int socket, t_str_c& channelName, t_str_c& target);
 
         /* <------ server errors -----> */
         void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);
