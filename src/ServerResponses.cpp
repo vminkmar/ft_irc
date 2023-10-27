@@ -193,21 +193,21 @@ void Server::ERR_USERONCHANNEL(int socket, t_str_c& nickname, t_str_c& channelNa
     log_err("User " + nickname + " is already member of the channel " + channelName);
     /* @note nick or user name of target? */
     t_str str = "443 " + um.getNickname(socket) + " "
-                + nickname + " " + channelName + " :is already on channel";
+                + nickname + " " + channelName + " :is already on channel\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
 void Server::ERR_NORECIPIENT(int socket, t_str_c& command){
     log_err("No recipient was given with command " + command + "!");
     t_str str = "411 " + um.getNickname(socket)
-                + " :No recipient given (" + command + ")";
+                + " :No recipient given (" + command + ")\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
 void Server::ERR_NOTEXTTOSEND(int socket){
     log_err("No text to send was given!");
     t_str str = "412 " + um.getNickname(socket)
-                + " :No text to send";
+                + " :No text to send\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
