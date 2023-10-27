@@ -196,4 +196,11 @@ void Server::ERR_USERONCHANNEL(int socket, t_str_c& nickname, t_str_c& channelNa
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
+void Server::ERR_NORECIPIENT(int socket, t_str_c& command){
+    log_err("No recipient was given with command " + command + "!");
+    t_str str = "411 " + um.getNickname(socket)
+                + " :No recipient given (" + command + ")";
+    um.appendToBuffer(socket, str, OUTPUT);
+}
+
 // -------------------------------------------------------------------------- //
