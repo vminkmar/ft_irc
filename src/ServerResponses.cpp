@@ -104,10 +104,13 @@ void Server::RPL_IFTOPIC(int socket, t_str_c& channelName, t_str_c& topic){
     }
 }
 
-void Server::RPL_PRIVMSG(int socket, t_str_c& target, t_str_c& message){
-    log("Private message prepared for " + target);
-    t_str str = ":" + um.getNickname(socket) + "!" + um.getUsername(socket)
-                + "@" + HOST " PRIVMSG " + target + ":" + message + "\r\n";
+void Server::RPL_PRIVMSG(int socketSender, t_str_c& target, t_str_c& message){
+    log("Private message prepared for socket"
+        + itostr(um.getSocket(target)) + "("
+        + target + ")");
+    t_str str = ":" + um.getNickname(socketSender) + "!"
+                + um.getUsername(socketSender)
+                + "@" + HOST " PRIVMSG " + target + " :" + message + "\r\n";
     um.appendToBuffer(um.getSocket(target), str, OUTPUT);
 }
 
