@@ -123,7 +123,7 @@ class Server{
         t_str_c   sumParameters           (t_vec_str_cit start)       const;
         t_str_c   getPartMessage()                                    const;
         t_str_c   itostr                  (int i)                     const;
-        void broadcast       (t_str_c& sender, t_str_c& channelName, t_str_c& message);
+        void broadcast       (t_str_c& sender, t_str_c& channelName, t_str_c& message, t_str_c& flag);
         void      cleanEmptyChannels();
         bool      isErasable              (int socket)     const;
 
@@ -134,7 +134,7 @@ class Server{
         void RPL_NICKCHANGE(int socket, t_str_c& newNickname);
         void RPL_NOTOPIC   (int socket, t_str_c& channelName);
         void RPL_PING      (int socket, t_str_c& serverName);
-        void RPL_QUIT      (int socket);
+        void RPL_QUIT      (int socket, t_str_c& message);
         void RPL_TOPIC     (int socket, t_str_c& channelName, t_str_c& topic);
         void RPL_WELCOME   (int socket, t_str_c& username);
         void RPL_PART      (int socket, t_str_c& channelName, t_str_c& message);

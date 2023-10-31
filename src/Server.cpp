@@ -420,18 +420,25 @@ Server::t_str_c Server::itostr(int i) const{
     return ss.str();
 }
 
-void Server::broadcast(t_str_c& sender, t_str_c& channelName, t_str_c& message){
+void Server::broadcast(t_str_c& sender, t_str_c& channelName, t_str_c& message, t_str_c& flag){
     
     int socketSender = um.getSocket(sender);
     Channel const* channel = um.getChannel(channelName);
     Channel::t_channel_users members = channel->getUserMap();
 
-    for (Channel::t_channel_users_cit it = members.begin(); it != members.end(); ++it){
+    for (Channel::t_channel_users_cit it = members.begin();
+                                      it != members.end();
+                                      ++it){
         t_str_c& nickname = um.getNickname(it->first);
         if (sender.empty() == false && sender == nickname){
             continue ;
         }
-        RPL_PRIVMSG(socketSender, nickname, message);
+        if (flag == "PRIVMSG"){
+            RPL_PRIVMSG(socketSender, nickname, message);
+        }
+        else if (flag == "QUIT"){
+            RPL_QUIT(socketSender, message);
+        }
     }
 }
 

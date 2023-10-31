@@ -67,10 +67,10 @@ void Server::CMD_QUIT(int socket){
         t_str_c& channelName = *it;
         if (um.getChannel(channelName)->isMember(socket) == true){
             um.eraseUserFromChannel(socket, channelName);
-            //broadcast(um.getNickname(socket), channelName, );
+            broadcast(um.getNickname(socket), channelName, m_trail, "QUIT");
         }
     }
-    RPL_QUIT(socket);
+    RPL_QUIT(socket, DEFMSG_PART);
 }
 
 void Server::CMD_JOIN(int socket){
@@ -141,7 +141,7 @@ void Server::CMD_PRIVMSG(int socket){
         return ;
     }
     else if (um.checkForChannel(target) == true){
-        broadcast(um.getNickname(socket), target, m_trail);
+        broadcast(um.getNickname(socket), target, m_trail, "PRIVMSG");
         return ;
     }
     ERR_NOSUCHNICK(socket, target);
