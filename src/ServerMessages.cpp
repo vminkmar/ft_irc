@@ -320,12 +320,9 @@ void Server::addUserToChannels(int socket,
             um.addUserToChannel(socket, USER, channelName);
         }
         RPL_JOIN(socket, socket, channel->getName());
-
         broadcast(um.getNickname(socket), channelName, m_trail, "JOIN");
-
         RPL_IFTOPIC(socket, channel->getName(), channel->getTopic());
-
-        /* @note RPL_NAMREPLY */
+        RPL_NAMREPLY(socket, channelName, um.getChannelNicknames(channelName));
     }
 }
 

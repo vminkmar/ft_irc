@@ -145,15 +145,16 @@ std::string UserManagement::getChannelNicknames
         t_um_users_cit usr = m_users.find(it->first);
         if (usr != m_users.end()){
             if (it != UserMap.begin()){
-                ss << ", ";
+                ss << " ";
             }
             ss << usr->second.getNickname();
-            if (it->second == OPERATOR){
-                ss << "(o)";
-            }
+            //if (it->second == OPERATOR){
+                //ss << "(o)";
+            //}
         }
     }
     return ss.str();
 }
+
 
 // -------------------------------------------------------------------------- //
