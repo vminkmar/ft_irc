@@ -12,7 +12,7 @@ void Server::RPL_CAP(int socket){
 
 void Server::RPL_JOIN(int socketSender, int socketTarget, t_str_c& channelName){
     log("JOIN message for " + channelName 
-        + " prepared for socket#" + itostr(socketSender));
+        + " prepared for socket#" + itostr(socketTarget));
     t_str_c& username = um.getUsername(socketSender);
     t_str_c& nickname = um.getNickname(socketSender);
     t_str str  = ":" + nickname + "!"
@@ -50,12 +50,12 @@ void Server::RPL_PING(int socket, t_str_c& serverName){
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::RPL_QUIT(int socket, t_str_c& message){
-    log("QUIT message prepared for socket#" + itostr(socket));
-    t_str str = um.getNickname(socket) + "!" +
-                um.getUsername(socket) + "@" + "localhost" 
+void Server::RPL_QUIT(int socketSender, int socketTarget, t_str_c& message){
+    log("QUIT message prepared for socket#" + itostr(socketTarget));
+    t_str str = ":" + um.getNickname(socketSender) + "!" +
+                um.getUsername(socketSender) + "@" + "localhost"
                 + " QUIT :" + message + "\r\n";
-    um.appendToBuffer(socket, str, OUTPUT);
+    um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
 void Server::RPL_TOPIC(int socket, t_str_c& channelName, t_str_c& topic){

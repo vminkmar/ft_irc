@@ -70,7 +70,7 @@ void Server::CMD_QUIT(int socket){
             broadcast(um.getNickname(socket), channelName, m_trail, "QUIT");
         }
     }
-    RPL_QUIT(socket, DEFMSG_PART);
+    RPL_QUIT(socket, socket, DEFMSG_PART);
 }
 
 void Server::CMD_JOIN(int socket){

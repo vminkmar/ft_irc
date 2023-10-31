@@ -438,7 +438,7 @@ void Server::broadcast(t_str_c& sender, t_str_c& channelName, t_str_c& message, 
             RPL_PRIVMSG(socketSender, nickname, message);
         }
         else if (flag == "QUIT"){
-            RPL_QUIT(socketSender, message);
+            RPL_QUIT(socketSender, socketTarget, message);
         }
         else if (flag == "JOIN"){
             RPL_JOIN(socketSender, socketTarget, channelName);

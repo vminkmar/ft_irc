@@ -156,5 +156,4 @@ std::string UserManagement::getChannelNicknames
     return ss.str();
 }
 
-
 // -------------------------------------------------------------------------- //

@@ -134,7 +134,7 @@ class Server{
         void RPL_NICKCHANGE(int socket, t_str_c& newNickname);
         void RPL_NOTOPIC   (int socket, t_str_c& channelName);
         void RPL_PING      (int socket, t_str_c& serverName);
-        void RPL_QUIT      (int socket, t_str_c& message);
+        void RPL_QUIT      (int socketSender, int socketTarget, t_str_c& message);
         void RPL_TOPIC     (int socket, t_str_c& channelName, t_str_c& topic);
         void RPL_WELCOME   (int socket, t_str_c& username);
         void RPL_PART      (int socket, t_str_c& channelName, t_str_c& message);
