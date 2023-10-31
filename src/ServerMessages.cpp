@@ -235,13 +235,11 @@ void Server::createChannelBy(int socket,
                              t_str_c& channelName,
                              t_str_c& channelKey){
 
-    /* not sure if this... */
-    ERR_NOSUCHCHANNEL(socket, channelName);
-    
-    if (channelName.size() >= 50
+    if (channelName.size() <= 1
+        || channelName.size() >= 50
         || channelName.find_first_of(CHAR_ALLOWED_CHANNEL) != 0
         || channelName.find_first_of(" ,\a") != t_str::npos){
-        /* ... should go here instead */
+        ERR_NOSUCHCHANNEL(socket, channelName);
         return ;
     }
 
