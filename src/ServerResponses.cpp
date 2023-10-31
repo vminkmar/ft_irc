@@ -10,15 +10,15 @@ void Server::RPL_CAP(int socket){
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::RPL_JOIN(int socket, t_str_c& channelName){
+void Server::RPL_JOIN(int socketSender, int socketTarget, t_str_c& channelName){
     log("JOIN message for " + channelName 
-        + " prepared for socket#" + itostr(socket));
-    t_str_c& username = um.getUsername(socket);
-    t_str_c& nickname = um.getNickname(socket);
+        + " prepared for socket#" + itostr(socketSender));
+    t_str_c& username = um.getUsername(socketSender);
+    t_str_c& nickname = um.getNickname(socketSender);
     t_str str  = ":" + nickname + "!"
                  + username + "@" + HOST + " JOIN "
                  + channelName + " * :" + username + "\r\n";
-    um.appendToBuffer(socket, str, OUTPUT);
+    um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
 void Server::RPL_NICKCHANGE(int socket, t_str_c& newNickname){

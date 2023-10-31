@@ -260,7 +260,7 @@ void Server::createChannelBy(int socket,
         log("Channel "+ channelName + " created by " + um.getNickname(socket));
     }
 
-    RPL_JOIN(socket, channelName);
+    RPL_JOIN(socket, socket, channelName);
     RPL_NOTOPIC(socket, channelName);
     RPL_NAMREPLY(socket, channelName, um.getNickname(socket));
 
@@ -319,8 +319,13 @@ void Server::addUserToChannels(int socket,
         else{
             um.addUserToChannel(socket, USER, channelName);
         }
-        RPL_JOIN(socket, channel->getName());
+        RPL_JOIN(socket, socket, channel->getName());
+
+        broadcast(um.getNickname(socket), channelName, m_trail, "JOIN");
+
         RPL_IFTOPIC(socket, channel->getName(), channel->getTopic());
+
+        /* @note RPL_NAMREPLY */
     }
 }
 

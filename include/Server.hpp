@@ -129,7 +129,7 @@ class Server{
 
         /* <------ server replies -----> */
         void RPL_CAP       (int socket);
-        void RPL_JOIN      (int socket, t_str_c& channelName);
+        void RPL_JOIN      (int socketSender, int socketTarget, t_str_c& channelName);
         void RPL_NAMREPLY  (int socket, t_str_c& channelName, t_str_c& members);
         void RPL_NICKCHANGE(int socket, t_str_c& newNickname);
         void RPL_NOTOPIC   (int socket, t_str_c& channelName);

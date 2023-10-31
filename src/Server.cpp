@@ -430,6 +430,7 @@ void Server::broadcast(t_str_c& sender, t_str_c& channelName, t_str_c& message, 
                                       it != members.end();
                                       ++it){
         t_str_c& nickname = um.getNickname(it->first);
+        int socketTarget = um.getSocket(nickname);
         if (sender.empty() == false && sender == nickname){
             continue ;
         }
@@ -438,6 +439,9 @@ void Server::broadcast(t_str_c& sender, t_str_c& channelName, t_str_c& message, 
         }
         else if (flag == "QUIT"){
             RPL_QUIT(socketSender, message);
+        }
+        else if (flag == "JOIN"){
+            RPL_JOIN(socketSender, socketTarget, channelName);
         }
     }
 }
