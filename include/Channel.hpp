@@ -55,12 +55,12 @@ class Channel
         void toggleChannelKey();
         
         /* <------ getters -----> */
-        std::string const&     getName()         const;
-        std::string const&     getTopic()        const;
-        std::string const&     getPassword()     const;
-        unsigned int           getUserLimit()    const;
-        t_channel_users const& getUserMap()      const;
-        unsigned int           getNumberOfUsers()const;
+        std::string const&     getName()          const;
+        std::string const&     getTopic()         const;
+        std::string const&     getPassword()      const;
+        unsigned int           getUserLimit()     const;
+        t_channel_users const& getUserMap()       const;
+        unsigned int           getNumberOfUsers() const;
         
         bool isInviteOnly()    const;
         bool isTopicEditable() const;
