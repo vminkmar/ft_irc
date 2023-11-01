@@ -99,16 +99,17 @@ class Server{
                                       t_str_c& unallowedChars) const;
 
         /* <------ server messages -----> */
-        void CMD_CAP (int socket);
-        void CMD_NICK(int socket);
-        void CMD_USER(int socket);
-        void CMD_PING(int socket);
-        void CMD_QUIT(int socket);
-        void CMD_JOIN(int socket);
-        void CMD_PART(int socket);
+        void CMD_CAP    (int socket);
+        void CMD_NICK   (int socket);
+        void CMD_USER   (int socket);
+        void CMD_PING   (int socket);
+        void CMD_QUIT   (int socket);
+        void CMD_JOIN   (int socket);
+        void CMD_PART   (int socket);
         void CMD_PRIVMSG(int socket);
-        void CMD_TOPIC(int socket);
-        void CMD_INVITE(int socket);
+        void CMD_TOPIC  (int socket);
+        void CMD_INVITE (int socket);
+        void CMD_KICK   (int socket);
 
         /* <------ server messages helpers -----> */
         void      createChannelBy         (int socket,

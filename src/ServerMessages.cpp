@@ -246,6 +246,13 @@ void Server::CMD_INVITE(int socket){
     RPL_INVITING(socket, socket, channelName, nicknameTarget);
 }
 
+void Server::CMD_KICK(int socket){
+
+
+
+}
+
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */
 
 void Server::createChannelBy(int socket,
