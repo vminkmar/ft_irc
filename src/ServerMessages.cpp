@@ -102,18 +102,24 @@ void Server::CMD_PART(int socket){
     t_vec_str channels = split(m_parameters[0], ',');
     log_vector("channels", channels);
 
+    t_str_c& partMessage = getPartMessage();
+    t_str_c& nickname = um.getNickname(socket);
+
     for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
-        if (um.checkForChannel(*it) == false){
-            ERR_NOSUCHCHANNEL(socket, *it);
+        t_str_c& channelName = *it;
+
+        if (um.checkForChannel(channelName) == false){
+            ERR_NOSUCHCHANNEL(socket, channelName);
             continue ;
         }
-        Channel const* channel = um.getChannel(*it);
+        Channel const* channel = um.getChannel(channelName);
         if (channel->isMember(socket) == false){
-            ERR_NOTONCHANNEL(socket, *it);
+            ERR_NOTONCHANNEL(socket, channelName);
             continue ;
         }
-        um.eraseUserFromChannel(socket, *it);
-        RPL_PART(socket, *it, getPartMessage());
+        um.eraseUserFromChannel(socket, channelName);
+        RPL_PART(socket, socket, channelName, partMessage);
+        broadcast(nickname, channelName, partMessage, "PART");
     }
 }
 
@@ -131,8 +137,8 @@ void Server::CMD_PRIVMSG(int socket){
 
     t_str_c& target = m_parameters[0];
 
-    /* @note and now somehow send messages to everyone */
     /* @note what if nickname starts with a channel sign like # & */
+
     if (um.checkForNickname(target) == true){
         RPL_PRIVMSG(socket, target, m_trail);
         return ;
@@ -337,13 +343,16 @@ void Server::addUserToChannels(int socket,
 
 void Server::eraseUserFromAllChannels(int socket){
 
-    t_vec_str channels = split(um.getChannelNames(), ',');
-    log_vector("all channels", channels); 
+    t_vec_str_c channels = split(um.getChannelNames(), ',');
+    t_str_c& partMessage = getPartMessage();
+    t_str_c& nickname = um.getNickname(socket);
+
     for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
         t_str_c& channelName = *it;
         if (um.getChannel(channelName)->isMember(socket) == true){
             um.eraseUserFromChannel(socket, channelName);
-            RPL_PART(socket, channelName, getPartMessage());
+            RPL_PART(socket, socket, channelName, partMessage);
+            broadcast(nickname, channelName, partMessage, "PART");
         }
     }
 }

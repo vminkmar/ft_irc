@@ -444,6 +444,9 @@ void Server::broadcast(t_str_c& sender,
         else if (command == "JOIN"){
             RPL_JOIN(socketSender, socketTarget, channelName);
         }
+        else if (command == "PART"){
+            RPL_PART(socketSender, socketTarget, channelName, message);
+        }
     }
 }
 

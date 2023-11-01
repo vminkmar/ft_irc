@@ -85,14 +85,13 @@ void Server::RPL_WELCOME(int socket, t_str_c& username){
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::RPL_PART(int socket, t_str_c& channelName, t_str_c& message){
-    log("<part message> " + message);
+void Server::RPL_PART(int socketSender, int socketTarget, t_str_c& channelName, t_str_c& message){
     log("Part message for " + channelName
-        + " prepared for socket#" + itostr(socket));
-    t_str str = ":" + um.getNickname(socket) + "!" 
-                + um.getUsername(socket) + "@" + HOST + " PART "
+        + " prepared for socket#" + itostr(socketTarget));
+    t_str str = ":" + um.getNickname(socketSender) + "!"
+                + um.getUsername(socketSender) + "@" + HOST + " PART "
                 + channelName + " :" + message + "!" + "\r\n";
-    um.appendToBuffer(socket, str, OUTPUT);
+    um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
 void Server::RPL_IFTOPIC(int socket, t_str_c& channelName, t_str_c& topic){
