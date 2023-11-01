@@ -241,8 +241,6 @@ void Server::Messages(int socket){
 void Server::cleanEmptyChannels(){
     
     t_vec_str_c channelNames = split(um.getChannelNames(), ',');
-    log_vector("channelNames", channelNames);
-
     for (t_vec_str_cit it = channelNames.begin();
                        it != channelNames.end();
                        ++it){
@@ -387,7 +385,7 @@ Server::t_vec_str Server::split(t_str_c& parameter,
         split.push_back(token);
     }
 
-    log_vector("splitted vec", split);
+    //log_vector("splitted vec", split);
     return split;
 }
 
