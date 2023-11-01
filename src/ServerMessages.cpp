@@ -285,7 +285,7 @@ void Server::CMD_KICK(int socketSender){
 
             t_str_c nicknameTarget = *itr;
             if (um.checkForNickname(nicknameTarget) == false){
-                ERR_NOSUCHCHANNEL(socketSender, nicknameTarget);
+                ERR_NOSUCHNICK(socketSender, nicknameTarget);
                 continue ;
             }
             int socketTarget = um.getSocket(nicknameTarget);
