@@ -246,10 +246,56 @@ void Server::CMD_INVITE(int socket){
     RPL_INVITING(socket, socket, channelName, nicknameTarget);
 }
 
-void Server::CMD_KICK(int socket){
+void Server::CMD_KICK(int socketSender){
 
+    if (m_parameters.size() < 2){
+        ERR_NEEDMOREPARAMS(socketSender, m_command);
+    }
 
+    t_vec_str_c channelNames = split(m_parameters[0], ',');
+    t_vec_str_c targets = split(m_parameters[1], ',');
 
+    for (t_vec_str_cit it = channelNames.begin();
+                       it != channelNames.end();
+                       ++it){
+
+        t_str_c channelName = *it;
+
+        if (um.checkForChannel(channelName) == false){
+            ERR_NOSUCHCHANNEL(socketSender, channelName);
+            /* @note currently doesnt print the message in the channel buffer */
+            continue ;
+        }
+
+        Channel const* channel = um.getChannel(channelName);
+
+        /* @note not sure about the order */
+
+        if (channel->isMember(socketSender) == false){
+            ERR_NOTONCHANNEL(socketSender, channelName);
+            continue ;
+        }
+
+        if (channel->isOperator(socketSender) == false){
+            ERR_CHANOPRIVSNEEDED(socketSender, channelName);
+            continue ;
+        }
+
+        for (t_vec_str_cit itr = targets.begin(); itr != targets.end(); ++itr){
+
+            t_str_c nicknameTarget = *itr;
+            if (um.checkForNickname(nicknameTarget) == false){
+                ERR_NOSUCHCHANNEL(socketSender, nicknameTarget);
+                continue ;
+            }
+            int socketTarget = um.getSocket(nicknameTarget);
+
+            if (channel->isMember(socketTarget) == false){
+                ERR_USERNOTINCHANNEL(socketSender, socketTarget, channelName);
+                continue ;
+            }
+        }
+    }
 }
 
 

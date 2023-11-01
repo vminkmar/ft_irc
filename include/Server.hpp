@@ -174,6 +174,9 @@ class Server{
                                   t_str_c& channelName);
         void ERR_NORECIPIENT     (int socket, t_str_c& command);
         void ERR_NOTEXTTOSEND    (int socket);
+        void ERR_USERNOTINCHANNEL(int socketSender,
+                                  int socketTarget,
+                                  t_str_c& channelName);
 
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;

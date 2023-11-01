@@ -231,4 +231,14 @@ void Server::ERR_NOTEXTTOSEND(int socket){
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
+void Server::ERR_USERNOTINCHANNEL(int socketSender,
+                                  int socketTarget,
+                                  t_str_c& channelName){
+    log_err("Target(" + um.getNickname(socketTarget)
+            + ") is not part of channel " + channelName);
+    t_str str = "441 " + um.getNickname(socketSender)
+                + " " + channelName + " :They aren't on that channel\r\n";
+    um.appendToBuffer(socketSender, str, OUTPUT);
+}
+
 // -------------------------------------------------------------------------- //
