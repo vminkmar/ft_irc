@@ -200,6 +200,13 @@ void Server::CMD_INVITE(int socket){
         um.addUserToChannel(socket, OPERATOR, channelName);
         um.addUserToChannel(socketTarget, OPERATOR, channelName);
 
+        RPL_JOIN(socket, socket, channelName);
+        RPL_NOTOPIC(socket, channelName);
+        RPL_JOIN(socketTarget, socketTarget, channelName);
+        RPL_NOTOPIC(socketTarget, channelName);
+        RPL_NAMREPLY(socket, channelName, nicknameTarget);
+        RPL_NAMREPLY(socketTarget, channelName, um.getNickname(socket));
+
     }
     else{
         
@@ -219,6 +226,13 @@ void Server::CMD_INVITE(int socket){
                 return ;
             }
         }
+        um.addUserToChannel(socketTarget, USER, channelName);
+        RPL_JOIN(socketTarget, socketTarget, channelName);
+        RPL_IFTOPIC(socketTarget, channelName, channel->getTopic());
+        RPL_NAMREPLY(socketTarget, channelName, um.getChannelNicknames(channelName));
+        /* @note prob just add a getter for that via the channel class */
+        broadcast(nicknameTarget, channelName, "", "JOIN");
+
     }
 
     RPL_INVITING(socket, socketTarget, channelName, nicknameTarget);
