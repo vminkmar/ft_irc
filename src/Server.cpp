@@ -420,7 +420,10 @@ Server::t_str_c Server::itostr(int i) const{
     return ss.str();
 }
 
-void Server::broadcast(t_str_c& sender, t_str_c& channelName, t_str_c& message, t_str_c& flag){
+void Server::broadcast(t_str_c& sender,
+                       t_str_c& channelName,
+                       t_str_c& message,
+                       t_str_c& command){
     
     int socketSender = um.getSocket(sender);
     Channel const* channel = um.getChannel(channelName);
@@ -434,13 +437,13 @@ void Server::broadcast(t_str_c& sender, t_str_c& channelName, t_str_c& message, 
         if (sender.empty() == false && sender == nickname){
             continue ;
         }
-        if (flag == "PRIVMSG"){
+        if (command == "PRIVMSG"){
             RPL_PRIVMSG(socketSender, nickname, message);
         }
-        else if (flag == "QUIT"){
+        else if (command == "QUIT"){
             RPL_QUIT(socketSender, socketTarget, message);
         }
-        else if (flag == "JOIN"){
+        else if (command == "JOIN"){
             RPL_JOIN(socketSender, socketTarget, channelName);
         }
     }

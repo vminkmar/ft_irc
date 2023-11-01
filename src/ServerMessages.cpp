@@ -185,12 +185,12 @@ void Server::CMD_INVITE(int socket){
         return ;
     }
 
-    t_str_c nickname = m_parameters[0];
-
-    if (um.checkForNickname(nickname) == false){
-        ERR_NOSUCHNICK(socket, nickname);
+    t_str_c nicknameTarget = m_parameters[0];
+    if (um.checkForNickname(nicknameTarget) == false){
+        ERR_NOSUCHNICK(socket, nicknameTarget);
         return ;
     }
+    int socketTarget = um.getSocket(nicknameTarget);
 
     t_str_c channelName = m_parameters[1];
 
@@ -198,7 +198,7 @@ void Server::CMD_INVITE(int socket){
     
         um.addChannel(channelName);
         um.addUserToChannel(socket, OPERATOR, channelName);
-        um.addUserToChannel(um.getSocket(nickname), OPERATOR, channelName);
+        um.addUserToChannel(socketTarget, OPERATOR, channelName);
 
     }
     else{
@@ -209,8 +209,8 @@ void Server::CMD_INVITE(int socket){
             ERR_NOTONCHANNEL(socket, channelName);
             return ;
         }
-        if (channel->isMember(um.getSocket(nickname)) == true){
-            ERR_USERONCHANNEL(socket, nickname, channelName);
+        if (channel->isMember(socketTarget) == true){
+            ERR_USERONCHANNEL(socket, nicknameTarget, channelName);
             return ;
         }
         if (channel->isInviteOnly() == true){
@@ -221,9 +221,8 @@ void Server::CMD_INVITE(int socket){
         }
     }
 
-    RPL_INVITING(socket, channelName, nickname);
-    /* @note not sure if another RPL to target is needed, need to test */
-
+    RPL_INVITING(socket, socketTarget, channelName, nicknameTarget);
+    RPL_INVITING(socket, socket, channelName, nicknameTarget);
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */

@@ -50,19 +50,19 @@ class Server{
         typedef std::vector<pollfd>       t_vec_pollfd;
         typedef t_vec_pollfd::iterator    t_vec_pollfd_it;
 
-        t_vec_str    m_parameters;
-        t_vec_pollfd m_pollfds;
+        t_vec_str                m_parameters;
+        t_vec_pollfd             m_pollfds;
 
         struct      sockaddr_in  address;
 
-        int         m_maxClients;
-        int         m_server_fd;
-        int         m_addrlen;
-        int         m_port;
+        int                      m_maxClients;
+        int                      m_server_fd;
+        int                      m_addrlen;
+        int                      m_port;
 
-        t_str m_command;
-        t_str m_trail;
-        t_str m_passwd;
+        t_str                    m_command;
+        t_str                    m_trail;
+        t_str                    m_passwd;
 
     public:
 	
@@ -123,24 +123,34 @@ class Server{
         t_str_c   sumParameters           (t_vec_str_cit start)       const;
         t_str_c   getPartMessage()                                    const;
         t_str_c   itostr                  (int i)                     const;
-        void broadcast       (t_str_c& sender, t_str_c& channelName, t_str_c& message, t_str_c& flag);
         void      cleanEmptyChannels();
-        bool      isErasable              (int socket)     const;
+        bool      isErasable              (int socket)                const;
+        void      broadcast               (t_str_c& sender,
+                                           t_str_c& channelName,
+                                           t_str_c& message,
+                                           t_str_c& command);
 
         /* <------ server replies -----> */
         void RPL_CAP       (int socket);
-        void RPL_JOIN      (int socketSender, int socketTarget, t_str_c& channelName);
+        void RPL_JOIN      (int socketSender,
+                            int socketTarget,
+                            t_str_c& channelName);
         void RPL_NAMREPLY  (int socket, t_str_c& channelName, t_str_c& members);
         void RPL_NICKCHANGE(int socket, t_str_c& newNickname);
         void RPL_NOTOPIC   (int socket, t_str_c& channelName);
         void RPL_PING      (int socket, t_str_c& serverName);
-        void RPL_QUIT      (int socketSender, int socketTarget, t_str_c& message);
+        void RPL_QUIT      (int socketSender,
+                            int socketTarget,
+                            t_str_c& message);
         void RPL_TOPIC     (int socket, t_str_c& channelName, t_str_c& topic);
         void RPL_WELCOME   (int socket, t_str_c& username);
         void RPL_PART      (int socket, t_str_c& channelName, t_str_c& message);
         void RPL_IFTOPIC   (int socket, t_str_c& channelName, t_str_c& topic);
         void RPL_PRIVMSG   (int socket, t_str_c& target, t_str_c& message);
-        void RPL_INVITING  (int socket, t_str_c& channelName, t_str_c& target);
+        void RPL_INVITING  (int socketSender,
+                            int socketTarget,
+                            t_str_c& channelName,
+                            t_str_c& target);
 
         /* <------ server errors -----> */
         void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);
@@ -155,7 +165,9 @@ class Server{
         void ERR_CHANNELISFULL   (int socket, t_str_c& channelName);
         void ERR_CHANOPRIVSNEEDED(int socket, t_str_c& channelName);
         void ERR_NOSUCHNICK      (int socket, t_str_c& nicknameOrChannelName);
-        void ERR_USERONCHANNEL   (int socket, t_str_c& nickname, t_str_c& channelName);
+        void ERR_USERONCHANNEL   (int socket,
+                                  t_str_c& nickname,
+                                  t_str_c& channelName);
         void ERR_NORECIPIENT     (int socket, t_str_c& command);
         void ERR_NOTEXTTOSEND    (int socket);
 
