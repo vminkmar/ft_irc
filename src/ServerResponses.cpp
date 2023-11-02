@@ -94,6 +94,15 @@ void Server::RPL_PART(int socketSender, int socketTarget, t_str_c& channelName, 
     um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
+void Server::RPL_KICK(int socketSender, int socketTarget, t_str_c& channelName, t_str_c& message){
+    log("Kick message for " + channelName
+        + " prepared for socket#" + itostr(socketTarget));
+    t_str str = ":" + um.getNickname(socketSender) + "!"
+                + um.getUsername(socketSender) + "@" + HOST + " KICK "
+                + channelName + " " + um.getNickname(socketTarget) + " :" + message + "\r\n";
+    um.appendToBuffer(socketTarget, str, OUTPUT);
+}
+
 void Server::RPL_IFTOPIC(int socket, t_str_c& channelName, t_str_c& topic){
     if (topic.empty() == true){
         RPL_NOTOPIC(socket, channelName);
