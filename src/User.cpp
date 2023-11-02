@@ -27,7 +27,8 @@ User::User() : m_onlineStatus(true){
 User::User(const User &copy) : m_nickname(copy.m_nickname),
                                m_username(copy.m_username),
                                m_inputBuffer(copy.m_inputBuffer),
-                               m_outputBuffer(copy.m_outputBuffer){
+                               m_outputBuffer(copy.m_outputBuffer),
+                               m_welcomed(copy.m_welcomed){
   print_log("copy constructor called");
 }
 
@@ -64,6 +65,10 @@ void User::toggleOnlineStatus(){
     m_onlineStatus = !m_onlineStatus;
 }
 
+void User::toggleWelcomedStatus(){
+    m_welcomed = !m_welcomed;
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> getters */
 
 std::string const& User::getNickname() const{
@@ -86,6 +91,10 @@ bool User::getOnlineStatus() const{
     return m_onlineStatus;
 }
 
+bool User::getWelcomedStatus() const{
+    return m_welcomed;
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */
 
 std::ostream &operator<<(std::ostream &os, const User &user){
@@ -101,6 +110,7 @@ User& User::operator=(const User& src){
 		m_username = src.m_username;
         m_inputBuffer = src.m_inputBuffer;
         m_outputBuffer = src.m_outputBuffer;
+        m_welcomed = src.m_welcomed;
 	}
 	return *this;
 }

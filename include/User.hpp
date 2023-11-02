@@ -14,6 +14,7 @@ class User{
         std::string m_inputBuffer;
         std::string m_outputBuffer;
         bool        m_onlineStatus;
+        bool        m_welcomed;
 
     public:
 
@@ -31,13 +32,15 @@ class User{
         void eraseOutputBuffer (int start, int end);
         void eraseInputBuffer  (int start, int end);
         void toggleOnlineStatus();
+        void toggleWelcomedStatus();
 
         /* <------ getters -----> */
-        std::string const& getNickname()     const;
-        std::string const& getUsername()     const;
-        std::string const& getInputBuffer()  const;
-        std::string const& getOutputBuffer() const;
-        bool               getOnlineStatus() const;
+        std::string const& getNickname()       const;
+        std::string const& getUsername()       const;
+        std::string const& getInputBuffer()    const;
+        std::string const& getOutputBuffer()   const;
+        bool               getOnlineStatus()   const;
+        bool               getWelcomedStatus() const;
 
 };
 
