@@ -50,6 +50,7 @@ class UserManagement{
         void setUsername    (int socket, t_str_c& newUsername);
         void setNickname    (int socket, t_str_c& newNickname);
         void setOnlineStatus(int socket, bool flag);
+        void setWelcomedStatus(int socket, bool flag);
         void appendToBuffer (int socket, t_str_c& message, int flag);
         void eraseBuffer    (int socket, int start, int end, int flag);
 
@@ -61,6 +62,7 @@ class UserManagement{
         t_str getUsernames   ()                     const;
         t_str getBuffer      (int socket, int flag) const;
         bool  getOnlineStatus(int socket)           const;
+        bool  getWelcomedStatus(int socket)         const;
 
         /* <------ channel map operations-----> */
         void addChannel      (t_str_c& channelName);

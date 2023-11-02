@@ -71,9 +71,20 @@ void UserManagement::setOnlineStatus(int socket, bool flag){
         if (it->second.getOnlineStatus() != flag){
             it->second.toggleOnlineStatus();
         }
-      return ;
+        return ;
     }
     throw std::runtime_error("setOnlineStatus: User not found!");
+}
+
+void UserManagement::setWelcomedStatus(int socket, bool flag){
+    t_um_users_it it = m_users.find(socket);
+    if (it != m_users.end()){
+        if (it->second.getWelcomedStatus() != flag){
+            it->second.toggleWelcomedStatus();
+        }
+        return ;
+    }
+    throw std::runtime_error("setWelcomedStatus: User not found!");
 }
 
 void UserManagement::appendToBuffer(int socket, t_str_c& message, int flag){
@@ -167,6 +178,14 @@ bool UserManagement::getOnlineStatus(int socket) const{
         return it->second.getOnlineStatus();
     }
     throw std::runtime_error("getOnlineStatus: User not found!");
+}
+
+bool UserManagement::getWelcomedStatus(int socket) const{
+    t_um_users_cit it = m_users.find(socket);
+    if (it != m_users.end()){
+        return it->second.getWelcomedStatus();
+    }
+    throw std::runtime_error("getWelcomedStatus: User not found!");
 }
 
 // -------------------------------------------------------------------------- //
