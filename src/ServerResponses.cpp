@@ -85,7 +85,10 @@ void Server::RPL_WELCOME(int socket, t_str_c& username){
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
-void Server::RPL_PART(int socketSender, int socketTarget, t_str_c& channelName, t_str_c& message){
+void Server::RPL_PART(int socketSender,
+                      int socketTarget,
+                      t_str_c& channelName,
+                      t_str_c& message){
     log("Part message for " + channelName
         + " prepared for socket#" + itostr(socketTarget));
     t_str str = ":" + um.getNickname(socketSender) + "!"
@@ -94,12 +97,18 @@ void Server::RPL_PART(int socketSender, int socketTarget, t_str_c& channelName, 
     um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
-void Server::RPL_KICK(int socketSender, int socketTarget, t_str_c& channelName, t_str_c& message){
+void Server::RPL_KICK(int socketSender,
+                      int socketTarget,
+                      t_str_c& channelName,
+                      t_str_c& nicknameKicked,
+                      t_str_c& message){
     log("Kick message for " + channelName
         + " prepared for socket#" + itostr(socketTarget));
     t_str str = ":" + um.getNickname(socketSender) + "!"
                 + um.getUsername(socketSender) + "@" + HOST + " KICK "
-                + channelName + " " + um.getNickname(socketTarget) + " :" + message + "\r\n";
+                + channelName + " " + nicknameKicked
+                + " :" + message + "\r\n";
+    /* @note implement default message */
     um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 

@@ -64,7 +64,7 @@ void Server::CMD_QUIT(int socket){
         t_str_c& channelName = *it;
         if (um.getChannel(channelName)->isMember(socket) == true){
             um.eraseUserFromChannel(socket, channelName);
-            broadcast(um.getNickname(socket), channelName, m_trail, "QUIT");
+            broadcast(um.getNickname(socket), channelName, "", m_trail, "QUIT");
         }
     }
     RPL_QUIT(socket, socket, DEFMSG_PART);
@@ -119,7 +119,7 @@ void Server::CMD_PART(int socket){
         }
         um.eraseUserFromChannel(socket, channelName);
         RPL_PART(socket, socket, channelName, partMessage);
-        broadcast(nickname, channelName, partMessage, "PART");
+        broadcast(nickname, channelName, "", partMessage, "PART");
     }
 }
 
@@ -144,7 +144,7 @@ void Server::CMD_PRIVMSG(int socket){
         return ;
     }
     else if (um.checkForChannel(target) == true){
-        broadcast(um.getNickname(socket), target, m_trail, "PRIVMSG");
+        broadcast(um.getNickname(socket), target, "", m_trail, "PRIVMSG");
         return ;
     }
     ERR_NOSUCHNICK(socket, target);
@@ -239,7 +239,7 @@ void Server::CMD_INVITE(int socket){
         t_str_c channelMembers = um.getChannelNicknames(channelName);
         RPL_NAMREPLY(socketTarget, channelName, channelMembers);
 
-        broadcast(nicknameTarget, channelName, "", "JOIN");
+        broadcast(nicknameTarget, channelName, "", "", "JOIN");
     }
 
     RPL_INVITING(socket, socketTarget, channelName, nicknameTarget);
@@ -280,27 +280,37 @@ void Server::CMD_KICK(int socketSender){
 
         for (t_vec_str_cit itr = targets.begin(); itr != targets.end(); ++itr){
 
-            t_str_c nicknameTarget = *itr;
-            if (um.checkForNickname(nicknameTarget) == false){
-                ERR_NOSUCHNICK(socketSender, nicknameTarget);
+            t_str_c nicknameKicked = *itr;
+            if (um.checkForNickname(nicknameKicked) == false){
+                ERR_NOSUCHNICK(socketSender, nicknameKicked);
             }
             else{
-                int socketTarget = um.getSocket(nicknameTarget);
+                int socketTarget = um.getSocket(nicknameKicked);
                 if (channel->isMember(socketTarget) == false){
                     ERR_USERNOTINCHANNEL(socketSender, socketTarget, channelName);
                 }
-								um.eraseUserFromChannel(socketSender, channelName);
-								RPL_KICK(socketSender, socketTarget, channelName, m_trail);
-								// broadcast(um.getNickname(socketSender), channelName, m_trail, "NAME");
-      				  // RPL_NAMREPLY(socketTarget, channelName, um.getNickname(socketSender));
 
-                /* implement actual Kick from channel */
-                /* use m_trail */
+                um.eraseUserFromChannel(socketTarget, channelName);
+				RPL_KICK(socketSender,
+                         socketTarget,
+                         channelName,
+                         nicknameKicked,
+                         m_trail);
+                RPL_KICK(socketSender,
+                         socketSender,
+                         channelName,
+                         nicknameKicked,
+                         m_trail);
+                broadcast(um.getNickname(socketSender),
+                          channelName,
+                          nicknameKicked,
+                          m_trail,
+                          "KICK");
+      			//RPL_NAMREPLY(socketTarget, channelName, um.getNickname(socketSender));
             }
         }
     }
 }
-
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */
 
@@ -391,7 +401,7 @@ void Server::addUserToChannels(int socket,
             um.addUserToChannel(socket, USER, channelName);
         }
         RPL_JOIN(socket, socket, channel->getName());
-        broadcast(um.getNickname(socket), channelName, m_trail, "JOIN");
+        broadcast(um.getNickname(socket), channelName, "", m_trail, "JOIN");
         RPL_IFTOPIC(socket, channel->getName(), channel->getTopic());
         RPL_NAMREPLY(socket, channelName, um.getChannelNicknames(channelName));
     }
@@ -408,7 +418,7 @@ void Server::eraseUserFromAllChannels(int socket){
         if (um.getChannel(channelName)->isMember(socket) == true){
             um.eraseUserFromChannel(socket, channelName);
             RPL_PART(socket, socket, channelName, partMessage);
-            broadcast(nickname, channelName, partMessage, "PART");
+            broadcast(nickname, channelName, "", partMessage, "PART");
         }
     }
 }

@@ -128,6 +128,7 @@ class Server{
         bool      isErasable              (int socket)                const;
         void      broadcast               (t_str_c& sender,
                                            t_str_c& channelName,
+                                           t_str_c& nicknameKicked,
                                            t_str_c& message,
                                            t_str_c& command);
 
@@ -152,6 +153,7 @@ class Server{
         void RPL_KICK      (int socketSender,
                             int socketTarget,
                             t_str_c& channelName,
+                            t_str_c& nicknameKicked,
                             t_str_c& message);
         void RPL_IFTOPIC   (int socket, t_str_c& channelName, t_str_c& topic);
         void RPL_PRIVMSG   (int socket, t_str_c& target, t_str_c& message);
