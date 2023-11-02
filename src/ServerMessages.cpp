@@ -306,7 +306,6 @@ void Server::CMD_KICK(int socketSender){
                           nicknameKicked,
                           m_trail,
                           "KICK");
-      			//RPL_NAMREPLY(socketTarget, channelName, um.getNickname(socketSender));
             }
         }
     }

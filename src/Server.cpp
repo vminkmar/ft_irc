@@ -452,11 +452,10 @@ void Server::broadcast(t_str_c& sender,
             RPL_PART(socketSender, socketTarget, channelName, message);
         }
         else if (command == "NAME"){
-		    //RPL_NAMREPLY(socketTarget, channelName, um.getChannelNicknames(channelName));
+            /* @note prob needed for some cases */
         }
         else if (command == "KICK"){
             RPL_KICK(socketSender, socketTarget, channelName, nicknameKicked, message);
-            // @note: we need the name of the target that got kicked
         }
     }
 }
