@@ -20,7 +20,7 @@ static inline void print_log(std::string const& message){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-User::User() : m_onlineStatus(true){
+User::User() : m_onlineStatus(true), m_welcomed(false){
     print_log("default constructor called");
 }
 

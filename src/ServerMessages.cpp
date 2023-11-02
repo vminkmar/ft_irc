@@ -15,7 +15,6 @@ void Server::CMD_NICK(int socket){
     if (m_parameters.empty() == true){
         ERR_NONICKNAMEGIVEN(socket);
     }
-    
     t_str_c& newNickname= m_parameters[0];
 
     if (checkUnallowedCharacters(newNickname, CHAR_UNALLOWED_NICK) == true){
@@ -23,12 +22,18 @@ void Server::CMD_NICK(int socket){
     }
     else if (um.checkForNickname(newNickname) == true){
         ERR_NICKNAMEINUSE(socket, newNickname);
+        um.setNickname(socket, "dummy");
     }
     else{
         if (um.getNickname(socket).empty() == false){
             RPL_NICKCHANGE(socket, socket, newNickname);
         }
         um.setNickname(socket, newNickname);
+        if (um.getUsername(socket).empty() == false
+            && um.getWelcomedStatus(socket) == false){
+            RPL_WELCOME(socket, um.getUsername(socket));
+            um.setWelcomedStatus(socket, true);
+        }
         t_vec_str_c channels = split(um.getChannelNames(), ',');
         for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
             t_str_c& channelName = *it;
@@ -51,7 +56,10 @@ void Server::CMD_USER(int socket){
     }
     else{
         t_str_c& username = m_parameters[0];
-        RPL_WELCOME(socket, username);
+        if (um.getNickname(socket) != "dummy"){
+            RPL_WELCOME(socket, username);
+            um.setWelcomedStatus(socket, true);
+        }
         um.setUsername(socket, username);
     }
 }
