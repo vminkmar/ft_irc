@@ -285,10 +285,12 @@ void Server::CMD_KICK(int socketSender){
 
         if (channel->isMember(socketSender) == false){
             ERR_NOTONCHANNEL(socketSender, channelName);
+            continue ;
         }
 
         if (channel->isOperator(socketSender) == false){
             ERR_CHANOPRIVSNEEDED(socketSender, channelName);
+            continue ;
         }
 
         for (t_vec_str_cit itr = targets.begin(); itr != targets.end(); ++itr){
@@ -296,19 +298,23 @@ void Server::CMD_KICK(int socketSender){
             t_str_c nicknameKicked = *itr;
             if (um.checkForNickname(nicknameKicked) == false){
                 ERR_NOSUCHNICK(socketSender, nicknameKicked);
+                continue ;
             }
             else{
                 int socketTarget = um.getSocket(nicknameKicked);
                 if (channel->isMember(socketTarget) == false){
                     ERR_USERNOTINCHANNEL(socketSender, socketTarget, channelName);
+                    continue ;
                 }
 
                 um.eraseUserFromChannel(socketTarget, channelName);
-				RPL_KICK(socketSender,
-                         socketTarget,
-                         channelName,
-                         nicknameKicked,
-                         m_trail);
+                if (socketSender != socketTarget){
+                    RPL_KICK(socketSender,
+                             socketTarget,
+                             channelName,
+                             nicknameKicked,
+                             m_trail);
+                }
                 RPL_KICK(socketSender,
                          socketSender,
                          channelName,
