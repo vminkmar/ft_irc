@@ -289,6 +289,11 @@ void Server::CMD_KICK(int socketSender){
                 if (channel->isMember(socketTarget) == false){
                     ERR_USERNOTINCHANNEL(socketSender, socketTarget, channelName);
                 }
+								um.eraseUserFromChannel(socketSender, channelName);
+								RPL_KICK(socketSender, socketTarget, channelName, m_trail);
+								// broadcast(um.getNickname(socketSender), channelName, m_trail, "NAME");
+      				  // RPL_NAMREPLY(socketTarget, channelName, um.getNickname(socketSender));
+
                 /* implement actual Kick from channel */
                 /* use m_trail */
             }
