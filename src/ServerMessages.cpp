@@ -151,7 +151,13 @@ void Server::CMD_PRIVMSG(int socket){
         return ;
     }
     else if (um.checkForChannel(target) == true){
-        broadcast(um.getNickname(socket), target, "", m_trail, "PRIVMSG");
+        Channel const* channel = um.getChannel(target);
+        if (channel->isMember(socket) == false){
+            ERR_NOTONCHANNEL(socket, target);
+        }
+        else{
+            broadcast(um.getNickname(socket), target, "", m_trail, "PRIVMSG");
+        }
         return ;
     }
     ERR_NOSUCHNICK(socket, target);
