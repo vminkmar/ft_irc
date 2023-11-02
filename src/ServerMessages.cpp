@@ -263,7 +263,6 @@ void Server::CMD_KICK(int socketSender){
 
         if (um.checkForChannel(channelName) == false){
             ERR_NOSUCHCHANNEL(socketSender, channelName);
-            /* @note currently doesnt print the message in the channel buffer */
             continue ;
         }
 
@@ -273,12 +272,10 @@ void Server::CMD_KICK(int socketSender){
 
         if (channel->isMember(socketSender) == false){
             ERR_NOTONCHANNEL(socketSender, channelName);
-            continue ;
         }
 
         if (channel->isOperator(socketSender) == false){
             ERR_CHANOPRIVSNEEDED(socketSender, channelName);
-            continue ;
         }
 
         for (t_vec_str_cit itr = targets.begin(); itr != targets.end(); ++itr){
@@ -286,13 +283,14 @@ void Server::CMD_KICK(int socketSender){
             t_str_c nicknameTarget = *itr;
             if (um.checkForNickname(nicknameTarget) == false){
                 ERR_NOSUCHNICK(socketSender, nicknameTarget);
-                continue ;
             }
-            int socketTarget = um.getSocket(nicknameTarget);
-
-            if (channel->isMember(socketTarget) == false){
-                ERR_USERNOTINCHANNEL(socketSender, socketTarget, channelName);
-                continue ;
+            else{
+                int socketTarget = um.getSocket(nicknameTarget);
+                if (channel->isMember(socketTarget) == false){
+                    ERR_USERNOTINCHANNEL(socketSender, socketTarget, channelName);
+                }
+                /* implement actual Kick from channel */
+                /* use m_trail */
             }
         }
     }
