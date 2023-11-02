@@ -387,8 +387,6 @@ Server::t_vec_str Server::split(t_str_c& parameter,
     while (std::getline(ss, token, delimiter)){
         split.push_back(token);
     }
-
-    //log_vector("splitted vec", split);
     return split;
 }
 
@@ -440,7 +438,14 @@ void Server::broadcast(t_str_c& sender,
             continue ;
         }
         if (command == "PRIVMSG"){
-            RPL_PRIVMSG(socketSender, nickname, message);
+            t_str str = ":" + um.getNickname(socketSender) + "!"
+                        + um.getUsername(socketSender) + "@"
+                        + HOST + " PRIVMSG " + channelName + " :"
+                        + message + "\r\n";
+            /* @note this is a diry workaround */
+            /* we should think about how we approach this differently */
+            um.appendToBuffer(socketTarget, str, OUTPUT);
+
         }
         else if (command == "QUIT"){
             RPL_QUIT(socketSender, socketTarget, message);
@@ -451,11 +456,15 @@ void Server::broadcast(t_str_c& sender,
         else if (command == "PART"){
             RPL_PART(socketSender, socketTarget, channelName, message);
         }
-        else if (command == "NAME"){
-            /* @note prob needed for some cases */
+        else if (command == "NAMREPLY"){
+            //RPL_NAMREPLY(socketTarget, channelName, um.getChannelNicknames(channelName));
         }
         else if (command == "KICK"){
             RPL_KICK(socketSender, socketTarget, channelName, nicknameKicked, message);
+        }
+        else if (command == "NICK"){
+            /* @note NICKCHANGE */
+            RPL_NICKCHANGE(socketSender, socketTarget, um.getNickname(socketSender));
         }
     }
 }

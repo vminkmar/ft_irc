@@ -26,9 +26,16 @@ void Server::CMD_NICK(int socket){
     }
     else{
         if (um.getNickname(socket).empty() == false){
-            RPL_NICKCHANGE(socket, newNickname);
+            RPL_NICKCHANGE(socket, socket, newNickname);
         }
         um.setNickname(socket, newNickname);
+        t_vec_str_c channels = split(um.getChannelNames(), ',');
+        for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
+            t_str_c& channelName = *it;
+            if (um.getChannel(channelName)->isMember(socket) == true){
+                broadcast(um.getNickname(socket), channelName, "", "", "NICK");
+            }
+        }
     }
 }
 
@@ -59,7 +66,7 @@ void Server::CMD_QUIT(int socket){
     log("Socket #" + itostr(socket) + " has gone offline ("
         + um.getNickname(socket) +")");
 
-    t_vec_str channels = split(um.getChannelNames(), ',');
+    t_vec_str_c channels = split(um.getChannelNames(), ',');
     for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it){
         t_str_c& channelName = *it;
         if (um.getChannel(channelName)->isMember(socket) == true){

@@ -21,7 +21,7 @@ void Server::RPL_JOIN(int socketSender, int socketTarget, t_str_c& channelName){
     um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
-void Server::RPL_NICKCHANGE(int socket, t_str_c& newNickname){
+void Server::RPL_NICKCHANGE(int socket, int socketTarget, t_str_c& newNickname){
     t_str oldNickname = um.getNickname(socket);
     if (oldNickname.empty() == true){
         log("UNSET_NICKNAME got changed to " + newNickname);
@@ -33,7 +33,7 @@ void Server::RPL_NICKCHANGE(int socket, t_str_c& newNickname){
                 + "!" + um.getUsername(socket)
                 + "@" + "localhost" + " " + "NICK"
                 + " :" + newNickname + "\r\n";
-    um.appendToBuffer(socket, str, OUTPUT);
+    um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
 void Server::RPL_NOTOPIC(int socket, t_str_c& channelName){
