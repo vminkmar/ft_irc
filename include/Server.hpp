@@ -149,6 +149,10 @@ class Server{
                             int socketTarget,
                             t_str_c& channelName,
                             t_str_c& message);
+        void RPL_KICK      (int socketSender,
+                            int socketTarget,
+                            t_str_c& channelName,
+                            t_str_c& message);
         void RPL_IFTOPIC   (int socket, t_str_c& channelName, t_str_c& topic);
         void RPL_PRIVMSG   (int socket, t_str_c& target, t_str_c& message);
         void RPL_INVITING  (int socketSender,
