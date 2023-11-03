@@ -372,10 +372,10 @@ void Server::CMD_MODE(int socket){
 				ERR_UNKNOWNMODE(socket, str[0], m_parameters[0]);
 				return ;
 			}
-			str = str.substr(1, str.size());
-			size_t pos = str.find_first_not_of(CHAR_ALLOWED_MODS);
+			t_str substr = str.substr(1, str.size());
+			size_t pos = substr.find_first_not_of(CHAR_ALLOWED_MODS);
 			if(pos != std::string::npos){
-				ERR_UNKNOWNMODE(socket, str[pos], m_parameters[0]);
+				ERR_UNKNOWNMODE(socket, substr[pos], m_parameters[0]);
 				return ;
 			}
 
@@ -388,10 +388,15 @@ void Server::CMD_MODE(int socket){
 							if ((plusorminus == '-' && channel->isInviteOnly() == true)
 							||  (plusorminus == '+' && channel->isInviteOnly() == false)){
 								channel->toggleInviteOnly();
-
+							}
+							RPL_CHANNELMODEIS(socket, channelName, std::string(1,plusorminus) + modechar, "");
 					}
 					else if (modechar == 't'){
-
+							if ((plusorminus == '-' && channel->isTopicEditable() == true)
+							|| (plusorminus == '+' && channel->isTopicEditable() == false)){
+								channel->toggleTopicEditable();
+							}
+							//RPL_CHANNELMODEIS();
 					}
 					else if (modechar == 'k'){
 
