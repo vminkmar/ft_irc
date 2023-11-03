@@ -30,6 +30,7 @@
 
 #define CHAR_UNALLOWED_NICK " !@#$%^&*()[]{}<>:;,/"
 #define CHAR_ALLOWED_CHANNEL "#&+!"
+#define CHAR_ALLOWED_MODS "itkol"
 
 /* DEFAULT MESSAGES */
 #define DEFMSG_PART "Goodbye!"

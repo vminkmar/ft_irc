@@ -340,10 +340,35 @@ void Server::CMD_KICK(int socketSender){
 
 void Server::CMD_MODE(int socket){
 
+	if (m_parameters.size() < 2){
+		ERR_NEEDMOREPARAMS(socket, m_command);
+		return ;
+	}
 
+	t_str_c& channelName = m_parameters[0];
 
+	if (um.checkForChannel(channelName) == false){
+		ERR_NOSUCHCHANNEL(socket, channelName);
+		return ;
+	}
+	
+	t_str_c& modes = m_parameters[1];
 
+	if (modes.find_first_of("+-") != 0){
+		log_err("No +/- in MODE message");
+		/* @note add specific ERR response */
+		ERR_NEEDMOREPARAMS(socket, m_command);
+	}
 
+	if (modes.find_first_of(CHAR_ALLOWED_MODS) == std::string::npos){
+
+		//ERR_NOCHANMODES();
+
+	}
+
+	/* ERR_CHANOPRIVSNEEDED */
+	/* ERR_UNKNOWNMODE */
+	/* ERR_USERNOTINCHANNEL */
 
 	
 }
