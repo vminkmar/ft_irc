@@ -163,6 +163,7 @@ class Server{
                             int socketTarget,
                             t_str_c& channelName,
                             t_str_c& target);
+				void RPL_CHANNELMODEIS(int socket, t_str_c& channelName, t_str_c& modechar, t_str_c& parameter);
 
         /* <------ server errors -----> */
         void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);
