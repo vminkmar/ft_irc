@@ -22,7 +22,7 @@ void Server::CMD_NICK(int socket){
     }
     else if (um.checkForNickname(newNickname) == true){
         ERR_NICKNAMEINUSE(socket, newNickname);
-        um.setNickname(socket, "dummy");
+        um.setNickname(socket, " ");
     }
     else{
         if (um.getNickname(socket).empty() == false){
@@ -56,7 +56,7 @@ void Server::CMD_USER(int socket){
     }
     else{
         t_str_c& username = m_parameters[0];
-        if (um.getNickname(socket) != "dummy"){
+        if (um.getNickname(socket) != " "){
             RPL_WELCOME(socket, username);
             um.setWelcomedStatus(socket, true);
         }
