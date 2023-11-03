@@ -185,6 +185,7 @@ class Server{
         void ERR_USERNOTINCHANNEL(int socketSender,
                                   int socketTarget,
                                   t_str_c& channelName);
+			  void ERR_UNKNOWNMODE     (int socket, char unknownChar, t_str_c& channelName);
 
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;

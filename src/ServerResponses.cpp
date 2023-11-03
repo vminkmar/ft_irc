@@ -259,4 +259,10 @@ void Server::ERR_USERNOTINCHANNEL(int socketSender,
     um.appendToBuffer(socketSender, str, OUTPUT);
 }
 
+void Server::ERR_UNKNOWNMODE(int socketSender, char unknownChar, t_str_c& channelName){
+	log_err("Wrong Mode for Channel");
+	t_str str = "472 " + std::string(1, unknownChar) + " :is unknown mode char to me for " + channelName + "\r\n";
+  um.appendToBuffer(socketSender, str, OUTPUT);
+
+}
 // -------------------------------------------------------------------------- //
