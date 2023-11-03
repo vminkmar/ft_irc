@@ -110,6 +110,7 @@ class Server{
         void CMD_TOPIC  (int socket);
         void CMD_INVITE (int socket);
         void CMD_KICK   (int socket);
+        void CMD_MODE   (int socket);
 
         /* <------ server messages helpers -----> */
         void      createChannelBy         (int socket,

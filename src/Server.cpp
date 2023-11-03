@@ -224,6 +224,9 @@ void Server::Messages(int socket){
     else if (m_command == "KICK"){
         CMD_KICK(socket);
     }
+		else if (m_command == "MODE"){
+        CMD_MODE(socket);
+		}
     // else if (m_command == "PASS")
     //     comparePassword();
     // }

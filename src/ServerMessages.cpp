@@ -338,6 +338,17 @@ void Server::CMD_KICK(int socketSender){
     }
 }
 
+void Server::CMD_MODE(int socket){
+
+
+
+
+
+
+	
+}
+
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */
 
 void Server::createChannelBy(int socket,
