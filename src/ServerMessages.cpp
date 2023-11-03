@@ -351,24 +351,107 @@ void Server::CMD_MODE(int socket){
 		ERR_NOSUCHCHANNEL(socket, channelName);
 		return ;
 	}
-	
-	t_str_c& modes = m_parameters[1];
 
-	if (modes.find_first_of("+-") != 0){
-		log_err("No +/- in MODE message");
-		/* @note add specific ERR response */
-		ERR_NEEDMOREPARAMS(socket, m_command);
+	Channel * channel = um.getChannel(channelName);
+	if (channel->isOperator(socket) == false){
+			if (channel->isMember(socket) == false){
+				ERR_NOTONCHANNEL(socket, channelName);
+				return ;
+			}
+			ERR_CHANOPRIVSNEEDED(socket, channelName);
+			return ;
 	}
 
-	if (modes.find_first_of(CHAR_ALLOWED_MODS) == std::string::npos){
+	bool ismode = true;
+	for(t_vec_str_cit it = m_parameters.begin() + 1; it != m_parameters.end(); ++it){
+		
+		t_str str = *it;
 
-		//ERR_NOCHANMODES();
+		if (ismode == true){
+			if (it->find_first_of("+-") != 0){
+				ERR_UNKNOWNMODE(socket, str[0], m_parameters[0]);
+				return ;
+			}
+			str = str.substr(1, str.size());
+			size_t pos = str.find_first_not_of(CHAR_ALLOWED_MODS);
+			if(pos != std::string::npos){
+				ERR_UNKNOWNMODE(socket, str[pos], m_parameters[0]);
+				return ;
+			}
 
-	}
+			char plusorminus = str[0];
+			for (std::string::const_iterator sit = str.begin() + 1; sit != str.end(); ++sit){
 
-	/* ERR_CHANOPRIVSNEEDED */
-	/* ERR_UNKNOWNMODE */
-	/* ERR_USERNOTINCHANNEL */
+					char modechar = *sit;
+
+					if (modechar == 'i'){
+							if ((plusorminus == '-' && channel->isInviteOnly() == true)
+							||  (plusorminus == '+' && channel->isInviteOnly() == false)){
+								channel->toggleInviteOnly();
+
+					}
+					else if (modechar == 't'){
+
+					}
+					else if (modechar == 'k'){
+
+					}
+					else if (modechar == 'o'){
+
+					}
+					else if (modechar == 'l'){
+					
+					}	
+			}
+
+
+
+
+
+
+					if (it == m_parameters.end()){
+						/* NO TARGET */
+						ERR_NEEDMOREPARAMS(socket, m_command);
+					}
+				
+
+			}
+
+
+		}
+	// 	else{
+	// 		// @note needs comment: o k l
+	// 		/* @note is target needed? */
+
+	// 		/* @note is target viable? */
+	// 		// t_str_c& target = *it;
+	// 		// int socketTarget = um.getSocket(target);
+	// 		// if (channel->isMember(socketTarget) == false){
+	// 		// 	ERR_USERNOTINCHANNEL(socket, socketTarget, channelName);
+	// 		// 	return ;
+	// 		// }
+	// 	}
+	// 	ismode = !ismode;
+	// }
+
+
+	// t_str_c& modes = m_parameters[1];
+
+	// if (modes.find_first_of("+-") != 0){
+	// 	log_err("No +/- in MODE message");
+	// 	/* @note add specific ERR response */
+	// 	ERR_NEEDMOREPARAMS(socket, m_command);
+	// }
+
+	// if (modes.find_first_of(CHAR_ALLOWED_MODS) == std::string::npos){
+
+	// 	//ERR_UNKNOWNMODE();
+
+	// }
+
+	// /* ERR_CHANOPRIVSNEEDED */
+	// /* ERR_UNKNOWNMODE */
+	// /* ERR_USERNOTINCHANNEL */
 
 	
 }
