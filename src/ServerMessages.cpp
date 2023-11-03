@@ -396,7 +396,7 @@ void Server::CMD_MODE(int socket){
 							|| (plusorminus == '+' && channel->isTopicEditable() == false)){
 								channel->toggleTopicEditable();
 							}
-							//RPL_CHANNELMODEIS();
+							RPL_CHANNELMODEIS(socket, channelName, std::string(1,plusorminus) + modechar, "");
 					}
 					else if (modechar == 'k'){
 
