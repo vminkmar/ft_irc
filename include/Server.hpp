@@ -170,7 +170,7 @@ class Server{
                             int socketTarget,
                             t_str_c& channelName,
                             t_str_c& target);
-				void RPL_CHANNELMODEIS(int socket, t_str_c& channelName, t_str_c& modechar, t_str_c& parameter);
+				void RPL_CHANNELMODEIS(int socket, int socketTarget, t_str_c& channelName, t_str_c& modechar, t_str_c& parameter);
 
         /* <------ server errors -----> */
         void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);
@@ -193,7 +193,7 @@ class Server{
         void ERR_USERNOTINCHANNEL(int socketSender,
                                   int socketTarget, /* @note mb nick  better */
                                   t_str_c& channelName);
-			  void ERR_UNKNOWNMODE     (int socket, char unknownChar, t_str_c& channelName);
+		void ERR_UNKNOWNMODE     (int socket, char unknownChar, t_str_c& channelName);
 
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;
