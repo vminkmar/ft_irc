@@ -398,15 +398,12 @@ void Server::CMD_MODE(int socket){
 				}
 				else if (modechar == 'k'){
                     if (plusorminus == '+'){
-						if((it + 1) != m_parameters.end()){
-							channel->setPassword(*(it + 1));
-                            /* @note if we use it i think we should advance it */
-                            ++it;
-						}
-						else{
-							ERR_NEEDMOREPARAMS(socket, m_command);
-                            continue; /* @note continue or break ? */
+                        if ((it + 1) == m_parameters.end()){
+                            ERR_NEEDMOREPARAMS(socket, m_command);
+                            continue ;
                         }
+                        channel->setPassword(*(it + 1));
+                        ++it;
                     }
                     else{
 						channel->setPassword("");
