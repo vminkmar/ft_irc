@@ -55,10 +55,10 @@ void User::appendOutputBuffer(std::string const& message){
 }
 
 void User::eraseInputBuffer(int start, int end) {
-  m_inputBuffer = m_inputBuffer.erase(start, end);
+    m_inputBuffer = m_inputBuffer.erase(start, end);
 }
 void User::eraseOutputBuffer(int start, int end) {
-  m_outputBuffer = m_outputBuffer.erase(start, end);
+    m_outputBuffer = m_outputBuffer.erase(start, end);
 }
 
 void User::toggleOnlineStatus(){
