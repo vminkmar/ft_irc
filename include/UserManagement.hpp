@@ -19,16 +19,18 @@ class UserManagement{
     
     private:
 
-        typedef std::string                    t_str;
-        typedef t_str const                    t_str_c;
+        typedef std::string                   t_str;
+        typedef t_str const                   t_str_c;
 
-        typedef std::map<int, User>            t_um_users;
-        typedef t_um_users::iterator           t_um_users_it;
-        typedef t_um_users::const_iterator     t_um_users_cit;
+        typedef std::map<int, User>           t_um_users;
+        typedef t_um_users::iterator          t_um_users_it;
+        typedef t_um_users::const_iterator    t_um_users_cit;
 
-        typedef std::map<t_str, Channel>       t_um_channels;
-        typedef t_um_channels::iterator        t_um_channels_it;
-        typedef t_um_channels::const_iterator  t_um_channels_cit;
+        typedef std::map<t_str, Channel>      t_um_channels;
+        typedef t_um_channels::iterator       t_um_channels_it;
+        typedef t_um_channels::const_iterator t_um_channels_cit;
+
+    private:
 
         t_um_users    m_users;
         t_um_channels m_channels;
