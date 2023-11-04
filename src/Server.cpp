@@ -472,6 +472,10 @@ void Server::broadcast(t_str_c& sender,
             /* @note NICKCHANGE */
             RPL_NICKCHANGE(socketSender, socketTarget, um.getNickname(socketSender));
         }
+		else if(command == "MODE"){
+			RPL_CHANNELMODEIS(socketSender, socketTarget, channelName, message, nicknameKicked);
+		}
+
     }
 }
 
