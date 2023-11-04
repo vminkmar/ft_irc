@@ -9,11 +9,10 @@
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> channel map operations */
 
 void UserManagement::addChannel(std::string const& channelName){
-  m_channels[channelName] = Channel(channelName);
+    m_channels[channelName] = Channel(channelName);
 }
 
 void UserManagement::eraseChannel(std::string const& channelName){
-	
     for (t_um_channels_it it = m_channels.begin();
                           it != m_channels.end();
                           ++it){
@@ -22,7 +21,7 @@ void UserManagement::eraseChannel(std::string const& channelName){
             return ;
 		}
 	}
-    throw std::runtime_error("eraseChannel(): Channel "
+    throw std::runtime_error("eraseChannel: Channel "
                              + channelName + " not found!");
 }
 
@@ -31,7 +30,6 @@ bool UserManagement::checkForChannel(std::string const& channelName) const{
 }
 
 void UserManagement::printChannelInfo(std::string const& channelName) const{
-    
     t_um_channels_cit it = m_channels.find(channelName);
     if (it != m_channels.end()){
         std::cout << it->second
@@ -40,7 +38,7 @@ void UserManagement::printChannelInfo(std::string const& channelName) const{
                   << std::endl;
         return ;
     }
-    throw std::runtime_error("printChannelInfo(): Channel "
+    throw std::runtime_error("printChannelInfo: Channel "
                              + channelName + " not found!");
 }
 
@@ -49,55 +47,50 @@ void UserManagement::printChannelInfo(std::string const& channelName) const{
 void UserManagement::addUserToChannel(int socket,
                                       UserPrivilege up,
                                       std::string const& channelName){
-	
     t_um_channels_it it = m_channels.find(channelName);
     if (it != m_channels.end()){
         it->second.addUser(socket, up);
         return ;
     }
-    throw std::runtime_error("addUserToChannel(): Channel "
+    throw std::runtime_error("addUserToChannel: Channel "
                              + channelName + " not found!");
 }
 
 void UserManagement::eraseUserFromChannel(int socket,
                                           std::string const& channelName){
-    
     t_um_channels_it it = m_channels.find(channelName);
     if (it != m_channels.end()){
         it->second.eraseUser(socket);
         return ;
     }
-    throw std::runtime_error("eraseUserFromChannel(): Channel "
+    throw std::runtime_error("eraseUserFromChannel: Channel "
                              + channelName + " not found!");
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> channel map getters */
 
 Channel * UserManagement::getChannel(std::string const& channelName){
-    
     t_um_channels_it it = m_channels.find(channelName);
     if (it != m_channels.end()){
         return &it->second;
     }
-    throw std::runtime_error("getChannel(): Channel " 
+    throw std::runtime_error("getChannel: Channel "
                              + channelName + " not found!");
 }
 
 Channel const* UserManagement::getChannel(std::string const& channelName) const{
-	
     t_um_channels_cit it = m_channels.find(channelName);
     if (it != m_channels.end()){
         return &it->second;
     }
-    throw std::runtime_error("getChannel(): Channel "
+    throw std::runtime_error("getChannel: Channel "
                              + channelName + " not found!");
 }
 
 std::string UserManagement::getChannelNames() const{ 
-	
     std::stringstream ss;
     if (m_channels.empty()){
-        return "";
+        return ss.str();
     }
     t_um_channels_cit last = --m_channels.end();
 	for (t_um_channels_cit it = m_channels.begin();	
@@ -115,7 +108,6 @@ std::string UserManagement::getChannelUsernames
                                         (std::string const& channelName) const{
     std::stringstream ss;
     Channel::t_channel_users UserMap = getChannel(channelName)->getUserMap();
-    
     for (Channel::t_channel_users_cit it = UserMap.begin();
                                       it != UserMap.end();
                                       ++it){
@@ -135,10 +127,8 @@ std::string UserManagement::getChannelUsernames
 
 std::string UserManagement::getChannelNicknames
                                         (std::string const& channelName) const{
-    
     std::stringstream ss;
     Channel::t_channel_users UserMap = getChannel(channelName)->getUserMap();
-    
     for (Channel::t_channel_users_cit it = UserMap.begin();
                                       it != UserMap.end();
                                       ++it){
