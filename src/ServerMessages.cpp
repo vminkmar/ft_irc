@@ -29,7 +29,6 @@ void Server::CMD_NICK(int socket)
     else if (um.checkForNickname(newNickname) == true)
     {
         ERR_NICKNAMEINUSE(socket, newNickname);
-        // um.setNickname(socket, "");
     }
     else
     {
