@@ -54,14 +54,18 @@ void UserManagement::setUsername(int socket, t_str_c& newUsername){
     t_um_users_it it = m_users.find(socket);
     if (it != m_users.end()){
         it->second.setUsername(newUsername);
+        return ;
     }
+    throw std::runtime_error("setUsername: User not found!");
 }
 
 void UserManagement::setNickname(int socket, t_str_c& newNickname){
     t_um_users_it it = m_users.find(socket);
     if (it != m_users.end()){
         it->second.setNickname(newNickname);
+        return ;
     }
+    throw std::runtime_error("setNickname: User not found!");
 }
 
 void UserManagement::setOnlineStatus(int socket, bool flag){
@@ -94,15 +98,17 @@ void UserManagement::appendToBuffer(int socket, t_str_c& message, int flag){
     else if (flag == OUTPUT){
         m_users.find(socket)->second.appendOutputBuffer(message);
     }
+    throw std::runtime_error("appendToBuffer: Wrong flagen given!");
 }
 
 void UserManagement::eraseBuffer(int socket, int start, int end, int flag){
-	if (flag == INPUT)
-    {
+    if (flag == INPUT){
         m_users.find(socket)->second.eraseInputBuffer(start, end);
-    }else if (flag == OUTPUT){
+    }
+    else if (flag == OUTPUT){
         m_users.find(socket)->second.eraseOutputBuffer(start, end);
     }
+    throw std::runtime_error("eraseBuffer: Wrong flag given!");
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user map getters */
@@ -169,7 +175,7 @@ UserManagement::t_str UserManagement::getBuffer(int socket, int flag) const{
     else if (flag == OUTPUT){
         return m_users.find(socket)->second.getOutputBuffer();
     }
-    return "";
+    throw std::runtime_error("getBuffer: Wrong flag given!");
 }
 
 bool UserManagement::getOnlineStatus(int socket) const{
