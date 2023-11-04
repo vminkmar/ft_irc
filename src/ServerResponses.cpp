@@ -142,11 +142,11 @@ void Server::RPL_INVITING(int socketSender,
     um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
-void Server::RPL_CHANNELMODEIS(int socket, t_str_c& channelName, t_str_c& modechar, t_str_c& parameter){
+void Server::RPL_CHANNELMODEIS(int socket, int socketTarget, t_str_c& channelName, t_str_c& modechar, t_str_c& parameter){
 	log(um.getNickname(socket) + " changed channel " + channelName
         + " mode with " + modechar + " " + parameter);
 	t_str str = ": 324 " + channelName + " " + modechar + " " + parameter + "\r\n";
-	um.appendToBuffer(socket, str, OUTPUT);
+	um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server errors */
