@@ -402,7 +402,7 @@ void Server::CMD_MODE(int socket){
 						}
 						else
 						{
-							if(it != m_parameters.end()){
+							if((it + 1) != m_parameters.end()){
 								channel->setPassword(*(it + 1));
 							}
 							else

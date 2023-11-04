@@ -94,9 +94,11 @@ void UserManagement::setWelcomedStatus(int socket, bool flag){
 void UserManagement::appendToBuffer(int socket, t_str_c& message, int flag){
     if (flag == INPUT){
         m_users.find(socket)->second.appendInputBuffer(message);
+        return ;
     }
     else if (flag == OUTPUT){
         m_users.find(socket)->second.appendOutputBuffer(message);
+        return ;
     }
     throw std::runtime_error("appendToBuffer: Wrong flagen given!");
 }
@@ -104,9 +106,11 @@ void UserManagement::appendToBuffer(int socket, t_str_c& message, int flag){
 void UserManagement::eraseBuffer(int socket, int start, int end, int flag){
     if (flag == INPUT){
         m_users.find(socket)->second.eraseInputBuffer(start, end);
+        return ;
     }
     else if (flag == OUTPUT){
         m_users.find(socket)->second.eraseOutputBuffer(start, end);
+        return ;
     }
     throw std::runtime_error("eraseBuffer: Wrong flag given!");
 }
