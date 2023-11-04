@@ -480,9 +480,9 @@ void Server::createChannelBy(int socket,
     um.addUserToChannel(socket, OPERATOR, channelName);
 
     if (channelKey.empty() == false){
-        Channel *c = um.getChannel(channelName);
-        c->setPassword(channelKey);
-        c->toggleChannelKey();
+        Channel * channel = um.getChannel(channelName);
+        channel->setPassword(channelKey);
+        channel->toggleChannelKey();
         log("Channel "+ channelName
             + " created by " + um.getNickname(socket) +
             " (password-protected)");
