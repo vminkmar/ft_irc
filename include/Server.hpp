@@ -46,6 +46,7 @@ class Server{
 
         typedef std::vector<t_str>        t_vec_str;
         typedef t_vec_str const           t_vec_str_c;
+        typedef t_vec_str::iterator       t_vec_str_it;
         typedef t_vec_str::const_iterator t_vec_str_cit;
 
         typedef std::vector<pollfd>       t_vec_pollfd;
