@@ -380,7 +380,7 @@ void Server::CMD_MODE(int socket){
 			}
 
 			char plusorminus = str[0];
-			for (std::string::const_iterator sit = str.begin() + 1; sit != str.end(); ++sit){
+			for (t_str_cit sit = str.begin() + 1; sit != str.end(); ++sit){
 
 					char modechar = *sit;
 
@@ -389,17 +389,25 @@ void Server::CMD_MODE(int socket){
 							||  (plusorminus == '+' && channel->isInviteOnly() == false)){
 								channel->toggleInviteOnly();
 							}
-							RPL_CHANNELMODEIS(socket, channelName, std::string(1,plusorminus) + modechar, "");
 					}
 					else if (modechar == 't'){
 							if ((plusorminus == '-' && channel->isTopicEditable() == true)
 							|| (plusorminus == '+' && channel->isTopicEditable() == false)){
 								channel->toggleTopicEditable();
 							}
-							RPL_CHANNELMODEIS(socket, channelName, std::string(1,plusorminus) + modechar, "");
 					}
 					else if (modechar == 'k'){
-
+						if (plusorminus == '-'){
+							channel->setPassword("");
+						}
+						else
+						{
+							if(it != m_parameters.end()){
+								channel->setPassword(*(it + 1));
+							}
+							else
+								ERR_NEEDMOREPARAMS(socket, m_command);
+						}
 					}
 					else if (modechar == 'o'){
 
@@ -407,6 +415,7 @@ void Server::CMD_MODE(int socket){
 					else if (modechar == 'l'){
 					
 					}	
+					RPL_CHANNELMODEIS(socket, channelName, std::string(1,plusorminus) + modechar, "");
 			}
 
 
