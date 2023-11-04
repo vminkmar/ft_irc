@@ -9,6 +9,7 @@
 #include <string>       // needed for std::string
 #include <poll.h>       // needed for poll_fd
 #include <netinet/in.h> // needed for sockaddr_in
+#include <csignal>			// needed for signal handling
 
 //IP_ADDRESS 127.0.0.1
 #define PORT       6667
@@ -67,6 +68,7 @@ class Server{
         t_str                    m_trail;
         t_str                    m_passwd;
 
+
     public:
 	
         UserManagement um;
@@ -76,6 +78,9 @@ class Server{
         ~Server();
 
 /* @note essentially all of this could be private at some point */
+
+				static bool              serverRunning;
+				static void signal_handler(int sig);
 
         /* <------ getters -----> */
         t_str getParameter(t_str_c& message);

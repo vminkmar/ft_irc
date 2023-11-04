@@ -10,10 +10,12 @@
 #include <iostream>  // needed for std::cout, std::endl
 #include <sstream>   // needed for std::stringstream
 
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-Server::Server() : m_maxClients(MAX_CLIENTS), m_command(""), m_trail("") {}
+Server::Server() : m_maxClients(MAX_CLIENTS), m_command(""), m_trail(""){}
 Server::~Server(){};
+bool Server::serverRunning = true;
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
@@ -58,8 +60,7 @@ void Server::createSocket(){
     newServer.fd = m_server_fd;
     newServer.events = POLLIN;
     m_pollfds.push_back(newServer);
-
-    while (1){
+    while (Server::serverRunning == true){
         /* waits for event on filedescriptor */
         int ret = poll(this->m_pollfds.data(), m_pollfds.size(), 100);
         if (ret < 0){
@@ -87,6 +88,7 @@ void Server::acceptClients(){
     struct pollfd newClient; 
     newClient.fd = newSocket;
     newClient.events = POLLIN | POLLOUT;
+		newClient.revents = 0;
     this->m_pollfds.push_back(newClient);
 
     try{
@@ -139,6 +141,7 @@ void Server::cleanUpSockets(){
             it = m_pollfds.erase(it);
             log("Socket #" + itostr(socket) + " has been removed ("
                 + nickname + ")");
+						close(socket);
         }
         else{
             ++it;
@@ -470,6 +473,12 @@ void Server::broadcast(t_str_c& sender,
             RPL_NICKCHANGE(socketSender, socketTarget, um.getNickname(socketSender));
         }
     }
+}
+
+void Server::signal_handler(int sig){
+	if(sig == SIGINT)
+		Server::serverRunning = false;
+	return ;
 }
 
 // void Server::getPortAndPasswd(char **argv) {
