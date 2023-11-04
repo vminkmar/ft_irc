@@ -271,4 +271,9 @@ void Server::ERR_UNKNOWNMODE(int socketSender, char unknownChar, t_str_c& channe
   um.appendToBuffer(socketSender, str, OUTPUT);
 
 }
+
+void Server::ERR_UNKNOWNCOMMAND(int socketSender){
+	t_str str = "421 " + m_parameters[0] + " :Unknown command" "\r\n";
+  um.appendToBuffer(socketSender, str, OUTPUT);
+}
 // -------------------------------------------------------------------------- //

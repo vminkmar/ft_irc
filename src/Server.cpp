@@ -230,6 +230,8 @@ void Server::Messages(int socket){
 		else if (m_command == "MODE"){
         CMD_MODE(socket);
 		}
+	else
+		ERR_UNKNOWNCOMMAND(socket);
     // else if (m_command == "PASS")
     //     comparePassword();
     // }
@@ -475,7 +477,6 @@ void Server::broadcast(t_str_c& sender,
 		else if(command == "MODE"){
 			RPL_CHANNELMODEIS(socketSender, socketTarget, channelName, message, nicknameKicked);
 		}
-
     }
 }
 

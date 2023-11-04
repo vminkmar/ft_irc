@@ -194,7 +194,7 @@ class Server{
                                   int socketTarget, /* @note mb nick  better */
                                   t_str_c& channelName);
 		void ERR_UNKNOWNMODE     (int socket, char unknownChar, t_str_c& channelName);
-
+		void ERR_UNKNOWNCOMMAND  (int socketSender);
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;
         void log_inc        (int socket, t_str_c& message)      const; 
