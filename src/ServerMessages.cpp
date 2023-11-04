@@ -20,7 +20,6 @@ void Server::CMD_NICK(int socket)
         ERR_NONICKNAMEGIVEN(socket);
     }
     t_str_c &newNickname = m_parameters[0];
-
     if (checkUnallowedCharacters(newNickname, CHAR_UNALLOWED_NICK) == true)
     {
         ERR_ERRONEUSNICKNAME(socket, newNickname);
@@ -28,7 +27,7 @@ void Server::CMD_NICK(int socket)
     else if (um.checkForNickname(newNickname) == true)
     {
         ERR_NICKNAMEINUSE(socket, newNickname);
-        um.setNickname(socket, " ");
+        // um.setNickname(socket, "");
     }
     else
     {
@@ -36,7 +35,7 @@ void Server::CMD_NICK(int socket)
         {
             RPL_NICKCHANGE(socket, socket, newNickname);
         }
-        um.setNickname(socket, newNickname);
+		um.setNickname(socket, newNickname);
         if (um.getUsername(socket).empty() == false && um.getWelcomedStatus(socket) == false)
         {
             RPL_WELCOME(socket, um.getUsername(socket));
@@ -69,7 +68,7 @@ void Server::CMD_USER(int socket)
     else
     {
         t_str_c &username = m_parameters[0];
-        if (um.getNickname(socket) != " ")
+        if (um.getNickname(socket) != "")
         {
             RPL_WELCOME(socket, username);
             um.setWelcomedStatus(socket, true);

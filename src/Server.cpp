@@ -463,7 +463,7 @@ void Server::broadcast(t_str_c& sender,
             RPL_PART(socketSender, socketTarget, channelName, message);
         }
         else if (command == "NAMREPLY"){
-            //RPL_NAMREPLY(socketTarget, channelName, um.getChannelNicknames(channelName));
+            RPL_NAMREPLY(socketTarget, channelName, um.getChannelNicknames(channelName));
         }
         else if (command == "KICK"){
             RPL_KICK(socketSender, socketTarget, channelName, nicknameKicked, message);
