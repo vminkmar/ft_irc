@@ -382,57 +382,51 @@ void Server::CMD_MODE(int socket){
 			char plusorminus = str[0];
 			for (t_str_cit sit = str.begin() + 1; sit != str.end(); ++sit){
 
-					char modechar = *sit;
+			    char modechar = *sit;
 
-					if (modechar == 'i'){
-							if ((plusorminus == '-' && channel->isInviteOnly() == true)
-							||  (plusorminus == '+' && channel->isInviteOnly() == false)){
-								channel->toggleInviteOnly();
-							}
+				if (modechar == 'i'){
+					if ((plusorminus == '-' && channel->isInviteOnly() == true)
+						||  (plusorminus == '+' && channel->isInviteOnly() == false)){
+					    channel->toggleInviteOnly();
 					}
-					else if (modechar == 't'){
-							if ((plusorminus == '-' && channel->isTopicEditable() == true)
-							|| (plusorminus == '+' && channel->isTopicEditable() == false)){
-								channel->toggleTopicEditable();
-							}
+				}
+				else if (modechar == 't'){
+					if ((plusorminus == '-' && channel->isTopicEditable() == true)
+						|| (plusorminus == '+' && channel->isTopicEditable() == false)){
+					    channel->toggleTopicEditable();
 					}
-					else if (modechar == 'k'){
-						if (plusorminus == '-'){
-							channel->setPassword("");
+				}
+				else if (modechar == 'k'){
+                    if (plusorminus == '+'){
+						if((it + 1) != m_parameters.end()){
+							channel->setPassword(*(it + 1));
+                            /* @note if we use it i think we should advance it */
+                            ++it;
 						}
-						else
-						{
-							if((it + 1) != m_parameters.end()){
-								channel->setPassword(*(it + 1));
-							}
-							else
-								ERR_NEEDMOREPARAMS(socket, m_command);
-						}
-					}
-					else if (modechar == 'o'){
+						else{
+							ERR_NEEDMOREPARAMS(socket, m_command);
+                            continue; /* @note continue or break ? */
+                        }
+                    }
+                    else{
+						channel->setPassword("");
+                    }
+				}
+				else if (modechar == 'o'){
 
-					}
-					else if (modechar == 'l'){
-					
-					}	
-					RPL_CHANNELMODEIS(socket, channelName, std::string(1,plusorminus) + modechar, "");
-			}
-
-
-
-
-
-
-					if (it == m_parameters.end()){
-						/* NO TARGET */
-						ERR_NEEDMOREPARAMS(socket, m_command);
-					}
+				}
+				else if (modechar == 'l'){
 				
-
-			}
-
-
-		}
+				}
+				RPL_CHANNELMODEIS(socket, channelName, std::string(1,plusorminus) + modechar, "");
+                /* note think we need to broadcast this! */
+		    }
+			    //if (it == m_parameters.end()){
+					/* NO TARGET */
+				//	ERR_NEEDMOREPARAMS(socket, m_command);
+				//}
+        }
+	}
 	// 	else{
 	// 		// @note needs comment: o k l
 	// 		/* @note is target needed? */
@@ -466,10 +460,7 @@ void Server::CMD_MODE(int socket){
 	// /* ERR_CHANOPRIVSNEEDED */
 	// /* ERR_UNKNOWNMODE */
 	// /* ERR_USERNOTINCHANNEL */
-
-	
 }
-
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages helpers */
 
