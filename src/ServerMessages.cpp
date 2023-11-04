@@ -435,7 +435,25 @@ void Server::CMD_MODE(int socket){
                     /* /@note operator reply or channel broadcast */
 				}
 				else if (modechar == 'l'){
-
+                    if (plusorminus == '-'){
+                        channel->setUserLimit(USER_LIMIT_MAX);
+                    }
+                    else{
+                        if ((it + 1) == m_parameters.end()){
+                            ERR_NEEDMOREPARAMS(socket, m_command);
+                            continue ;
+                        }
+                        ++it;
+                        t_str_c& target = *it;
+                        if (target.find_first_not_of("0123456789") != std::string::npos){
+                            ERR_UNKNOWNMODE(socket, substr[pos], channelName);
+                            /* @note not perfect right now */
+                            /* mb implement own ERR message */
+                            continue ;
+                        }
+                        int newUserLimit = atoi(target.c_str());
+                        channel->setUserLimit(newUserLimit);
+                    }
 				}
 				RPL_CHANNELMODEIS(socket, channelName, std::string(1,plusorminus) + modechar, "");
                 /* note think we need to broadcast this! */
