@@ -21,8 +21,7 @@ void Server::RPL_JOIN(int socketSender, int socketTarget, t_str_c& channelName){
     um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
-void Server::RPL_NICKCHANGE(int socket, int socketTarget, t_str_c& newNickname){
-    t_str oldNickname = um.getNickname(socket);
+void Server::RPL_NICKCHANGE(int socket, int socketTarget, t_str_c& newNickname, t_str_c& oldNickname){
     if (oldNickname.empty() == true){
         log("UNSET_NICKNAME got changed to " + newNickname);
     }

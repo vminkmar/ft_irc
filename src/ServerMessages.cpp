@@ -32,15 +32,17 @@ void Server::CMD_NICK(int socket)
     }
     else
     {
+		t_str_c oldNickname = um.getNickname(socket);
         if (um.getNickname(socket).empty() == false)
         {
-            RPL_NICKCHANGE(socket, socket, newNickname);
+            RPL_NICKCHANGE(socket, socket, newNickname, oldNickname);
         }
 		um.setNickname(socket, newNickname);
         if (um.getUsername(socket).empty() == false && um.getWelcomedStatus(socket) == false)
         {
             RPL_WELCOME(socket, um.getUsername(socket));
             um.setWelcomedStatus(socket, true);
+			return;
         }
         t_vec_str_c channels = split(um.getChannelNames(), ',');
         for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it)
@@ -48,7 +50,7 @@ void Server::CMD_NICK(int socket)
             t_str_c &channelName = *it;
             if (um.getChannel(channelName)->isMember(socket) == true)
             {
-                broadcast(um.getNickname(socket), channelName, "", "", "NICK");
+                broadcast(um.getNickname(socket), channelName, oldNickname, "", "NICK");
             }
         }
     }
