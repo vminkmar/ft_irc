@@ -131,7 +131,7 @@ bool Channel::isTopicEditable() const{
 }
 
 bool Channel::isChannelKey() const{
-    return m_password.empty();
+    return m_password.empty() == false;
 }
 
 bool Channel::isFull() const{
