@@ -186,7 +186,7 @@ class Server{
         void ERR_NORECIPIENT     (int socket, t_str_c& command);
         void ERR_NOTEXTTOSEND    (int socket);
         void ERR_USERNOTINCHANNEL(int socketSender,
-                                  int socketTarget,
+                                  int socketTarget, /* @note mb nick  better */
                                   t_str_c& channelName);
 			  void ERR_UNKNOWNMODE     (int socket, char unknownChar, t_str_c& channelName);
 

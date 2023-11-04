@@ -410,10 +410,32 @@ void Server::CMD_MODE(int socket){
                     }
 				}
 				else if (modechar == 'o'){
+                    if ((it + 1) == m_parameters.end()){
+                        ERR_NEEDMOREPARAMS(socket, m_command);
+                        continue ;
+                    }
+                    ++it;
+                    t_str_c& target = *(it);
+                    if (um.checkForNickname(target) == false){
+                        ERR_NOSUCHNICK(socket, target);
+                        continue ;
+                    }
+                    int socketTarget = um.getSocket(target);
+                    if (channel->isMember(socketTarget) == false){
+                        ERR_USERNOTINCHANNEL(socket, socketTarget, channelName);
+                        continue ;
+                    }
 
+                    if (plusorminus == '-'){
+                        um.addUserToChannel(socketTarget, USER, channelName);
+                    }
+                    else if (plusorminus == '+'){
+                        um.addUserToChannel(socketTarget, OPERATOR, channelName);
+                    }
+                    /* /@note operator reply or channel broadcast */
 				}
 				else if (modechar == 'l'){
-				
+
 				}
 				RPL_CHANNELMODEIS(socket, channelName, std::string(1,plusorminus) + modechar, "");
                 /* note think we need to broadcast this! */
