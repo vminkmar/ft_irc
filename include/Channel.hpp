@@ -64,7 +64,8 @@ class Channel
         
         bool isInviteOnly()    const;
         bool isTopicEditable() const;
-        bool isChannelKey()    const; /* @note might not be needed */
+        /* changed !*/
+        bool isChannelKey()    const;
         bool isFull()          const;
         
         /* <------ member functions -----> */
