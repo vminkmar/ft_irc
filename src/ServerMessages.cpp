@@ -2,6 +2,8 @@
 
 #include "../include/Server.hpp" // needed for Server class
 
+#include <stdlib.h> // needed for atoi() (linux)
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server messages */
 
 void Server::CMD_CAP(int socket)
