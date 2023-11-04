@@ -33,7 +33,7 @@ class Channel
         
         bool            m_inviteOnly;
         bool            m_topicEditable;
-        bool            m_channelKey;
+        bool            m_channelKey; /* @note might not be needed */
 
     public:
   
@@ -52,7 +52,7 @@ class Channel
         
         void toggleInviteOnly();
         void toggleTopicEditable();
-        void toggleChannelKey();
+        void toggleChannelKey(); /* @note might not be needed */
         
         /* <------ getters -----> */
         std::string const&     getName()          const;
@@ -64,7 +64,7 @@ class Channel
         
         bool isInviteOnly()    const;
         bool isTopicEditable() const;
-        bool isChannelKey()    const;
+        bool isChannelKey()    const; /* @note might not be needed */
         bool isFull()          const;
         
         /* <------ member functions -----> */
