@@ -41,9 +41,8 @@
 
 class Server{
     
-
 	struct Bot{
-		int socket;
+		int    socket;
 		User * self;
 	};
 
@@ -79,7 +78,7 @@ class Server{
     public:
 	
         UserManagement um;
-		struct Bot     marvin;
+		struct Bot     Marvin;
 
         /* <------ constructors -----> */
         Server();
@@ -95,7 +94,7 @@ class Server{
         void  getCommand  (t_str&   message);
         // void getPortAndPasswd(char **argv); /* @note no implement. */
 
-        void createSocket(); /* this function essent. runs the whole server */
+        void start(); /* this function essent. runs the whole server */
         
         /* <------ setup -----> */
         void runServer     ();

@@ -46,7 +46,7 @@ void Server::createBot(){
 }
 
 
-void Server::createSocket(){
+void Server::start(){
   
     /* get sizeof of struct sockaddr_in address */
     this->m_addrlen = sizeof(this->address);
@@ -122,11 +122,11 @@ void Server::acceptClients(){
     this->m_pollfds.push_back(newClient);
 	um.addUser(newSocket);
 	if (m_pollfds.size() == 2){
-		marvin.socket = newSocket;
-		marvin.self = um.getUser(marvin.socket);
-		marvin.self->setUsername("Bot");
-		marvin.self->setNickname("Marvin");
-		marvin.self->toggleWelcomedStatus();
+		Marvin.socket = newSocket;
+		Marvin.self = um.getUser(Marvin.socket);
+		Marvin.self->setUsername("Bot");
+		Marvin.self->setNickname("Marvin");
+		Marvin.self->toggleWelcomedStatus();
 	}
     this->m_pollfds[0].revents = 0; /* current event */
 }

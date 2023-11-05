@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     Server server;
     signal(SIGINT, Server::signal_handler);
   // server.getPortAndPasswd(argv);
-    server.createSocket();
+    server.start();
 }
 
 // -------------------------------------------------------------------------- //

@@ -196,13 +196,13 @@ void Server::CMD_PRIVMSG(int socket)
 
             if (m_trail == "!server")
             {
-                RPL_PRIVMSG(marvin.socket, um.getNickname(socket),
+                RPL_PRIVMSG(Marvin.socket, um.getNickname(socket),
                             "Number of Users on server: " +
                                 itostr(m_pollfds.size() - 2));
             }
             else
             {
-                RPL_PRIVMSG(marvin.socket, um.getNickname(socket),
+                RPL_PRIVMSG(Marvin.socket, um.getNickname(socket),
                             "I am Marvin! Ask me anything...");
             }
         }
@@ -225,7 +225,7 @@ void Server::CMD_PRIVMSG(int socket)
             {
                 t_str_c msg =
                     "Operator: " + um.getChannelOperatorNicknames(target);
-                broadcast(um.getNickname(marvin.socket), target, "", msg,
+                broadcast(um.getNickname(Marvin.socket), target, "", msg,
                           "PRIVMSG");
             }
             else
@@ -587,7 +587,7 @@ void Server::CMD_MODE(int socket)
             t_str msg = "Channel mode changed with: "
                         + std::string(1, plusorminus)
                         + modechar + " " + param;
-            broadcast(um.getNickname(marvin.socket),
+            broadcast(um.getNickname(Marvin.socket),
                       channelName,
                       "",
                       msg,
@@ -612,7 +612,7 @@ void Server::createChannelBy(int socket, t_str_c &channelName,
 
     um.addChannel(channelName);
     um.addUserToChannel(socket, OPERATOR, channelName);
-    um.addUserToChannel(marvin.socket, USER, channelName);
+    um.addUserToChannel(Marvin.socket, USER, channelName);
 
     if (channelKey.empty() == false)
     {
