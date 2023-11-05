@@ -525,9 +525,8 @@ void Server::CMD_MODE(int socket)
 
                     if (target.find_first_not_of("0123456789") != std::string::npos)
                     {
-                        ERR_UNKNOWNMODE(socket, substr[pos], channelName);
-                        /* @note not perfect right now */
-                        /* mb implement own ERR message */
+                        t_str_c errMsg = substr + " " + target;
+                        ERR_MODEWRONGPARAM(socket, channelName, substr + " " + target);
                         continue;
                     }
 
@@ -536,13 +535,22 @@ void Server::CMD_MODE(int socket)
                     channel->setUserLimit(newUserLimit);
                 }
             }
+
             t_str param;
             if(it != m_parameters.end()){
                 param = *it;
             }
-            RPL_CHANNELMODEIS(socket, socket, channelName, std::string(1, plusorminus) + modechar, param);
-            broadcast(um.getNickname(socket), channelName, "", "Channel mode changed with: " + std::string(1, plusorminus) + modechar + " " + param, "PRIVMSG");
-            //broadcast(um.getNickname(socket), channelName, param, std::string(1, plusorminus) + modechar, "MODE");
+
+            RPL_CHANNELMODEIS(socket,
+                              socket,
+                              channelName,
+                              std::string(1, plusorminus) + modechar, param);
+            broadcast(um.getNickname(socket),
+                      channelName,
+                      "",
+                      "Channel mode changed with: "
+                      + std::string(1, plusorminus) + modechar + " " + param,
+                      "PRIVMSG");
         }
     }
 }

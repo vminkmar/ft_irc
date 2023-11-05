@@ -268,12 +268,18 @@ void Server::ERR_USERNOTINCHANNEL(int socketSender,
 void Server::ERR_UNKNOWNMODE(int socketSender, char unknownChar, t_str_c& channelName){
 	log_err("Wrong Mode for Channel");
 	t_str str = "472 " + std::string(1, unknownChar) + " :is unknown mode char to me for " + channelName + "\r\n";
-  um.appendToBuffer(socketSender, str, OUTPUT);
+    um.appendToBuffer(socketSender, str, OUTPUT);
+}
 
+void Server::ERR_MODEWRONGPARAM(int socketSender, t_str_c& channelName, t_str_c& message){
+	log_err("Wrong Mode Parameters");
+    t_str str = "472 " + message + " :is a wrong mode parameter for " + channelName + "\r\n";
+    um.appendToBuffer(socketSender, str, OUTPUT);
 }
 
 void Server::ERR_UNKNOWNCOMMAND(int socketSender){
 	t_str str = "421 " + m_parameters[0] + " :Unknown command" "\r\n";
   um.appendToBuffer(socketSender, str, OUTPUT);
 }
+
 // -------------------------------------------------------------------------- //
