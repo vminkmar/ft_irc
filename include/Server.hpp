@@ -93,7 +93,6 @@ class Server{
         /* <------ setup -----> */
         void runServer     ();
         void error         (t_str str);
-        void socketClosed  (int i);
         void acceptClients ();
         void cleanUpSockets();
 

@@ -9,6 +9,7 @@
 #include <cstdlib>   // needed for exit() (linux compilation)
 #include <iostream>  // needed for std::cout, std::endl
 #include <sstream>   // needed for std::stringstream
+#include <fcntl.h>
 
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
@@ -55,7 +56,7 @@ void Server::createSocket(){
     if (listen(this->m_server_fd, 10) < 0){
         error("listen");
     }
-
+	fcntl(m_server_fd, F_SETFL, O_NONBLOCK);
     struct pollfd newServer;
     newServer.fd = m_server_fd;
     newServer.events = POLLIN;
@@ -85,18 +86,13 @@ void Server::acceptClients(){
          error("accept");
     }
 
-    struct pollfd newClient; 
+    struct pollfd newClient;
+	fcntl(newSocket, F_SETFL, O_NONBLOCK);
     newClient.fd = newSocket;
     newClient.events = POLLIN | POLLOUT;
 		newClient.revents = 0;
     this->m_pollfds.push_back(newClient);
-
-    try{
-			um.addUser(newSocket);
-		}
-		catch(std::exception &e){
-			log_err(e.what());
-		}
+	um.addUser(newSocket);
     this->m_pollfds[0].revents = 0; /* current event */
 }
 
@@ -108,7 +104,7 @@ void Server::runServer(){
             continue;
 	    }
         if (it->revents & (POLLERR | POLLHUP | POLLNVAL)){
-            socketClosed(it->fd);
+            um.setOnlineStatus(it->fd, OFFLINE);
         }
         else if (it->revents & POLLIN){
             /* @note BUG: when just using /disconnect this condition is set */
@@ -141,21 +137,12 @@ void Server::cleanUpSockets(){
             it = m_pollfds.erase(it);
             log("Socket #" + itostr(socket) + " has been removed ("
                 + nickname + ")");
-						close(socket);
+			close(socket);
         }
         else{
             ++it;
         }
     }
-}
-
-void Server::socketClosed(int socket){
-    try{
-			um.setOnlineStatus(socket, OFFLINE);
-		}
-		catch (std::exception &e){
-			log_err(e.what());
-		}
 }
 
 void Server::sendMessages(int socket){
