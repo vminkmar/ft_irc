@@ -74,6 +74,8 @@ void Server::createSocket(){
         }
         runServer();
     }
+	close(m_server_fd);
+	/* @note close bot fd*/
 }
 
 void Server::acceptClients(){
