@@ -64,7 +64,8 @@ class UserManagement{
         t_str getUsernames     ()                     const;
         t_str getBuffer        (int socket, int flag) const;
         bool  getOnlineStatus  (int socket)           const;
-        bool  getWelcomedStatus(int socket)         const;
+        bool  getWelcomedStatus(int socket)           const;
+		User * getUser(int socket);
 
         /* <------ channel map operations-----> */
         void addChannel      (t_str_c& channelName);

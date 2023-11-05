@@ -28,7 +28,7 @@ User::User(const User &copy) : m_nickname(copy.m_nickname),
                                m_username(copy.m_username),
                                m_inputBuffer(copy.m_inputBuffer),
                                m_outputBuffer(copy.m_outputBuffer),
-															 m_onlineStatus(copy.m_onlineStatus),
+							   m_onlineStatus(copy.m_onlineStatus),
                                m_welcomed(copy.m_welcomed){
   print_log("copy constructor called");
 }

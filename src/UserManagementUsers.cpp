@@ -198,4 +198,11 @@ bool UserManagement::getWelcomedStatus(int socket) const{
     throw std::runtime_error("getWelcomedStatus: User not found!");
 }
 
+User * UserManagement::getUser(int socket){
+	t_um_users_it it = m_users.find(socket);
+	if (it != m_users.end()){
+		return &(m_users.find(socket)->second);
+	}
+	throw std::runtime_error("getUser: User not found!");
+}
 // -------------------------------------------------------------------------- //
