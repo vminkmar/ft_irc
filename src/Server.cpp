@@ -33,7 +33,7 @@ void Server::createBot(){
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 
-	if (getaddrinfo(HOST, std::to_string(PORT).c_str(), &hints, &servinfo) != 0) {
+	if (getaddrinfo(HOST, itostr(PORT).c_str(), &hints, &servinfo) != 0) {
 	    error("getaddrinfo");
 	}
 
