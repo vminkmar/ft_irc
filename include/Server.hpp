@@ -34,7 +34,8 @@
 #define CHAR_ALLOWED_MODS "itkol"
 
 /* DEFAULT MESSAGES */
-#define DEFMSG_PART "Goodbye!"
+#define DEFMSG_PART      "Goodbye!"
+#define DEFMSG_PROMOTION "I have been promoted to an Operator!"
 
 #define MAX_CLIENTS 512
 
@@ -120,6 +121,10 @@ class Server{
         void CMD_KICK   (int socket);
         void CMD_MODE   (int socket);
 
+        /* <------ server routines -----> */
+        void cleanEmptyChannels();
+        void autoPromoteOperator();
+
         /* <------ server messages helpers -----> */
         void      createChannelBy         (int socket,
                                            t_str_c& channelName,
@@ -133,7 +138,6 @@ class Server{
         t_str_c   sumParameters           (t_vec_str_cit start)       const;
         t_str_c   getPartMessage()                                    const;
         t_str_c   itostr                  (int i)                     const;
-        void      cleanEmptyChannels();
         bool      isErasable              (int socket)                const;
         void      broadcast               (t_str_c& sender,
                                            t_str_c& channelName,

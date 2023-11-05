@@ -227,17 +227,19 @@ void Server::Messages(int socket){
     else if (m_command == "KICK"){
         CMD_KICK(socket);
     }
-		else if (m_command == "MODE"){
+    else if (m_command == "MODE"){
         CMD_MODE(socket);
-		}
-	else
+	}
+    else{
 		ERR_UNKNOWNCOMMAND(socket);
+    }
     // else if (m_command == "PASS")
     //     comparePassword();
     // }
     
     /* @note error prone, if you access empty channels afterwards */
     cleanEmptyChannels();
+    autoPromoteOperator();
 
 }
 
@@ -483,6 +485,37 @@ void Server::signal_handler(int sig){
 	if(sig == SIGINT)
 		Server::serverRunning = false;
 	return ;
+}
+
+void Server::autoPromoteOperator()
+{
+    t_vec_str_c channelNames = split(um.getChannelNames(), ',');
+
+    for (t_vec_str_cit it = channelNames.begin();
+                       it != channelNames.end();
+                       ++it){
+
+        t_str_c& channelName = *it;
+        Channel * channel = um.getChannel(*it);
+
+        if (channel->hasOperator() == false){
+
+            int socketFirstUser = channel->getFirstUserSocket();
+            t_str_c& nicknameFirstUser = um.getNickname(socketFirstUser);
+
+            channel->addUser(socketFirstUser, OPERATOR);
+
+            t_str msg = t_str_c(DEFMSG_PROMOTION)
+                        + "(Last Operator left the channel)";
+
+            /* @note could let the bot broacast this message */
+            broadcast(nicknameFirstUser,
+                      channelName,
+                      "",
+                      msg,
+                      "PRIVMSG");
+        }
+    }
 }
 
 // void Server::getPortAndPasswd(char **argv) {
