@@ -348,7 +348,7 @@ void Server::parseIncomingMessage(t_str_c& incomingMessage, int socket){
     }
 }
 
-Server::t_str Server::getParameter(t_str_c& message){
+t_str Server::getParameter(t_str_c& message){
     size_t colon = message.find(":");
     if (colon != t_str::npos){
         t_str before = message.substr(0, colon);
@@ -382,7 +382,7 @@ void Server::error(t_str str){
 }
 
 
-Server::t_vec_str Server::split(t_str_c& parameter,
+t_vec_str Server::split(t_str_c& parameter,
                                 char delimiter) const{
     t_vec_str          split;
     t_str              token;
@@ -394,7 +394,7 @@ Server::t_vec_str Server::split(t_str_c& parameter,
     return split;
 }
 
-Server::t_str_c Server::sumParameters(t_vec_str_cit start) const{
+t_str_c Server::sumParameters(t_vec_str_cit start) const{
     if (start == m_parameters.end()){
         throw std::runtime_error("sum_parameter: Wrong iterator given!");
     }
@@ -410,14 +410,14 @@ Server::t_str_c Server::sumParameters(t_vec_str_cit start) const{
     return ss.str();
 }
 
-Server::t_str_c Server::getPartMessage() const{
+t_str_c Server::getPartMessage() const{
     if (m_parameters.size() >= 2){
         return sumParameters(m_parameters.begin() + 1);
     }
     return DEFMSG_PART;
 }
 
-Server::t_str_c Server::itostr(int i) const{
+t_str_c Server::itostr(int i) const{
     std::stringstream ss;
     ss << i;
     return ss.str();
