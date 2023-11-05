@@ -80,8 +80,8 @@ class Server{
 
 /* @note essentially all of this could be private at some point */
 
-				static bool              serverRunning;
-				static void signal_handler(int sig);
+		static bool serverRunning;
+		static void signal_handler(int sig);
 
         /* <------ getters -----> */
         t_str getParameter(t_str_c& message);
@@ -146,35 +146,50 @@ class Server{
                                            t_str_c& command);
 
         /* <------ server replies -----> */
-        void RPL_CAP       (int socket);
-        void RPL_JOIN      (int socketSender,
-                            int socketTarget,
-                            t_str_c& channelName);
-        void RPL_NAMREPLY  (int socket, t_str_c& channelName, t_str_c& members);
-        void RPL_NICKCHANGE(int socket, int socketTarget, t_str_c& newNickname, t_str_c& oldNickname);
-        void RPL_NOTOPIC   (int socket, t_str_c& channelName);
-        void RPL_PING      (int socket, t_str_c& serverName);
-        void RPL_QUIT      (int socketSender,
-                            int socketTarget,
-                            t_str_c& message);
-        void RPL_TOPIC     (int socket, t_str_c& channelName, t_str_c& topic);
-        void RPL_WELCOME   (int socket, t_str_c& username);
-        void RPL_PART      (int socketSender,
-                            int socketTarget,
-                            t_str_c& channelName,
-                            t_str_c& message);
-        void RPL_KICK      (int socketSender,
-                            int socketTarget,
-                            t_str_c& channelName,
-                            t_str_c& nicknameKicked,
-                            t_str_c& message);
-        void RPL_IFTOPIC   (int socket, t_str_c& channelName, t_str_c& topic);
-        void RPL_PRIVMSG   (int socket, t_str_c& target, t_str_c& message);
-        void RPL_INVITING  (int socketSender,
-                            int socketTarget,
-                            t_str_c& channelName,
-                            t_str_c& target);
-				void RPL_CHANNELMODEIS(int socket, int socketTarget, t_str_c& channelName, t_str_c& modechar, t_str_c& parameter);
+        void RPL_CAP          (int socket);
+        void RPL_JOIN         (int socketSender,
+                               int socketTarget,
+                               t_str_c& channelName);
+        void RPL_NAMREPLY     (int socket,
+                               t_str_c& channelName,
+                               t_str_c& members);
+        void RPL_NICKCHANGE   (int socket,
+                               int socketTarget,
+                               t_str_c& newNickname,
+                               t_str_c& oldNickname);
+        void RPL_NOTOPIC      (int socket, t_str_c& channelName);
+        void RPL_PING         (int socket, t_str_c& serverName);
+        void RPL_QUIT         (int socketSender,
+                               int socketTarget,
+                               t_str_c& message);
+        void RPL_TOPIC        (int socket,
+                               t_str_c& channelName,
+                               t_str_c& topic);
+        void RPL_WELCOME      (int socket, t_str_c& username);
+        void RPL_PART         (int socketSender,
+                               int socketTarget,
+                               t_str_c& channelName,
+                               t_str_c& message);
+        void RPL_KICK         (int socketSender,
+                               int socketTarget,
+                               t_str_c& channelName,
+                               t_str_c& nicknameKicked,
+                               t_str_c& message);
+        void RPL_IFTOPIC      (int socket,
+                               t_str_c& channelName,
+                               t_str_c& topic);
+        void RPL_PRIVMSG      (int socket,
+                               t_str_c& target,
+                               t_str_c& message);
+        void RPL_INVITING     (int socketSender,
+                               int socketTarget,
+                               t_str_c& channelName,
+                               t_str_c& target);
+        void RPL_CHANNELMODEIS(int socket,
+                               int socketTarget,
+                               t_str_c& channelName,
+                               t_str_c& modechar,
+                               t_str_c& parameter);
 
         /* <------ server errors -----> */
         void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);
@@ -195,11 +210,15 @@ class Server{
         void ERR_NORECIPIENT     (int socket, t_str_c& command);
         void ERR_NOTEXTTOSEND    (int socket);
         void ERR_USERNOTINCHANNEL(int socketSender,
-                                  int socketTarget, /* @note mb nick  better */
+                                  int socketTarget,
                                   t_str_c& channelName);
-		void ERR_UNKNOWNMODE     (int socket, char unknownChar, t_str_c& channelName);
-		void ERR_MODEWRONGPARAM  (int socketSender, t_str_c& channelName, t_str_c& message);
-		void ERR_UNKNOWNCOMMAND  (int socketSender);
+        void ERR_UNKNOWNMODE     (int socket,
+                                  char unknownChar,
+                                  t_str_c& channelName);
+        void ERR_MODEWRONGPARAM  (int socketSender,
+                                  t_str_c& channelName,
+                                  t_str_c& message);
+        void ERR_UNKNOWNCOMMAND  (int socketSender);
 
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;
@@ -207,9 +226,6 @@ class Server{
         void log_send       (int socket, t_str_c& message)      const;
         void log_err        (t_str_c& message)                  const;
         void log_vector     (t_str_c& name, t_vec_str_c& v)     const;
-
-        /* <------ else -----> */
-        void              printCommand()                        const;
 
 };
 

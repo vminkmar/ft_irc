@@ -343,12 +343,6 @@ Server::t_str Server::getParameter(t_str_c& message){
     }
 }
 
-void Server::printCommand() const{
-    if (!this->m_command.empty()){
-        log("Command: " + this->m_command);
-    }
-}
-
 void Server::getCommand(t_str& message){
     size_t end = message.find(" ");
     this->m_command = message.substr(0, end);
