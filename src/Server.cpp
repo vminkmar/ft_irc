@@ -475,14 +475,10 @@ void Server::broadcast(t_str_c& sender,
             continue ;
         }
         if (command == "PRIVMSG"){
-            t_str str = ":" + um.getNickname(socketSender) + "!"
-                        + um.getUsername(socketSender) + "@"
-                        + HOST + " PRIVMSG " + channelName + " :"
-                        + message + "\r\n";
-            /* @note this is a diry workaround */
-            /* we should think about how we approach this differently */
-            um.appendToBuffer(socketTarget, str, OUTPUT);
-
+            RPL_PRIVMSG_CHANNEL(socketSender,
+                                socketTarget,
+                                channelName,
+                                message);
         }
         else if (command == "QUIT"){
             RPL_QUIT(socketSender, socketTarget, message);

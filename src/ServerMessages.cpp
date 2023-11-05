@@ -558,17 +558,15 @@ void Server::CMD_MODE(int socket)
             if(it != m_parameters.end()){
                 param = *it;
             }
-
             RPL_CHANNELMODEIS(socket,
                               socket,
                               channelName,
                               std::string(1, plusorminus) + modechar, param);
-            broadcast(um.getNickname(socket),
-                      channelName,
-                      "",
-                      "Channel mode changed with: "
-                      + std::string(1, plusorminus) + modechar + " " + param,
-                      "PRIVMSG");
+            /* RPL_PRIVMSG(marvin.socket,
+                        channelName,
+                        "Channel mode changed with: "
+                        + std::string(1, plusorminus)
+                        + modechar + " " + param); */
         }
     }
 }

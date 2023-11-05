@@ -130,6 +130,16 @@ void Server::RPL_PRIVMSG(int socketSender, t_str_c& target, t_str_c& message){
     um.appendToBuffer(um.getSocket(target), str, OUTPUT);
 }
 
+void Server::RPL_PRIVMSG_CHANNEL(int socketSender, int socketTarget, t_str_c& channelName, t_str_c& message){
+    log("Channel message prepared for " + channelName
+        + " by socket#" + itostr(socketSender));
+    t_str str = ":" + um.getNickname(socketSender) + "!"
+                + um.getUsername(socketSender) + "@"
+                + HOST + " PRIVMSG " + channelName + " :"
+                + message + "\r\n";
+    um.appendToBuffer(socketTarget, str, OUTPUT);
+}
+
 void Server::RPL_INVITING(int socketSender,
                           int socketTarget,
                           t_str_c& channelName,
