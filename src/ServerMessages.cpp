@@ -506,7 +506,6 @@ void Server::CMD_MODE(int socket)
                     {
                         um.addUserToChannel(socketTarget, OPERATOR, channelName);
                     }
-                    /* /@note operator reply or channel broadcast */
                 }
                 else if (modechar == 'l')
                 {
