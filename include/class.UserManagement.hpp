@@ -1,10 +1,10 @@
 // -------------------------------------------------------------------------- //
 
-#ifndef USERMANAGEMENT_HPP
-# define USERMANAGEMENT_HPP
+#ifndef CLASS_USERMANAGEMENT_HPP
+# define CLASS_USERMANAGEMENT_HPP
 
-#include "Channel.hpp" // needed for Channel class, UserPrivilege ENUM
-#include "User.hpp"    // needed for User class
+#include "class.Channel.hpp" // needed for Channel class, UserPrivilege ENUM
+#include "class.User.hpp"    // needed for User class
 
 #include <map>    // needed for std::map
 #include <string> // needed for std::string
@@ -89,6 +89,6 @@ class UserManagement{
 
 };
 
-#endif // USERMANAGEMENT_HPP
+#endif // CLASS_USERMANAGEMENT_HPP
 
 // -------------------------------------------------------------------------- //

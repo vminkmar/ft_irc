@@ -1,6 +1,6 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/UserManagement.hpp" // needed for UserManagement class
+#include "../include/class.UserManagement.hpp" // needed for UserManagement
 
 #include <sstream>   // needed for std::stringstream
 #include <stdexcept> // needed for std::runtime_error

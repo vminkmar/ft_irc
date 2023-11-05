@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/User.hpp" // needed for User class, std::string, ENUM
-#include <iostream>            // needed for std::ostream
+#include "../include/class.User.hpp" // needed for User class, std::string, ENUM
+#include <iostream>                  // needed for std::ostream
 
 #ifndef DEBUG
 #define DEBUG 0

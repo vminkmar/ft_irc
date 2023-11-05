@@ -1,8 +1,8 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/Server.hpp"         // needed for Server class
-#include "../include/UserManagement.hpp" // needed for UserManagement class
-#include "../include/utils.hpp"          // needed for sumParameters
+#include "../include/class.Server.hpp"         // needed for Server class
+#include "../include/class.UserManagement.hpp" // needed for UserManagement class
+#include "../include/utils.hpp"                // needed for sumParameters
 
 #include <unistd.h> // needed for read()
 #include <cstring>  // needed for memset() (linux compilation)

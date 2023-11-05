@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------------- //
 
-#ifndef CHANNEL_HPP
-# define CHANNEL_HPP
+#ifndef CLASS_CHANNEL_HPP
+# define CLASS_CHANNEL_HPP
 
 #include <string>   // needed for std::string
 #include <map>      // needed for std::map <-- C11 would be unordered_map
@@ -77,6 +77,6 @@ class Channel
 
 std::ostream& operator<<(std::ostream& os, Channel const& c);
 
-#endif // CHANNEL_HPP
+#endif // CLASS_CHANNEL_HPP
 
 // -------------------------------------------------------------------------- //

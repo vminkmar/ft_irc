@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------------- //
 
-#ifndef SERVERCONFIG_HPP
-# define SERVERCONFIG_HPP
+#ifndef CLASS_SERVERCONFIG_HPP
+# define CLASS_SERVERCONFIG_HPP
 
 /* MAIN SETTINGS */
 #define PORT       6667
@@ -18,6 +18,6 @@
 #define DEFMSG_PART      "Goodbye!"
 #define DEFMSG_PROMOTION "I have been promoted to an Operator!"
 
-#endif // SERVERCONFIG_HPP
+#endif // CLASS_SERVERCONFIG_HPP
 
 // -------------------------------------------------------------------------- //

@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/Server.hpp" // needed for Server class
-#include "../include/utils.hpp"  // needed for itostr()
+#include "../include/class.Server.hpp" // needed for Server class
+#include "../include/utils.hpp"        // needed for itostr()
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server replies */
 

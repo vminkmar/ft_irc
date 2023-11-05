@@ -13,11 +13,15 @@ CFLAGS          := -Wall -Wextra -Werror -std=c++98 -I $(INCLUDE) $(DEBUG_FLAG)
 VPATH           := src/
 
 SRC_MAIN        := main.cpp
-SRC_SOURCES     := Server.cpp ServerMessages.cpp ServerResponses.cpp ServerLog.cpp\
-                   UserManagement.cpp \
-                   UserManagementUsers.cpp UserManagementChannels.cpp \
-                   Channel.cpp \
-                   User.cpp \
+SRC_SOURCES     := class.Server.cpp\
+                   class.Server.Messages.cpp\
+                   class.Server.Responses.cpp\
+                   class.Server.Log.cpp\
+                   class.UserManagement.cpp\
+                   class.UserManagement.Users.cpp\
+                   class.UserManagement.Channels.cpp\
+                   class.Channel.cpp\
+                   class.User.cpp\
                    utils.cpp
 SRC_FULL_SOURCES= $(foreach src,$(SRC_SOURCES),src/$(src))
 

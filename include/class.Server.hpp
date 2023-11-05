@@ -1,36 +1,38 @@
 // -------------------------------------------------------------------------- //
 
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#ifndef CLASS_SERVER_HPP
+# define CLASS_SERVER_HPP
 
-#include "UserManagement.hpp" // needed for UserManagement class
-#include "ServerConfig.hpp"   // needed for MACROS
-#include "typedefs.hpp"       // needed for Types and typedefs
-
+#include "class.UserManagement.hpp" // needed for UserManagement class
+#include "class.Server.Config.hpp"  // needed for MACROS
+#include "typedefs.hpp"             // needed for Types and typedefs
 #include <netinet/in.h> // needed for sockaddr_in
 #include <csignal>	    // needed for signal handling
 
 class Server{
     
-    public:  /* constructors */
+    public:
 
         Server();
         ~Server();
 
-    public:  /* public variables */
-
         static bool serverRunning;
 
-    public:  /* public member functions */
-
         void        start();
-        void        getPortAndPasswd(char **argv); /* @note can possibly be done inside the class too */
 
-		static void signal_handler(int sig); /* @note cant we handle signal inside the class ? */
+        /* @note think we can handle these two inside the class (private) */
+        void        getPortAndPasswd(char **argv);
+		static void signal_handler(int sig);
 
-    private: /* private variables */
+// ------------------ private variables --------------------------- //
+    
+    private:
+        
+        /* @note prob needless at this point */
+        void error (t_str str);
+        
 
-        /* settings */
+        /* setup */
         int                      m_port;
         int                      m_maxClients;
         t_str                    m_passwd;
@@ -47,7 +49,7 @@ class Server{
         t_str                    m_trail;
 
         /* user/channel handling */
-        UserManagement um;
+        UserManagement           um;
 
         /* server bot */
         struct ServerBot{
@@ -55,16 +57,16 @@ class Server{
             User * self;
         }                       Marvin;
 
-    private: /* private member functions */
+// ------------------ private functions --------------------------- // 
 
-        void error         (t_str str);
-
-        /* setup settings and connection */
+    private:
+        
+        /* setup and connection */
         void comparePassword         ();
-        void createBot();
         void acceptClients ();
+        void createBot();
 
-        /* <------ server routine -----> */
+        /* <------ server routine (connection <-> command parsing)-----> */
         void routine();
         void receiveMessages (int i);
         void sendMessages    (int i);
@@ -119,7 +121,6 @@ class Server{
         void CMD_MODE   (int socket);
 
         /* success replies */
-
         /* @note could add a server variable socketSender / socketTarget */
         void RPL_CAP            (int socket);
         void RPL_JOIN           (int socketSender,
@@ -171,7 +172,6 @@ class Server{
                                  t_str_c& parameter);
 
         /* error replies */
-
         /* @note prob dont have to pass the command */
         /* @note would benefit from server socketSender/socketTarget var too */
         void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);
@@ -204,6 +204,6 @@ class Server{
 
 };
 
-#endif // SERVER_HPP
+#endif // CLASS_SERVER_HPP
 
 // -------------------------------------------------------------------------- //

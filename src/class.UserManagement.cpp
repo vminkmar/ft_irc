@@ -1,7 +1,8 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/UserManagement.hpp" // needed for UserManagement class
-#include <iostream>                      // needed for std::cout, std::endl
+#include "../include/class.UserManagement.hpp" // needed for UserManagement
+
+#include <iostream> // needed for std::cout, std::endl
 
 #ifndef DEBUG
 #define DEBUG 0
@@ -12,19 +13,23 @@
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> non-class functions */
 
-static inline void print_log(std::string message){
-  if (DEBUG){ 
+static inline void print_log(std::string message)
+{
+  if (DEBUG)
+  { 
     std::cerr << YELLOW << "User Management: " << message << RESET << std::endl;
   }
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-UserManagement::UserManagement(){
+UserManagement::UserManagement()
+{
     print_log("default constructor called");
 }
 
-UserManagement::~UserManagement(){
+UserManagement::~UserManagement()
+{
     print_log("destructor called");
 }
 

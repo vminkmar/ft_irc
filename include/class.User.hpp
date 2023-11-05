@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------------- //
 
-#ifndef USER_HPP
-# define USER_HPP
+#ifndef CLASS_USER_HPP
+# define CLASS_USER_HPP
 
 #include <string> // needed for std::string
 
@@ -46,6 +46,6 @@ class User{
 
 std::ostream& operator<<(std::ostream &os, const User &user);
 
-#endif // USER_HPP
+#endif // CLASS_USER_HPP
 
 // -------------------------------------------------------------------------- //

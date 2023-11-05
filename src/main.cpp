@@ -1,6 +1,6 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/Server.hpp"
+#include "../include/class.Server.hpp"
 
 int main(int argc, char *argv[]) {
     (void)argc;

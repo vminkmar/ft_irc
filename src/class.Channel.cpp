@@ -1,6 +1,6 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/Channel.hpp" // needed for Channel class
+#include "../include/class.Channel.hpp" // needed for Channel class
 
 #include <iostream>  // needed for std::cerr, std::endl
 
