@@ -41,6 +41,12 @@
 
 class Server{
     
+
+	struct Bot{
+		int socket;
+		User * self;
+	};
+
     private:
 
         typedef std::string               t_str;
@@ -73,13 +79,14 @@ class Server{
     public:
 	
         UserManagement um;
+		struct Bot     marvin;
 
         /* <------ constructors -----> */
         Server();
         ~Server();
 
 /* @note essentially all of this could be private at some point */
-
+		void createBot();
 		static bool serverRunning;
 		static void signal_handler(int sig);
 

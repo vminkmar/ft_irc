@@ -10,6 +10,8 @@
 #include <iostream>  // needed for std::cout, std::endl
 #include <sstream>   // needed for std::stringstream
 #include <fcntl.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
@@ -19,6 +21,30 @@ Server::~Server(){};
 bool Server::serverRunning = true;
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
+
+
+void Server::createBot(){
+	int botSocket = socket(AF_INET, SOCK_STREAM, 0);
+	struct sockaddr_in serverAddress;
+	struct addrinfo hints;
+	struct addrinfo *servinfo;
+
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+
+	if (getaddrinfo(HOST, std::to_string(PORT).c_str(), &hints, &servinfo) != 0) {
+	    error("getaddrinfo");
+	}
+
+	serverAddress = *((struct sockaddr_in *)(servinfo->ai_addr));
+	if (connect(botSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {
+	    error("In connect");
+	}
+
+	freeaddrinfo(servinfo);
+}
+
 
 void Server::createSocket(){
   
@@ -61,6 +87,7 @@ void Server::createSocket(){
     newServer.fd = m_server_fd;
     newServer.events = POLLIN;
     m_pollfds.push_back(newServer);
+	createBot();
     while (Server::serverRunning == true){
         /* waits for event on filedescriptor */
         int ret = poll(this->m_pollfds.data(), m_pollfds.size(), 100);
@@ -94,6 +121,13 @@ void Server::acceptClients(){
 		newClient.revents = 0;
     this->m_pollfds.push_back(newClient);
 	um.addUser(newSocket);
+	if (m_pollfds.size() == 1){
+		marvin.socket = newSocket;
+		marvin.self = um.getUser(marvin.socket);
+		marvin.self->setUsername("Bot");
+		marvin.self->setNickname("Marvin");
+		marvin.self->toggleWelcomedStatus();
+	}
     this->m_pollfds[0].revents = 0; /* current event */
 }
 
@@ -129,7 +163,7 @@ bool Server::isErasable(int socket) const{
 }
 
 void Server::cleanUpSockets(){
-    for(t_vec_pollfd_it it = m_pollfds.begin() + 1; it != m_pollfds.end();){
+    for(t_vec_pollfd_it it = m_pollfds.begin() + 2; it != m_pollfds.end();){
         int     socket = it->fd;
         t_str_c nickname = um.getNickname(it->fd);
         
