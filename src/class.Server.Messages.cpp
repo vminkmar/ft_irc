@@ -23,7 +23,7 @@ void Server::CMD_NICK(int socket)
         ERR_NONICKNAMEGIVEN(socket);
     }
     t_str_c &newNickname = m_parameters[0];
-    if (checkUnallowedCharacters(newNickname, CHAR_UNALLOWED_NICK) == true)
+    if (hasUnallowedChar(newNickname, CHAR_UNALLOWED_NICK) == true)
     {
         ERR_ERRONEUSNICKNAME(socket, newNickname);
     }

@@ -77,12 +77,13 @@ class Server{
         /* command parsing */
         void    Messages                (int socket);
         void    checkCompleteMessage    (int socket);
-        void    parseIncomingMessage    (t_str_c& incomingMessage, int socket);
-        bool    checkUnallowedCharacters(t_str_c& strToCheck,
-                                         t_str_c& unallowedChars)     const;
         t_str   getParameter            (t_str_c& message);
         void    getCommand              (t_str&   message);
         t_str_c getPartMessage()                                      const;
+        void    parseIncomingMessage    (t_str_c& incomingMessage,
+                                         int socket);
+        bool    hasUnallowedChar        (t_str_c& strToCheck,
+                                         t_str_c& unallowedChars)     const;
 
         /* user/channel handling */
         bool isErasable              (int socket)                     const;

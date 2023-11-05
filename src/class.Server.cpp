@@ -291,7 +291,7 @@ void Server::cleanEmptyChannels(){
     }
 }
 
-bool Server::checkUnallowedCharacters(t_str_c& stringToCheck,
+bool Server::hasUnallowedChar(t_str_c& stringToCheck,
                                       t_str_c& unallowedChars) const{
 	for(size_t i = 0; i < unallowedChars.length(); ++i){
 		size_t find = stringToCheck.find(unallowedChars[i]);
