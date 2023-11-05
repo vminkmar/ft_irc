@@ -85,6 +85,7 @@ class UserManagement{
         t_str          getChannelNames()                         const;
         t_str          getChannelUsernames(t_str_c& channelName) const;
         t_str          getChannelNicknames(t_str_c& channelName) const;
+		t_str          getChannelOperatorNicknames(t_str_c& channelName) const;
 
 };
 

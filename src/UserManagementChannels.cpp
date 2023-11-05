@@ -104,6 +104,7 @@ std::string UserManagement::getChannelNames() const{
     return ss.str();
 }
 
+/* @note erase */
 std::string UserManagement::getChannelUsernames
                                         (std::string const& channelName) const{
     std::stringstream ss;
@@ -125,6 +126,7 @@ std::string UserManagement::getChannelUsernames
     return ss.str();
 }
 
+/* @note erase */
 std::string UserManagement::getChannelNicknames
                                         (std::string const& channelName) const{
     std::stringstream ss;
@@ -138,10 +140,25 @@ std::string UserManagement::getChannelNicknames
                 ss << " ";
             }
             ss << usr->second.getNickname();
-            //if (it->second == OPERATOR){
-                //ss << "(o)";
-            //}
         }
+    }
+    return ss.str();
+}
+
+std::string UserManagement::getChannelOperatorNicknames(t_str_c& channelName) const{
+    std::stringstream ss;
+    Channel::t_channel_users UserMap = getChannel(channelName)->getUserMap();
+	Channel::t_channel_users_cit last = --UserMap.end();
+    for (Channel::t_channel_users_cit it = UserMap.begin();
+                                      it != UserMap.end();
+                                      ++it){
+        t_um_users_cit usr = m_users.find(it->first);
+		if (it->second == OPERATOR){
+			ss << usr->second.getNickname();
+			if (it != last){
+				ss << " ";
+			}
+		}
     }
     return ss.str();
 }
