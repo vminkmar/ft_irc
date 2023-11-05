@@ -33,7 +33,7 @@ void Server::CMD_NICK(int socket)
     else
     {
 		t_str_c oldNickname = um.getNickname(socket);
-        if (um.getNickname(socket).empty() == false)
+        if (oldNickname.empty() == false)
         {
             RPL_NICKCHANGE(socket, socket, newNickname, oldNickname);
         }
