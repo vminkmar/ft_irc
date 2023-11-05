@@ -85,7 +85,6 @@ void Server::acceptClients(){
                      (socklen_t *)&m_addrlen)) < 0){
          error("accept");
     }
-
     struct pollfd newClient;
 	fcntl(newSocket, F_SETFL, O_NONBLOCK);
     newClient.fd = newSocket;
@@ -265,46 +264,50 @@ bool Server::checkUnallowedCharacters(t_str_c& stringToCheck,
 	return false;
 }
 
-void Server::parseIncomingMessage(t_str message, int socket){
+void Server::parseIncomingMessage(t_str_c& incomingMessage, int socket){
   
-    /* if buffer isnt empty, append message to buffer and use that as new msg */
-    if (!um.getBuffer(socket, INPUT).empty())
+    t_str message = incomingMessage;
+
+	if (!um.getBuffer(socket, INPUT).empty())
     {
-        t_str buffer = um.getBuffer(socket, INPUT);
+		t_str buffer = um.getBuffer(socket, INPUT);
         buffer.append(message);
         message = buffer;
     }
-
-    log_inc(socket, message.substr(0, message.find("\r\n")));
-    
+	log_inc(socket, incomingMessage);
     size_t pos = message.find("\r\n");
-    while (pos != t_str::npos)
-    {
-        t_str tmp = message.substr(0, pos);
+    if(pos != std::string::npos){
+		log("<inputBuffer> " + um.getBuffer(socket, INPUT));
+		while (pos != t_str::npos)
+    	{
+    	    t_str tmp = message.substr(0, pos);
 
-        getCommand(tmp);
+    	    getCommand(tmp);
 
-        tmp = getParameter(tmp);
+    	    tmp = getParameter(tmp);
 
-        log("<command> " + m_command);
-        for (t_vec_str_cit it = m_parameters.begin();
-                           it != m_parameters.end();
-                           ++it){
-            log("<param>   " + *it);
-        }
-        m_trail = tmp;
-        log("<trail>   " + m_trail);
+    	    log("<command> " + m_command);
+    	    for (t_vec_str_cit it = m_parameters.begin();
+    	                       it != m_parameters.end();
+    	                       ++it){
+    	        log("<param>   " + *it);
+    	    }
+    	    m_trail = tmp;
+    	    log("<trail>   " + m_trail);
 
-        message.erase(message.begin(), message.begin() + pos + 2);
-        if (!(um.getBuffer(socket, INPUT).empty())){
-            um.eraseBuffer(socket, 0, pos + 2, INPUT);
-        }
-        Messages(socket);
-        m_parameters.clear();
-        pos = message.find("\r\n");
-    }
-    if (!message.empty()){
-        um.appendToBuffer(socket, message, INPUT);
+    	    message.erase(message.begin(), message.begin() + pos + 2);
+    	    if (!(um.getBuffer(socket, INPUT).empty())){
+    	        um.eraseBuffer(socket, 0, pos + 2, INPUT);
+    	    }
+    	    Messages(socket);
+    	    m_parameters.clear();
+    	    pos = message.find("\r\n");
+    	}
+	}
+    else {
+		if(!incomingMessage.empty()){
+        	um.appendToBuffer(socket, incomingMessage, INPUT);
+		}
     }
 }
 
@@ -346,8 +349,14 @@ void Server::log(t_str_c& message) const{
 }
 
 void Server::log_inc(int socket, t_str_c& message) const{
-    std::cout << COLOUR_IN
-              << "\nIncoming: " << message << " <-- socket#" << itostr(socket)
+    
+	t_str tmp = message.substr(0, message.find("\r\n"));
+	if (tmp.empty() == true){
+		return ;
+	}
+	
+	std::cout << COLOUR_IN
+              << "\nIncoming: " << tmp << " <-- socket#" << itostr(socket)
               << RESET << std::endl;
 }
 

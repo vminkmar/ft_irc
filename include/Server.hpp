@@ -101,7 +101,7 @@ class Server{
         void checkCompleteMessage    (int socket);
         void sendMessages            (int i);
         void receiveMessages         (int i);
-        void parseIncomingMessage    (t_str message, int socket);
+        void parseIncomingMessage    (t_str_c& incomingMessage, int socket);
         void comparePassword         ();
         bool checkUnallowedCharacters(t_str_c& strToCheck,
                                       t_str_c& unallowedChars) const;
