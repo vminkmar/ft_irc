@@ -117,6 +117,13 @@ unsigned int Channel::getNumberOfUsers() const{
     return m_users.size();
 }
 
+int Channel::getFirstUserSocket() const{
+    if (m_users.begin() != m_users.end()){
+        return m_users.begin()->first;
+    }
+    throw std::runtime_error("getFirstUserSocket: No Users in Channel!");
+}
+
 bool Channel::isInviteOnly() const{
 	return m_inviteOnly;
 }
