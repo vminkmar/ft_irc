@@ -357,6 +357,7 @@ void Server::CMD_KICK(int socketSender)
         {
 
             t_str_c nicknameKicked = *itr;
+
             if (um.checkForNickname(nicknameKicked) == false)
             {
                 ERR_NOSUCHNICK(socketSender, nicknameKicked);
@@ -385,7 +386,6 @@ void Server::CMD_KICK(int socketSender)
 
 void Server::CMD_MODE(int socket)
 {
-
     if (m_parameters.size() < 2)
     {
         ERR_NEEDMOREPARAMS(socket, m_command);
@@ -412,70 +412,107 @@ void Server::CMD_MODE(int socket)
         return;
     }
 
-    bool ismode = true;
-    for (t_vec_str_cit it = m_parameters.begin() + 1; it != m_parameters.end(); ++it)
+    for (t_vec_str_cit it = m_parameters.begin() + 1;
+                       it != m_parameters.end();
+                       ++it)
     {
 
         t_str str = *it;
 
-        if (ismode == true)
+        if (it->find_first_of("+-") != 0)
         {
-            if (it->find_first_of("+-") != 0)
+            ERR_UNKNOWNMODE(socket, str[0], m_parameters[0]);
+            return;
+        }
+
+        t_str substr = str.substr(1, str.size());
+        size_t pos = substr.find_first_not_of(CHAR_ALLOWED_MODS);
+
+        if (pos != std::string::npos)
+        {
+            ERR_UNKNOWNMODE(socket, substr[pos], m_parameters[0]);
+            return;
+        }
+
+        char plusorminus = str[0];
+
+        for (t_str_cit sit = str.begin() + 1; sit != str.end(); ++sit)
+        {
+
+            char modechar = *sit;
+
+            if (modechar == 'i')
             {
-                ERR_UNKNOWNMODE(socket, str[0], m_parameters[0]);
-                return;
+                if ((plusorminus == '-' && channel->isInviteOnly() == true) ||
+                    (plusorminus == '+' && channel->isInviteOnly() == false))
+                {
+                    channel->toggleInviteOnly();
+                }
             }
-
-            t_str substr = str.substr(1, str.size());
-            size_t pos = substr.find_first_not_of(CHAR_ALLOWED_MODS);
-
-            if (pos != std::string::npos)
+            else if (modechar == 't')
             {
-                ERR_UNKNOWNMODE(socket, substr[pos], m_parameters[0]);
-                return;
+                if ((plusorminus == '-' && channel->isTopicEditable() == true) ||
+                    (plusorminus == '+' && channel->isTopicEditable() == false))
+                {
+                    channel->toggleTopicEditable();
+                }
             }
-
-            char plusorminus = str[0];
-
-            for (t_str_cit sit = str.begin() + 1; sit != str.end(); ++sit)
+            else if (modechar == 'k')
             {
+                if (plusorminus == '+')
+                {
+                    if ((it + 1) == m_parameters.end())
+                    {
+                        ERR_NEEDMOREPARAMS(socket, m_command);
+                        continue;
+                    }
+                    channel->setPassword(*(it + 1));
+                    ++it;
+                }
+                else
+                {
+                    channel->setPassword("");
+                }
+            }
+            else if (modechar == 'o')
+            {
+                if ((it + 1) == m_parameters.end())
+                {
+                    ERR_NEEDMOREPARAMS(socket, m_command);
+                    continue;
+                }
 
-                char modechar = *sit;
+                ++it;
+                t_str_c &target = *(it);
 
-                if (modechar == 'i')
+                if (um.checkForNickname(target) == false)
                 {
-                    if ((plusorminus == '-' && channel->isInviteOnly() == true) ||
-                        (plusorminus == '+' && channel->isInviteOnly() == false))
-                    {
-                        channel->toggleInviteOnly();
-                    }
+                    ERR_NOSUCHNICK(socket, target);
+                    continue;
                 }
-                else if (modechar == 't')
+                int socketTarget = um.getSocket(target);
+                if (channel->isMember(socketTarget) == false)
                 {
-                    if ((plusorminus == '-' && channel->isTopicEditable() == true) ||
-                        (plusorminus == '+' && channel->isTopicEditable() == false))
-                    {
-                        channel->toggleTopicEditable();
-                    }
+                    ERR_USERNOTINCHANNEL(socket, socketTarget, channelName);
+                    continue;
                 }
-                else if (modechar == 'k')
+
+                if (plusorminus == '-')
                 {
-                    if (plusorminus == '+')
-                    {
-                        if ((it + 1) == m_parameters.end())
-                        {
-                            ERR_NEEDMOREPARAMS(socket, m_command);
-                            continue;
-                        }
-                        channel->setPassword(*(it + 1));
-                        ++it;
-                    }
-                    else
-                    {
-                        channel->setPassword("");
-                    }
+                    um.addUserToChannel(socketTarget, USER, channelName);
                 }
-                else if (modechar == 'o')
+                else if (plusorminus == '+')
+                {
+                    um.addUserToChannel(socketTarget, OPERATOR, channelName);
+                }
+            }
+            else if (modechar == 'l')
+            {
+                if (plusorminus == '-')
+                {
+                    channel->setUserLimit(USER_LIMIT_MAX);
+                }
+                else
                 {
                     if ((it + 1) == m_parameters.end())
                     {
@@ -484,67 +521,28 @@ void Server::CMD_MODE(int socket)
                     }
 
                     ++it;
-                    t_str_c &target = *(it);
+                    t_str_c &target = *it;
 
-                    if (um.checkForNickname(target) == false)
+                    if (target.find_first_not_of("0123456789") != std::string::npos)
                     {
-                        ERR_NOSUCHNICK(socket, target);
-                        continue;
-                    }
-                    int socketTarget = um.getSocket(target);
-                    if (channel->isMember(socketTarget) == false)
-                    {
-                        ERR_USERNOTINCHANNEL(socket, socketTarget, channelName);
+                        ERR_UNKNOWNMODE(socket, substr[pos], channelName);
+                        /* @note not perfect right now */
+                        /* mb implement own ERR message */
                         continue;
                     }
 
-                    if (plusorminus == '-')
-                    {
-                        um.addUserToChannel(socketTarget, USER, channelName);
-                    }
-                    else if (plusorminus == '+')
-                    {
-                        um.addUserToChannel(socketTarget, OPERATOR, channelName);
-                    }
+                    int newUserLimit = atoi(target.c_str());
+
+                    channel->setUserLimit(newUserLimit);
                 }
-                else if (modechar == 'l')
-                {
-                    if (plusorminus == '-')
-                    {
-                        channel->setUserLimit(USER_LIMIT_MAX);
-                    }
-                    else
-                    {
-                        if ((it + 1) == m_parameters.end())
-                        {
-                            ERR_NEEDMOREPARAMS(socket, m_command);
-                            continue;
-                        }
-
-                        ++it;
-                        t_str_c &target = *it;
-
-                        if (target.find_first_not_of("0123456789") != std::string::npos)
-                        {
-                            ERR_UNKNOWNMODE(socket, substr[pos], channelName);
-                            /* @note not perfect right now */
-                            /* mb implement own ERR message */
-                            continue;
-                        }
-
-                        int newUserLimit = atoi(target.c_str());
-
-                        channel->setUserLimit(newUserLimit);
-                    }
-                }
-				t_str param; 
-				if(it != m_parameters.end()){
-					param = *it;
-				}
-                RPL_CHANNELMODEIS(socket, socket, channelName, std::string(1, plusorminus) + modechar, param);
-				broadcast(um.getNickname(socket), channelName, "", "Channel mode changed with: " + std::string(1, plusorminus) + modechar + " " + param, "PRIVMSG");
-                //broadcast(um.getNickname(socket), channelName, param, std::string(1, plusorminus) + modechar, "MODE");
             }
+            t_str param;
+            if(it != m_parameters.end()){
+                param = *it;
+            }
+            RPL_CHANNELMODEIS(socket, socket, channelName, std::string(1, plusorminus) + modechar, param);
+            broadcast(um.getNickname(socket), channelName, "", "Channel mode changed with: " + std::string(1, plusorminus) + modechar + " " + param, "PRIVMSG");
+            //broadcast(um.getNickname(socket), channelName, param, std::string(1, plusorminus) + modechar, "MODE");
         }
     }
 }
