@@ -569,6 +569,7 @@ void Server::createChannelBy(int socket, t_str_c &channelName, t_str_c &channelK
 
     um.addChannel(channelName);
     um.addUserToChannel(socket, OPERATOR, channelName);
+	um.addUserToChannel(marvin.socket, USER, channelName);
 
     if (channelKey.empty() == false)
     {
@@ -584,7 +585,7 @@ void Server::createChannelBy(int socket, t_str_c &channelName, t_str_c &channelK
 
     RPL_JOIN(socket, socket, channelName);
     RPL_NOTOPIC(socket, channelName);
-    RPL_NAMREPLY(socket, channelName, um.getNickname(socket));
+    RPL_NAMREPLY(socket, channelName, um.getChannelNicknames(channelName));
 }
 
 void Server::addUserToChannels(int socket, t_vec_str_c &channelNames, t_vec_str_c &channelKeys)
@@ -606,7 +607,6 @@ void Server::addUserToChannels(int socket, t_vec_str_c &channelNames, t_vec_str_
         t_str_c &channelName = *it;
         if (um.checkForChannel(channelName) == false)
         {
-
             createChannelBy(socket, channelName, enteredKey);
             continue;
         }

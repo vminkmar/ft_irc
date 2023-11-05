@@ -121,7 +121,7 @@ void Server::acceptClients(){
 		newClient.revents = 0;
     this->m_pollfds.push_back(newClient);
 	um.addUser(newSocket);
-	if (m_pollfds.size() == 1){
+	if (m_pollfds.size() == 2){
 		marvin.socket = newSocket;
 		marvin.self = um.getUser(marvin.socket);
 		marvin.self->setUsername("Bot");
@@ -282,7 +282,7 @@ void Server::cleanEmptyChannels(){
         
         t_str_c channelName = *it;
         Channel const* channel = um.getChannel(channelName);
-        if (channel->getNumberOfUsers() == 0){
+        if (channel->getNumberOfUsers() == 1){
             um.eraseChannel(channelName);
             log(channelName + " has been removed (no Users)");
         }
