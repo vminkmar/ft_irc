@@ -133,6 +133,15 @@ bool Channel::isFull() const{
     return m_users.size() >= m_userLimit;
 }
 
+bool Channel::hasOperator() const{
+    for (t_channel_users_cit it = m_users.begin(); it != m_users.end(); ++it){
+        if (it->second == OPERATOR){
+            return true;
+        }
+    }
+    return false;
+}
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
 void Channel::addUser(int socket, UserPrivilege up){

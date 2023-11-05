@@ -64,6 +64,7 @@ class Channel
         bool isTopicEditable() const;
         bool isChannelKey()    const;
         bool isFull()          const;
+        bool hasOperator()     const;
         
         /* <------ member functions -----> */
         void addUser   (int socket, UserPrivilege up); 
