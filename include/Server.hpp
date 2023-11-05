@@ -14,10 +14,14 @@
 
 class Server{
     
-	struct Bot{
-		int    socket;
-		User * self;
-	};
+    private:  /* Server Bot Marvin */
+
+        struct Bot{
+            int    socket;
+            User * self;
+        };
+
+		struct Bot Marvin;
 
     private:
 
@@ -50,7 +54,6 @@ class Server{
     public:
 	
         UserManagement um;
-		struct Bot     Marvin;
 
         /* <------ constructors -----> */
         Server();
