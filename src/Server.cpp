@@ -386,12 +386,10 @@ void Server::log(t_str_c& message) const{
 }
 
 void Server::log_inc(int socket, t_str_c& message) const{
-    
 	t_str tmp = message.substr(0, message.find("\r\n"));
 	if (tmp.empty() == true){
 		return ;
 	}
-	
 	std::cout << COLOUR_IN
               << "\nIncoming: " << tmp << " <-- socket#" << itostr(socket)
               << RESET << std::endl;

@@ -4,40 +4,13 @@
 # define SERVER_HPP
 
 #include "UserManagement.hpp" // needed for UserManagement class
+#include "ServerConfig.hpp"   // needed for MACROS
 
 #include <vector>       // needed for std::vector
 #include <string>       // needed for std::string
 #include <poll.h>       // needed for poll_fd
 #include <netinet/in.h> // needed for sockaddr_in
-#include <csignal>			// needed for signal handling
-
-//IP_ADDRESS 127.0.0.1
-#define PORT       6667
-#define HOST       "localhost"
-#define SERVERNAME std::string("Valhalla")
-
-/* LOG COLOURING */
-#define YELLOW             "\033[33m"
-#define PINK               "\033[95m"
-#define CYAN               "\033[36m"
-#define RED                "\033[31m"
-#define WHITE              "\033[37m"
-#define RESET              "\033[0m"
-#define COLOUR_LOG         WHITE
-#define COLOUR_INTERACTION WHITE
-#define COLOUR_IN          CYAN
-#define COLOUR_OUT         PINK
-#define COLOUR_ERR         RED
-
-#define CHAR_UNALLOWED_NICK " !@#$%^&*()[]{}<>:;,/"
-#define CHAR_ALLOWED_CHANNEL "#&+!"
-#define CHAR_ALLOWED_MODS "itkol"
-
-/* DEFAULT MESSAGES */
-#define DEFMSG_PART      "Goodbye!"
-#define DEFMSG_PROMOTION "I have been promoted to an Operator!"
-
-#define MAX_CLIENTS 512
+#include <csignal>	    // needed for signal handling
 
 class Server{
     
@@ -73,7 +46,6 @@ class Server{
         t_str                    m_command;
         t_str                    m_trail;
         t_str                    m_passwd;
-
 
     public:
 	
