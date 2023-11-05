@@ -6,6 +6,7 @@
 #include "class.UserManagement.hpp" // needed for UserManagement class
 #include "class.Server.Config.hpp"  // needed for MACROS
 #include "typedefs.hpp"             // needed for Types and typedefs
+
 #include <netinet/in.h> // needed for sockaddr_in
 #include <csignal>	    // needed for signal handling
 
@@ -31,7 +32,6 @@ class Server{
         /* @note prob needless at this point */
         void error (t_str str);
         
-
         /* setup */
         int                      m_port;
         int                      m_maxClients;
@@ -62,29 +62,28 @@ class Server{
     private:
         
         /* setup and connection */
-        void comparePassword         ();
-        void acceptClients ();
-        void createBot();
+        void acceptClients();
+        void createBot    ();
 
         /* <------ server routine (connection <-> command parsing)-----> */
-        void routine();
-        void receiveMessages (int i);
-        void sendMessages    (int i);
-        void cleanUpSockets();
-        void cleanEmptyChannels();
+        void routine            ();
+        void receiveMessages    (int i);
+        void sendMessages       (int i);
+        void cleanUpSockets     ();
+        void cleanEmptyChannels ();
         void autoPromoteOperator();
 
         /* command parsing */
         void    Messages                (int socket);
-        void    checkCompleteMessage    (int socket);
         t_str   getParameter            (t_str_c& message);
         void    getCommand              (t_str&   message);
-        t_str_c getPartMessage()                                      const;
+        t_str_c getPartMessage          ()                            const;
+        void    comparePassword         ();
         void    parseIncomingMessage    (t_str_c& incomingMessage,
                                          int socket);
         bool    hasUnallowedChar        (t_str_c& strToCheck,
                                          t_str_c& unallowedChars)     const;
-
+        
         /* user/channel handling */
         bool isErasable              (int socket)                     const;
         void eraseUserFromAllChannels(int socket);

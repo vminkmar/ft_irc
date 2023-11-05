@@ -15,6 +15,9 @@
 
 #include <arpa/inet.h> /*@note not needed in linux compilation */
 
+
+// ------------------ public --------------------------- //
+
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
 Server::Server() : m_maxClients(MAX_CLIENTS), m_command(""), m_trail(""){}
@@ -22,30 +25,6 @@ Server::~Server(){};
 bool Server::serverRunning = true;
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
-
-
-void Server::createBot(){
-	int botSocket = socket(AF_INET, SOCK_STREAM, 0);
-	struct sockaddr_in serverAddress;
-	struct addrinfo hints;
-	struct addrinfo *servinfo;
-
-	memset(&hints, 0, sizeof hints);
-	hints.ai_family = AF_INET;
-	hints.ai_socktype = SOCK_STREAM;
-
-	if (getaddrinfo(HOST, itostr(PORT).c_str(), &hints, &servinfo) != 0) {
-	    error("getaddrinfo");
-	}
-
-	serverAddress = *((struct sockaddr_in *)(servinfo->ai_addr));
-	if (connect(botSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {
-	    error("In connect");
-	}
-
-	freeaddrinfo(servinfo);
-}
-
 
 void Server::start(){
   
@@ -106,6 +85,32 @@ void Server::start(){
 	/* @note close bot fd*/
 }
 
+// void Server::getPortAndPasswd(char **argv) {
+//   std::string str = argv[1];
+//   for (size_t i = 0; i < str.size() - 1; i++)
+//     if (isnumber(str[i]) == false)
+//       error("Bad input as Port");
+//   this->m_port = atoi(argv[1]);
+// 	std::string passwd = argv[2];
+// 	m_passwd = passwd;
+// }
+
+
+void Server::signal_handler(int sig){
+	if(sig == SIGINT)
+		Server::serverRunning = false;
+	return ;
+}
+
+// ------------------ private --------------------------- //
+
+void Server::error(t_str str){
+    std::cerr << str << std::endl;
+    exit(1);
+}
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> setup and connection */
+
 void Server::acceptClients(){
     
     /* accepts client on newSocket */
@@ -132,6 +137,30 @@ void Server::acceptClients(){
     this->m_pollfds[0].revents = 0; /* current event */
 }
 
+void Server::createBot(){
+	int botSocket = socket(AF_INET, SOCK_STREAM, 0);
+	struct sockaddr_in serverAddress;
+	struct addrinfo hints;
+	struct addrinfo *servinfo;
+
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+
+	if (getaddrinfo(HOST, itostr(PORT).c_str(), &hints, &servinfo) != 0) {
+	    error("getaddrinfo");
+	}
+
+	serverAddress = *((struct sockaddr_in *)(servinfo->ai_addr));
+	if (connect(botSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {
+	    error("In connect");
+	}
+
+	freeaddrinfo(servinfo);
+}
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server routine */
+
 void Server::routine(){
     for (t_vec_pollfd_it it = m_pollfds.begin() + 1;
                          it != m_pollfds.end();
@@ -154,35 +183,20 @@ void Server::routine(){
     cleanUpSockets();
 }
 
-bool Server::isErasable(int socket) const{
-    if (um.checkForUser(socket) == true){
-        if (um.getOnlineStatus(socket) == OFFLINE){
-            return true;
-        }
+void Server::receiveMessages(int socket){
+    char buffer[30000];
+    memset(buffer, 0, sizeof(buffer));
+    int reading = read(socket, buffer, sizeof(buffer));
+    if (reading < 0){
+        LOG_ERR("Reading error in receiveMessages()");
     }
-    return false;
+    t_str message = buffer;
+    parseIncomingMessage(message, socket);
+    memset(buffer, 0, sizeof(buffer)); /* @note unneccessary? */
 }
 
-void Server::cleanUpSockets(){
-    for(t_vec_pollfd_it it = m_pollfds.begin() + 2; it != m_pollfds.end();){
-        int     socket = it->fd;
-        t_str_c nickname = um.getNickname(it->fd);
-        
-        if (isErasable(socket) == true){
-            um.eraseUser(socket);
-            it = m_pollfds.erase(it);
-            LOG("Socket #" + itostr(socket) + " has been removed ("
-                + nickname + ")");
-			close(socket);
-        }
-        else{
-            ++it;
-        }
-    }
-}
-
-void Server::sendMessages(int socket){
-    
+void Server::sendMessages(int socket)
+{
     while (um.getBuffer(socket, OUTPUT).empty() == false){
         
         t_str_c& outputBuffer = um.getBuffer(socket, OUTPUT);
@@ -203,21 +217,75 @@ void Server::sendMessages(int socket){
     }
 }
 
-void Server::receiveMessages(int socket){
-    char buffer[30000];
-    memset(buffer, 0, sizeof(buffer));
-    int reading = read(socket, buffer, sizeof(buffer));
-    if (reading < 0){
-        LOG_ERR("Reading error in receiveMessages()");
+void Server::cleanUpSockets(){
+    for(t_vec_pollfd_it it = m_pollfds.begin() + 2; it != m_pollfds.end();){
+        int     socket = it->fd;
+        t_str_c nickname = um.getNickname(it->fd);
+        
+        if (isErasable(socket) == true){
+            um.eraseUser(socket);
+            it = m_pollfds.erase(it);
+            LOG("Socket #" + itostr(socket) + " has been removed ("
+                + nickname + ")");
+			close(socket);
+        }
+        else{
+            ++it;
+        }
     }
-
-    t_str message = buffer;
-    parseIncomingMessage(message, socket);
-    memset(buffer, 0, sizeof(buffer)); /* @note unneccessary? */
 }
 
+void Server::cleanEmptyChannels()
+{
+    t_vec_str_c channelNames = split(um.getChannelNames(), ',');
+    for (t_vec_str_cit it = channelNames.begin();
+                       it != channelNames.end();
+                       ++it){
+        
+        t_str_c channelName = *it;
+        Channel const* channel = um.getChannel(channelName);
+        if (channel->getNumberOfUsers() == 1){
+            um.eraseChannel(channelName);
+            LOG(channelName + " has been removed (no Users)");
+        }
+    }
+}
+
+void Server::autoPromoteOperator()
+{
+    t_vec_str_c channelNames = split(um.getChannelNames(), ',');
+
+    for (t_vec_str_cit it = channelNames.begin();
+                       it != channelNames.end();
+                       ++it){
+
+        t_str_c& channelName = *it;
+        Channel * channel = um.getChannel(*it);
+
+        if (channel->hasOperator() == false){
+
+            int socketFirstUser = channel->getFirstUserSocket();
+            t_str_c& nicknameFirstUser = um.getNickname(socketFirstUser);
+
+            channel->addUser(socketFirstUser, OPERATOR);
+
+            t_str msg = t_str_c(DEFMSG_PROMOTION)
+                        + "(Last Operator left the channel)";
+
+            /* @note could let the bot broacast this message */
+            broadcast(nicknameFirstUser,
+                      channelName,
+                      "",
+                      msg,
+                      "PRIVMSG");
+        }
+    }
+}
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> command parsing */
+
 void Server::Messages(int socket){
-    
+    /* @note switch statements! */
     if (m_command == "CAP"){
         CMD_CAP(socket);
     }
@@ -254,17 +322,49 @@ void Server::Messages(int socket){
     else if (m_command == "MODE"){
         CMD_MODE(socket);
 	}
-    else{
-		ERR_UNKNOWNCOMMAND(socket);
-    }
     // else if (m_command == "PASS")
     //     comparePassword();
     // }
-    
-    /* @note error prone, if you access empty channels afterwards */
+    else{
+		ERR_UNKNOWNCOMMAND(socket);
+    }
     cleanEmptyChannels();
     autoPromoteOperator();
+}
 
+t_str Server::getParameter(t_str_c& message){
+    size_t colon = message.find(":");
+    if (colon != t_str::npos){
+        t_str before = message.substr(0, colon);
+        t_str after = message.substr(colon + 1);
+        std::stringstream iss(before);
+        t_str token;
+        while (iss >> token){
+            m_parameters.push_back(token);
+        }
+        return (after);
+    }
+    else{
+        std::stringstream iss(message);
+        t_str token;
+        while (iss >> token){
+            this->m_parameters.push_back(token);
+        }
+        return ("");
+    }
+}
+
+void Server::getCommand(t_str& message){
+    size_t end = message.find(" ");
+    this->m_command = message.substr(0, end);
+    message.erase(message.begin(), message.begin() + end + 1);
+}
+
+t_str_c Server::getPartMessage() const{
+    if (m_parameters.size() >= 2){
+        return sumParameters(m_parameters.begin() + 1, m_parameters.end());
+    }
+    return DEFMSG_PART;
 }
 
 // void Server::comparePassword(){
@@ -275,35 +375,7 @@ void Server::Messages(int socket){
 // 		writeToOutputBuffer(ERR_PASSWD)
 // }
 
-void Server::cleanEmptyChannels(){
-    
-    t_vec_str_c channelNames = split(um.getChannelNames(), ',');
-    for (t_vec_str_cit it = channelNames.begin();
-                       it != channelNames.end();
-                       ++it){
-        
-        t_str_c channelName = *it;
-        Channel const* channel = um.getChannel(channelName);
-        if (channel->getNumberOfUsers() == 1){
-            um.eraseChannel(channelName);
-            LOG(channelName + " has been removed (no Users)");
-        }
-    }
-}
-
-bool Server::hasUnallowedChar(t_str_c& stringToCheck,
-                                      t_str_c& unallowedChars) const{
-	for(size_t i = 0; i < unallowedChars.length(); ++i){
-		size_t find = stringToCheck.find(unallowedChars[i]);
-		if(find != t_str::npos){
-			return true;
-        }
-	}
-	return false;
-}
-
 void Server::parseIncomingMessage(t_str_c& incomingMessage, int socket){
-  
     t_str message = incomingMessage;
 
 	if (!um.getBuffer(socket, INPUT).empty())
@@ -349,44 +421,142 @@ void Server::parseIncomingMessage(t_str_c& incomingMessage, int socket){
     }
 }
 
-t_str Server::getParameter(t_str_c& message){
-    size_t colon = message.find(":");
-    if (colon != t_str::npos){
-        t_str before = message.substr(0, colon);
-        t_str after = message.substr(colon + 1);
-        std::stringstream iss(before);
-        t_str token;
-        while (iss >> token){
-            m_parameters.push_back(token);
+bool Server::hasUnallowedChar(t_str_c& stringToCheck,
+                              t_str_c& unallowedChars) const
+{
+	for(size_t i = 0; i < unallowedChars.length(); ++i)
+    {
+		size_t find = stringToCheck.find(unallowedChars[i]);
+		if(find != t_str::npos)
+        {
+			return true;
         }
-        return (after);
-    }
-    else{
-        std::stringstream iss(message);
-        t_str token;
-        while (iss >> token){
-            this->m_parameters.push_back(token);
+	}
+	return false;
+}
+
+/* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> user/channel handling */
+
+bool Server::isErasable(int socket) const{
+    if (um.checkForUser(socket) == true){
+        if (um.getOnlineStatus(socket) == OFFLINE){
+            return true;
         }
-        return ("");
+    }
+    return false;
+}
+
+void Server::eraseUserFromAllChannels(int socket)
+{
+    t_vec_str_c channels = split(um.getChannelNames(), ',');
+    t_str_c &partMessage = getPartMessage();
+    t_str_c &nickname = um.getNickname(socket);
+
+    for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it)
+    {
+        t_str_c &channelName = *it;
+        if (um.getChannel(channelName)->isMember(socket) == true)
+        {
+            um.eraseUserFromChannel(socket, channelName);
+            RPL_PART(socket, socket, channelName, partMessage);
+            broadcast(nickname, channelName, "", partMessage, "PART");
+        }
     }
 }
 
-void Server::getCommand(t_str& message){
-    size_t end = message.find(" ");
-    this->m_command = message.substr(0, end);
-    message.erase(message.begin(), message.begin() + end + 1);
-}
-
-void Server::error(t_str str){
-    std::cerr << str << std::endl;
-    exit(1);
-}
-
-t_str_c Server::getPartMessage() const{
-    if (m_parameters.size() >= 2){
-        return sumParameters(m_parameters.begin() + 1, m_parameters.end());
+void Server::createChannelBy(int socket, t_str_c &channelName,
+                             t_str_c &channelKey)
+{
+    if (channelName.size() <= 1 || channelName.size() >= 50 ||
+        channelName.find_first_of(CHAR_ALLOWED_CHANNEL) != 0 ||
+        channelName.find_first_of(" ,\a") != t_str::npos)
+    {
+        ERR_NOSUCHCHANNEL(socket, channelName);
+        return;
     }
-    return DEFMSG_PART;
+
+    um.addChannel(channelName);
+    um.addUserToChannel(socket, OPERATOR, channelName);
+    um.addUserToChannel(Marvin.socket, USER, channelName);
+
+    if (channelKey.empty() == false)
+    {
+        Channel *channel = um.getChannel(channelName);
+        channel->setPassword(channelKey);
+        // channel->toggleChannelKey(); /* @note might not be needed */
+        LOG("Channel " + channelName + " created by " + um.getNickname(socket) +
+            " (password-protected)");
+    }
+    else
+    {
+        LOG("Channel " + channelName + " created by " + um.getNickname(socket));
+    }
+
+    RPL_JOIN(socket, socket, channelName);
+    RPL_NOTOPIC(socket, channelName);
+    RPL_NAMREPLY(socket, channelName, um.getChannelNicknames(channelName));
+}
+
+void Server::addUserToChannels(int socket, t_vec_str_c &channelNames,
+                               t_vec_str_c &channelKeys)
+{
+    t_vec_str_cit key = channelKeys.begin();
+
+    for (t_vec_str_cit it = channelNames.begin(); it != channelNames.end();
+         ++it)
+    {
+        /* @note possibly need to update this on an error */
+        /* @note should be fine though if its here */
+        t_str enteredKey;
+        if (key != channelKeys.end())
+        {
+            enteredKey = *key++;
+        }
+
+        t_str_c &channelName = *it;
+        if (um.checkForChannel(channelName) == false)
+        {
+            createChannelBy(socket, channelName, enteredKey);
+            continue;
+        }
+
+        Channel const *channel = um.getChannel(channelName);
+        if (channel->isInviteOnly() == true)
+        {
+
+            ERR_INVITEONLYCHAN(socket, channelName);
+            continue;
+        }
+
+        if (channel->isFull() == true)
+        {
+
+            ERR_CHANNELISFULL(socket, channelName);
+            continue;
+        }
+
+        if (enteredKey.empty() == false && channel->isChannelKey() == false)
+        {
+            LOG_ERR("Received password for non_pw channel");
+        }
+        else if (channel->isChannelKey() == true)
+        {
+            if (channel->getPassword() != enteredKey)
+            {
+                ERR_BADCHANNELKEY(socket, channel->getName());
+                continue;
+            }
+            um.addUserToChannel(socket, USER, channelName);
+        }
+        else
+        {
+            um.addUserToChannel(socket, USER, channelName);
+        }
+        RPL_JOIN(socket, socket, channel->getName());
+        broadcast(um.getNickname(socket), channelName, "", m_trail, "JOIN");
+        RPL_IFTOPIC(socket, channel->getName(), channel->getTopic());
+        RPL_NAMREPLY(socket, channelName, um.getChannelNicknames(channelName));
+    }
 }
 
 void Server::broadcast(t_str_c& sender,
@@ -407,6 +577,7 @@ void Server::broadcast(t_str_c& sender,
         if (sender.empty() == false && sender == nickname){
             continue ;
         }
+        /* @note switch statements or even overloaded functions */
         if (command == "PRIVMSG"){
             RPL_PRIVMSG_CHANNEL(socketSender,
                                 socketTarget,
@@ -436,52 +607,5 @@ void Server::broadcast(t_str_c& sender,
 		}
     }
 }
-
-void Server::signal_handler(int sig){
-	if(sig == SIGINT)
-		Server::serverRunning = false;
-	return ;
-}
-
-void Server::autoPromoteOperator()
-{
-    t_vec_str_c channelNames = split(um.getChannelNames(), ',');
-
-    for (t_vec_str_cit it = channelNames.begin();
-                       it != channelNames.end();
-                       ++it){
-
-        t_str_c& channelName = *it;
-        Channel * channel = um.getChannel(*it);
-
-        if (channel->hasOperator() == false){
-
-            int socketFirstUser = channel->getFirstUserSocket();
-            t_str_c& nicknameFirstUser = um.getNickname(socketFirstUser);
-
-            channel->addUser(socketFirstUser, OPERATOR);
-
-            t_str msg = t_str_c(DEFMSG_PROMOTION)
-                        + "(Last Operator left the channel)";
-
-            /* @note could let the bot broacast this message */
-            broadcast(nicknameFirstUser,
-                      channelName,
-                      "",
-                      msg,
-                      "PRIVMSG");
-        }
-    }
-}
-
-// void Server::getPortAndPasswd(char **argv) {
-//   std::string str = argv[1];
-//   for (size_t i = 0; i < str.size() - 1; i++)
-//     if (isnumber(str[i]) == false)
-//       error("Bad input as Port");
-//   this->m_port = atoi(argv[1]);
-// 	std::string passwd = argv[2];
-// 	m_passwd = passwd;
-// }
 
 // -------------------------------------------------------------------------- //
