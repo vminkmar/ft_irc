@@ -17,7 +17,8 @@ SRC_SOURCES     := Server.cpp ServerMessages.cpp ServerResponses.cpp ServerLog.c
                    UserManagement.cpp \
                    UserManagementUsers.cpp UserManagementChannels.cpp \
                    Channel.cpp \
-                   User.cpp
+                   User.cpp \
+                   utils.cpp
 SRC_FULL_SOURCES= $(foreach src,$(SRC_SOURCES),src/$(src))
 
 SRC_FILES       := $(SRC_MAIN) $(SRC_SOURCES)

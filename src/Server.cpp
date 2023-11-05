@@ -2,6 +2,7 @@
 
 #include "../include/Server.hpp"         // needed for Server class
 #include "../include/UserManagement.hpp" // needed for UserManagement class
+#include "../include/utils.hpp"          // needed for sumParameters
 
 #include <unistd.h> // needed for read()
 #include <cstring>  // needed for memset() (linux compilation)
@@ -381,46 +382,11 @@ void Server::error(t_str str){
     exit(1);
 }
 
-
-t_vec_str Server::split(t_str_c& parameter,
-                                char delimiter) const{
-    t_vec_str          split;
-    t_str              token;
-    std::stringstream  ss(parameter);
-
-    while (std::getline(ss, token, delimiter)){
-        split.push_back(token);
-    }
-    return split;
-}
-
-t_str_c Server::sumParameters(t_vec_str_cit start) const{
-    if (start == m_parameters.end()){
-        throw std::runtime_error("sum_parameter: Wrong iterator given!");
-    }
-
-    std::stringstream ss;
-    t_vec_str_cit last = m_parameters.end() - 1;
-    for (t_vec_str_cit it = start; it != m_parameters.end(); ++it){
-        ss << *it;
-        if (it != last){
-            ss << " ";
-        }
-    }
-    return ss.str();
-}
-
 t_str_c Server::getPartMessage() const{
     if (m_parameters.size() >= 2){
-        return sumParameters(m_parameters.begin() + 1);
+        return sumParameters(m_parameters.begin() + 1, m_parameters.end());
     }
     return DEFMSG_PART;
-}
-
-t_str_c Server::itostr(int i) const{
-    std::stringstream ss;
-    ss << i;
-    return ss.str();
 }
 
 void Server::broadcast(t_str_c& sender,

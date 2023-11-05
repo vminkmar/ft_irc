@@ -1,6 +1,7 @@
 // -------------------------------------------------------------------------- //
 
 #include "../include/Server.hpp" // needed for Server class
+#include "../include/utils.hpp"  // needed for itostr(), split()
 
 #include <stdlib.h> // needed for atoi() (linux)
 
