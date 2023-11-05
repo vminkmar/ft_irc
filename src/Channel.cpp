@@ -48,8 +48,7 @@ static inline void print_stdstr(std::ostream& os, std::string str, bool nl){
 Channel::Channel(std::string const& name) : m_name(name),
                                             m_userLimit(USER_LIMIT_MAX),
                                             m_inviteOnly(false),
-											m_topicEditable(true),
-											m_channelKey(false){
+                                            m_topicEditable(true){
 	print_log("name constructor called");
 }
 
@@ -90,10 +89,6 @@ void Channel::toggleInviteOnly(){
 
 void Channel::toggleTopicEditable(){
 	m_topicEditable = !m_topicEditable;
-}
-
-void Channel::toggleChannelKey(){
-	m_channelKey = !m_channelKey;
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> getters */
@@ -171,7 +166,6 @@ Channel& Channel::operator=(Channel const& src){
 		m_userLimit = src.getUserLimit();
 		m_inviteOnly = src.isInviteOnly();
 		m_topicEditable = src.isTopicEditable();
-		m_channelKey = src.isChannelKey();
 	}
 	return *this;
 }

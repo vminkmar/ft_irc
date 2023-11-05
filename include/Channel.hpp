@@ -33,7 +33,6 @@ class Channel
         
         bool            m_inviteOnly;
         bool            m_topicEditable;
-        bool            m_channelKey; /* @note might not be needed */
 
     public:
   
@@ -52,7 +51,6 @@ class Channel
         
         void toggleInviteOnly();
         void toggleTopicEditable();
-        void toggleChannelKey(); /* @note might not be needed */
         
         /* <------ getters -----> */
         std::string const&     getName()          const;
@@ -64,12 +62,10 @@ class Channel
         
         bool isInviteOnly()    const;
         bool isTopicEditable() const;
-        /* changed !*/
         bool isChannelKey()    const;
         bool isFull()          const;
         
         /* <------ member functions -----> */
-        /* also behaves like set_privilege */
         void addUser   (int socket, UserPrivilege up); 
         void eraseUser (int socket);
         bool isMember  (int socket) const;
