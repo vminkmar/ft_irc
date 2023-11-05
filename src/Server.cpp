@@ -170,7 +170,7 @@ void Server::cleanUpSockets(){
         if (isErasable(socket) == true){
             um.eraseUser(socket);
             it = m_pollfds.erase(it);
-            log("Socket #" + itostr(socket) + " has been removed ("
+            LOG("Socket #" + itostr(socket) + " has been removed ("
                 + nickname + ")");
 			close(socket);
         }
@@ -187,16 +187,16 @@ void Server::sendMessages(int socket){
         t_str_c& outputBuffer = um.getBuffer(socket, OUTPUT);
         size_t messageEnd = outputBuffer.find("\r\n");
         if (messageEnd == t_str::npos){
-            log_err("no \r\n found in OUTPUT Buffer!");
+            LOG_ERR("no \r\n found in OUTPUT Buffer!");
             break ;
         }
         messageEnd += 2;
         t_str_c& message = outputBuffer.substr(0, messageEnd);
         
-        log_send(socket, message);
+        LOG_SEND(socket, message);
         int sending = send(socket, message.data(), message.length(), 0);
         if (sending < 0){
-            log_err("Send return < 0?");
+            LOG_ERR("Send return < 0?");
         }
         um.eraseBuffer(socket, 0, messageEnd, OUTPUT);
     }
@@ -207,7 +207,7 @@ void Server::receiveMessages(int socket){
     memset(buffer, 0, sizeof(buffer));
     int reading = read(socket, buffer, sizeof(buffer));
     if (reading < 0){
-        log_err("Reading error in receiveMessages()");
+        LOG_ERR("Reading error in receiveMessages()");
     }
 
     t_str message = buffer;
@@ -285,7 +285,7 @@ void Server::cleanEmptyChannels(){
         Channel const* channel = um.getChannel(channelName);
         if (channel->getNumberOfUsers() == 1){
             um.eraseChannel(channelName);
-            log(channelName + " has been removed (no Users)");
+            LOG(channelName + " has been removed (no Users)");
         }
     }
 }
@@ -311,10 +311,10 @@ void Server::parseIncomingMessage(t_str_c& incomingMessage, int socket){
         buffer.append(message);
         message = buffer;
     }
-	log_inc(socket, incomingMessage);
+	LOG_INC(socket, incomingMessage);
     size_t pos = message.find("\r\n");
     if(pos != std::string::npos){
-		log("<inputBuffer> " + um.getBuffer(socket, INPUT));
+		LOG("<inputBuffer> " + um.getBuffer(socket, INPUT));
 		while (pos != t_str::npos)
     	{
     	    t_str tmp = message.substr(0, pos);
@@ -323,14 +323,14 @@ void Server::parseIncomingMessage(t_str_c& incomingMessage, int socket){
 
     	    tmp = getParameter(tmp);
 
-    	    log("<command> " + m_command);
+    	    LOG("<command> " + m_command);
     	    for (t_vec_str_cit it = m_parameters.begin();
     	                       it != m_parameters.end();
     	                       ++it){
-    	        log("<param>   " + *it);
+    	        LOG("<param>   " + *it);
     	    }
     	    m_trail = tmp;
-    	    log("<trail>   " + m_trail);
+    	    LOG("<trail>   " + m_trail);
 
     	    message.erase(message.begin(), message.begin() + pos + 2);
     	    if (!(um.getBuffer(socket, INPUT).empty())){

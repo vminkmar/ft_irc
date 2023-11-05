@@ -190,14 +190,12 @@ class Server{
                                   t_str_c& message);
         void ERR_UNKNOWNCOMMAND  (int socketSender);
 
-    private:
-
-        /* <------ server logs -----> */
-        void log            (t_str_c& message)                  const;
-        void log_inc        (int socket, t_str_c& message)      const; 
-        void log_send       (int socket, t_str_c& message)      const;
-        void log_err        (t_str_c& message)                  const;
-        void log_vector     (t_str_c& name, t_vec_str_c& v)     const;
+        /* Server log functions */
+        void LOG      (t_str_c& message)              const;
+        void LOG_INC  (int socket, t_str_c& message)  const; 
+        void LOG_SEND (int socket, t_str_c& message)  const;
+        void LOG_ERR  (t_str_c& message)              const;
+        void LOG_VEC  (t_str_c& name, t_vec_str_c& v) const;
 
 };
 

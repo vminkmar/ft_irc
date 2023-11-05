@@ -92,7 +92,7 @@ void Server::CMD_PING(int socket)
 void Server::CMD_QUIT(int socket)
 {
     um.setOnlineStatus(socket, OFFLINE);
-    log("Socket #" + itostr(socket) + " has gone offline (" +
+    LOG("Socket #" + itostr(socket) + " has gone offline (" +
         um.getNickname(socket) + ")");
 
     t_vec_str_c channels = split(um.getChannelNames(), ',');
@@ -143,7 +143,6 @@ void Server::CMD_PART(int socket)
     }
 
     t_vec_str channels = split(m_parameters[0], ',');
-    log_vector("channels", channels);
 
     t_str_c &partMessage = getPartMessage();
     t_str_c &nickname = um.getNickname(socket);
@@ -619,12 +618,12 @@ void Server::createChannelBy(int socket, t_str_c &channelName,
         Channel *channel = um.getChannel(channelName);
         channel->setPassword(channelKey);
         // channel->toggleChannelKey(); /* @note might not be needed */
-        log("Channel " + channelName + " created by " + um.getNickname(socket) +
+        LOG("Channel " + channelName + " created by " + um.getNickname(socket) +
             " (password-protected)");
     }
     else
     {
-        log("Channel " + channelName + " created by " + um.getNickname(socket));
+        LOG("Channel " + channelName + " created by " + um.getNickname(socket));
     }
 
     RPL_JOIN(socket, socket, channelName);
@@ -674,7 +673,7 @@ void Server::addUserToChannels(int socket, t_vec_str_c &channelNames,
 
         if (enteredKey.empty() == false && channel->isChannelKey() == false)
         {
-            log_err("Received password for non_pw channel");
+            LOG_ERR("Received password for non_pw channel");
         }
         else if (channel->isChannelKey() == true)
         {
