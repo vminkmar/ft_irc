@@ -186,7 +186,19 @@ void Server::CMD_PRIVMSG(int socket)
 
     if (um.checkForNickname(target) == true)
     {
-        RPL_PRIVMSG(socket, target, m_trail);
+        if (target == "Marvin"){
+			RPL_PRIVMSG(socket, target, m_trail);
+
+			if (m_trail == "!server"){
+				RPL_PRIVMSG(marvin.socket, um.getNickname(socket), "Number of Users on server: " + itostr(m_pollfds.size() - 2));
+			}
+			else{
+				RPL_PRIVMSG(marvin.socket, um.getNickname(socket), "I am Marvin! Ask me anything...");
+			}
+		}
+		else{
+			RPL_PRIVMSG(socket, target, m_trail);
+		}
         return;
     }
     else if (um.checkForChannel(target) == true)
@@ -198,7 +210,13 @@ void Server::CMD_PRIVMSG(int socket)
         }
         else
         {
-            broadcast(um.getNickname(socket), target, "", m_trail, "PRIVMSG");
+            if (m_trail == "!operator"){
+				t_str_c msg = "Operator: " + um.getChannelOperatorNicknames(target);
+				broadcast(um.getNickname(marvin.socket), target, "", msg, "PRIVMSG");
+			}
+			else{
+				broadcast(um.getNickname(socket), target, "", m_trail, "PRIVMSG");
+			}
         }
         return;
     }

@@ -209,6 +209,7 @@ void Server::receiveMessages(int socket){
     if (reading < 0){
         log_err("Reading error in receiveMessages()");
     }
+
     t_str message = buffer;
     parseIncomingMessage(message, socket);
     memset(buffer, 0, sizeof(buffer)); /* @note unneccessary? */
