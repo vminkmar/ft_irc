@@ -99,7 +99,7 @@ void Server::start(){
         if (this->m_pollfds[0].revents & POLLIN){
             acceptClients();
         }
-        runServer();
+        routine();
     }
 	close(m_server_fd);
 	/* @note close bot fd*/
@@ -131,7 +131,7 @@ void Server::acceptClients(){
     this->m_pollfds[0].revents = 0; /* current event */
 }
 
-void Server::runServer(){
+void Server::routine(){
     for (t_vec_pollfd_it it = m_pollfds.begin() + 1;
                          it != m_pollfds.end();
                          ++it){
