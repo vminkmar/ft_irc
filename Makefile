@@ -13,7 +13,7 @@ CFLAGS          := -Wall -Wextra -Werror -std=c++98 -I $(INCLUDE) $(DEBUG_FLAG)
 VPATH           := src/
 
 SRC_MAIN        := main.cpp
-SRC_SOURCES     := Server.cpp ServerMessages.cpp ServerResponses.cpp \
+SRC_SOURCES     := Server.cpp ServerMessages.cpp ServerResponses.cpp ServerLog.cpp\
                    UserManagement.cpp \
                    UserManagementUsers.cpp UserManagementChannels.cpp \
                    Channel.cpp \

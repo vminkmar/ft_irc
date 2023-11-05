@@ -381,37 +381,6 @@ void Server::error(t_str str){
     exit(1);
 }
 
-void Server::log(t_str_c& message) const{
-    std::cout << COLOUR_LOG << message << RESET << std::endl;
-}
-
-void Server::log_inc(int socket, t_str_c& message) const{
-	t_str tmp = message.substr(0, message.find("\r\n"));
-	if (tmp.empty() == true){
-		return ;
-	}
-	std::cout << COLOUR_IN
-              << "\nIncoming: " << tmp << " <-- socket#" << itostr(socket)
-              << RESET << std::endl;
-}
-
-void Server::log_send(int socket, t_str_c& message) const{
-    std::cout << COLOUR_OUT
-              << "Sending: "<< message << " --> socket#" << itostr(socket)
-              << RESET << std::endl;
-}
-
-void Server::log_err(t_str_c& message) const{
-    std::cout << COLOUR_ERR << "Error: " << message << RESET << std::endl;
-}
-
-void Server::log_vector(t_str_c& name, t_vec_str_c& v) const{
-    std::cout << COLOUR_LOG << "<" + name + "> ";
-    for (t_vec_str_cit it = v.begin(); it != v.end(); ++it){
-        std::cout << "[" << *it << "] ";
-    }
-    std::cout << RESET << std::endl;
-}
 
 Server::t_vec_str Server::split(t_str_c& parameter,
                                 char delimiter) const{

@@ -201,6 +201,8 @@ class Server{
                                   t_str_c& message);
         void ERR_UNKNOWNCOMMAND  (int socketSender);
 
+    private:
+
         /* <------ server logs -----> */
         void log            (t_str_c& message)                  const;
         void log_inc        (int socket, t_str_c& message)      const; 
