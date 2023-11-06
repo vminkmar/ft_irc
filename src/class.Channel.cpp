@@ -165,8 +165,6 @@ bool Channel::isMember(int socket) const{
 }
 
 bool Channel::isOperator(int socket) const{
-    /*@note might change this because user has to make sure this member is part
-     * of the channel */
     return m_users.find(socket) != m_users.end() 
            && m_users.find(socket)->second == OPERATOR;
 }

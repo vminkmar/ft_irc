@@ -13,9 +13,6 @@
 #include <netdb.h>  // needed for addrinfo
 #include <fcntl.h>  // needed for fcntl()
 
-#include <arpa/inet.h> /*@note not needed in linux compilation */
-
-
 // ------------------ public --------------------------- //
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
@@ -43,7 +40,8 @@ void Server::start(int argc, char **argv){
 
     /* set socket int to m_server_fd */
     if ((this->m_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0){
-        error("In socket");
+        LOG_ERR("socket");
+		return;
     }
 
     int reuseaddr = 1;
@@ -53,7 +51,9 @@ void Server::start(int argc, char **argv){
                    SO_REUSEADDR,
                    &reuseaddr,
                    sizeof(reuseaddr)) == -1){
-        error("socketopt");
+        LOG_ERR("socketopt");
+		close(m_server_fd);
+		return;
     }
     this->address.sin_family = AF_INET;
     this->address.sin_addr.s_addr = INADDR_ANY;
@@ -65,24 +65,34 @@ void Server::start(int argc, char **argv){
     if (bind(this->m_server_fd,
              reinterpret_cast<struct sockaddr *>(&address),
              sizeof(this->address)) < 0){
-        error("In bind");
+        LOG_ERR("bind");
+		close(m_server_fd);
+		return;
     }
 
     /* makes socket ready to listen for clients */
     if (listen(this->m_server_fd, 10) < 0){
-        error("listen");
+        LOG_ERR("listen");
+		close(m_server_fd);
+		return;
     }
 	fcntl(m_server_fd, F_SETFL, O_NONBLOCK);
     struct pollfd newServer;
     newServer.fd = m_server_fd;
     newServer.events = POLLIN;
     m_pollfds.push_back(newServer);
-	createBot();
+
+	if (createBot() == false){
+		return ;
+	}
+
     while (Server::serverRunning == true){
         /* waits for event on filedescriptor */
         int ret = poll(this->m_pollfds.data(), m_pollfds.size(), 100);
         if (ret < 0){
-            error("poll");
+            LOG_ERR("poll");
+			cleanUpSockets();
+			break ;
         }
 
         /* if there is some incoming event */
@@ -121,11 +131,6 @@ void Server::signal_handler(int sig){
 
 // ------------------ private --------------------------- //
 
-void Server::error(t_str str){
-    std::cerr << str << std::endl;
-    exit(1);
-}
-
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> setup and connection */
 
 void Server::acceptClients(){
@@ -135,7 +140,7 @@ void Server::acceptClients(){
     if ((newSocket = accept(this->m_server_fd,
                      (struct sockaddr *)&address,
                      (socklen_t *)&m_addrlen)) < 0){
-         error("accept");
+         LOG_ERR("accept");
     }
     struct pollfd newClient;
 	fcntl(newSocket, F_SETFL, O_NONBLOCK);
@@ -154,8 +159,13 @@ void Server::acceptClients(){
     this->m_pollfds[0].revents = 0; /* current event */
 }
 
-void Server::createBot(){
+bool Server::createBot(){
 	int botSocket = socket(AF_INET, SOCK_STREAM, 0);
+	if (botSocket < 0){
+		LOG_ERR("botSocket");
+		return false;
+	}
+
 	struct sockaddr_in serverAddress;
 	struct addrinfo hints;
 	struct addrinfo *servinfo;
@@ -165,15 +175,20 @@ void Server::createBot(){
 	hints.ai_socktype = SOCK_STREAM;
 
 	if (getaddrinfo(HOST, itostr(PORT).c_str(), &hints, &servinfo) != 0) {
-	    error("getaddrinfo");
+		LOG_ERR("getaddrinfo");
+		close(botSocket);
+		return false;
 	}
 
 	serverAddress = *((struct sockaddr_in *)(servinfo->ai_addr));
 	if (connect(botSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {
-	    error("In connect");
+	    LOG_ERR("connect");
+		close(botSocket);
+		return false;
 	}
 
 	freeaddrinfo(servinfo);
+	return true;
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> server routine */
@@ -189,7 +204,6 @@ void Server::routine(){
             um.setOnlineStatus(it->fd, OFFLINE);
         }
         else if (it->revents & POLLIN){
-            /* @note BUG: when just using /disconnect this condition is set */
             receiveMessages(it->fd);
         }
         else if (it->revents & POLLOUT){
@@ -209,7 +223,6 @@ void Server::receiveMessages(int socket){
     }
     t_str message = buffer;
     parseIncomingMessage(message, socket);
-    memset(buffer, 0, sizeof(buffer)); /* @note unneccessary? */
 }
 
 void Server::sendMessages(int socket)
@@ -288,8 +301,6 @@ void Server::autoPromoteOperator()
 
             t_str msg = t_str_c(DEFMSG_PROMOTION)
                         + "(Last Operator left the channel)";
-
-            /* @note could let the bot broacast this message */
             broadcast(nicknameFirstUser,
                       channelName,
                       "",
@@ -505,7 +516,6 @@ void Server::createChannelBy(int socket, t_str_c &channelName,
     {
         Channel *channel = um.getChannel(channelName);
         channel->setPassword(channelKey);
-        // channel->toggleChannelKey(); /* @note might not be needed */
         LOG("Channel " + channelName + " created by " + um.getNickname(socket) +
             " (password-protected)");
     }
@@ -527,8 +537,6 @@ void Server::addUserToChannels(int socket, t_vec_str_c &channelNames,
     for (t_vec_str_cit it = channelNames.begin(); it != channelNames.end();
          ++it)
     {
-        /* @note possibly need to update this on an error */
-        /* @note should be fine though if its here */
         t_str enteredKey;
         if (key != channelKeys.end())
         {
@@ -599,7 +607,6 @@ void Server::broadcast(t_str_c& sender,
         if (sender.empty() == false && sender == nickname){
             continue ;
         }
-        /* @note switch statements or even overloaded functions */
         if (command == "PRIVMSG"){
             RPL_PRIVMSG_CHANNEL(socketSender,
                                 socketTarget,

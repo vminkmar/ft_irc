@@ -104,11 +104,17 @@ void Server::RPL_KICK(int socketSender,
                       t_str_c& message){
     LOG("Kick message for " + channelName
         + " prepared for socket#" + itostr(socketTarget));
+	t_str tmp;
+	if (message.empty() == true){
+		tmp = DEFMSG_KICK;
+	}
+	else{
+		tmp = message;
+	}
     t_str str = ":" + um.getNickname(socketSender) + "!"
                 + um.getUsername(socketSender) + "@" + HOST + " KICK "
                 + channelName + " " + nicknameKicked
-                + " :" + message + "\r\n";
-    /* @note implement default message */
+                + " :" + tmp + "\r\n";
     um.appendToBuffer(socketTarget, str, OUTPUT);
 }
 
@@ -246,7 +252,6 @@ void Server::ERR_NOSUCHNICK(int socket, t_str_c& nicknameOrchannelName){
 
 void Server::ERR_USERONCHANNEL(int socket, t_str_c& nickname, t_str_c& channelName){
     LOG_ERR("User " + nickname + " is already member of the channel " + channelName);
-    /* @note nick or user name of target? */
     t_str str = "443 " + um.getNickname(socket) + " "
                 + nickname + " " + channelName + " :is already on channel\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
@@ -261,8 +266,7 @@ void Server::ERR_NORECIPIENT(int socket, t_str_c& command){
 
 void Server::ERR_NOTEXTTOSEND(int socket){
     LOG_ERR("No text to send was given!");
-    t_str str = "412 " + um.getNickname(socket)
-                + " :No text to send\r\n";
+    t_str str = "412 " + um.getNickname(socket) + " :No text to send\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 
@@ -278,7 +282,8 @@ void Server::ERR_USERNOTINCHANNEL(int socketSender,
 
 void Server::ERR_UNKNOWNMODE(int socketSender, char unknownChar, t_str_c& channelName){
 	LOG_ERR("Wrong Mode for Channel");
-	t_str str = "472 " + std::string(1, unknownChar) + " :is unknown mode char to me for " + channelName + "\r\n";
+	t_str str = "472 " + std::string(1, unknownChar)
+	            + " :is unknown mode char to me for " + channelName + "\r\n";
     um.appendToBuffer(socketSender, str, OUTPUT);
 }
 

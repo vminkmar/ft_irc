@@ -56,7 +56,6 @@ class UserManagement{
         void addChannel      (t_str_c& channelName);
         void eraseChannel    (t_str_c& channelName);
         bool checkForChannel (t_str_c& channelName)  const;
-        void printChannelInfo(t_str_c& channelName)  const;
 
         /* <---- channel map setters */
         void addUserToChannel    (int socket,
@@ -68,7 +67,6 @@ class UserManagement{
         Channel const* getChannel                 (t_str_c& channelName)  const;
         Channel *      getChannel                 (t_str_c& channelName);
         t_str          getChannelNames()                                  const;
-        t_str          getChannelUsernames        (t_str_c& channelName)  const;
         t_str          getChannelNicknames        (t_str_c& channelName)  const;
 		t_str          getChannelOperatorNicknames(t_str_c& channelName)  const;
 

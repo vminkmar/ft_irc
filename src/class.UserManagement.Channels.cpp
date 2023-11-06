@@ -29,19 +29,6 @@ bool UserManagement::checkForChannel(std::string const& channelName) const{
     return m_channels.find(channelName) != m_channels.end();
 }
 
-void UserManagement::printChannelInfo(std::string const& channelName) const{
-    t_um_channels_cit it = m_channels.find(channelName);
-    if (it != m_channels.end()){
-        std::cout << it->second
-                  << "List of Users:   "
-                  << getChannelUsernames(channelName)
-                  << std::endl;
-        return ;
-    }
-    throw std::runtime_error("printChannelInfo: Channel "
-                             + channelName + " not found!");
-}
-
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> channel map setters */
 
 void UserManagement::addUserToChannel(int socket,
@@ -104,29 +91,6 @@ std::string UserManagement::getChannelNames() const{
     return ss.str();
 }
 
-/* @note erase */
-std::string UserManagement::getChannelUsernames
-                                        (std::string const& channelName) const{
-    std::stringstream ss;
-    t_channel_users UserMap = getChannel(channelName)->getUserMap();
-    for (t_channel_users_cit it = UserMap.begin();
-                                      it != UserMap.end();
-                                      ++it){
-        t_um_users_cit usr = m_users.find(it->first);
-        if (usr != m_users.end()){
-            if (it != UserMap.begin()){
-                ss << ", ";
-            }
-            ss << usr->second.getUsername();
-            if (it->second == OPERATOR){
-                ss << "(o)";
-            }
-        }
-    }
-    return ss.str();
-}
-
-/* @note erase */
 std::string UserManagement::getChannelNicknames
                                         (std::string const& channelName) const{
     std::stringstream ss;

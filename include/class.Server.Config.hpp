@@ -18,6 +18,7 @@
 /* DEFAULT MESSAGES */
 #define DEFMSG_PART      "Goodbye!"
 #define DEFMSG_PROMOTION "I have been promoted to an Operator!"
+#define DEFMSG_KICK      "Begone you fool!"
 
 #endif // CLASS_SERVERCONFIG_HPP
 

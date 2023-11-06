@@ -20,17 +20,11 @@ class Server{
         static bool serverRunning;
 
         void        start(int argc, char **argv);
-
-        /* @note think we can handle these two inside the class (private) */
-		bool        getPortAndPasswd(char **argv);
 		static void signal_handler(int sig);
 
 // ------------------ private variables --------------------------- //
     
     private:
-        
-        /* @note prob needless at this point */
-        void error (t_str str);
         
         /* setup */
         int                      m_port;
@@ -59,8 +53,9 @@ class Server{
     private:
         
         /* setup and connection */
+		bool getPortAndPasswd(char **argv);
         void acceptClients();
-        void createBot    ();
+        bool createBot    ();
 
         /* <------ server routine (connection <-> command parsing)-----> */
         void routine            ();
@@ -118,7 +113,6 @@ class Server{
         void CMD_MODE   (int socket);
 
         /* success replies --> Server.Responses.cpp */
-        /* @note could add a server variable socketSender / socketTarget */
         void RPL_CAP            (int socket);
         void RPL_JOIN           (int socketSender,
                                  int socketTarget,
@@ -169,8 +163,6 @@ class Server{
                                  t_str_c& parameter);
 
         /* error replies --> Server.Responses.cpp */
-        /* @note prob dont have to pass the command */
-        /* @note would benefit from server socketSender/socketTarget var too */
         void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);
         void ERR_NONICKNAMEGIVEN (int socket);
         void ERR_ERRONEUSNICKNAME(int socket, t_str_c& nickname);

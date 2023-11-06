@@ -18,11 +18,23 @@
 #define COLOUR_OUT         PINK
 #define COLOUR_ERR         RED
 
-void Server::LOG(t_str_c& message) const{
-    std::cout << COLOUR_LOG << message << RESET << std::endl;
+#ifndef TMP
+//#define TMP
+#endif //TMP
+
+void Server::LOG(t_str_c& message) const
+{
+    (void) message;	
+	#ifdef TMP
+	std::cout << COLOUR_LOG << message << RESET << std::endl;
+	#endif //DEBUG
 }
 
-void Server::LOG_INC(int socket, t_str_c& message) const{
+void Server::LOG_INC(int socket, t_str_c& message) const
+{
+	(void) socket;
+	(void) message;
+	#ifdef TMP
 	t_str tmp = message.substr(0, message.find("\r\n"));
 	if (tmp.empty() == true){
 		return ;
@@ -30,24 +42,39 @@ void Server::LOG_INC(int socket, t_str_c& message) const{
 	std::cout << COLOUR_IN
               << "\nIncoming: " << tmp << " <-- socket#" << itostr(socket)
               << RESET << std::endl;
+	#endif //TMP
 }
 
-void Server::LOG_SEND(int socket, t_str_c& message) const{
-    std::cout << COLOUR_OUT
+void Server::LOG_SEND(int socket, t_str_c& message) const
+{
+    (void) socket;
+	(void) message;
+	#ifdef TMP
+	std::cout << COLOUR_OUT
               << "Sending: "<< message << " --> socket#" << itostr(socket)
               << RESET << std::endl;
+	#endif //TMP
 }
 
-void Server::LOG_ERR(t_str_c& message) const{
-    std::cout << COLOUR_ERR << "Error: " << message << RESET << std::endl;
+void Server::LOG_ERR(t_str_c& message) const
+{
+	(void) message;
+    #ifdef TMP
+	std::cout << COLOUR_ERR << "Error: " << message << RESET << std::endl;
+	#endif //TMP
 }
 
-void Server::LOG_VEC(t_str_c& name, t_vec_str_c& v) const{
-    std::cout << COLOUR_LOG << "<" + name + "> ";
+void Server::LOG_VEC(t_str_c& name, t_vec_str_c& v) const
+{
+    (void) name;
+	(void) v;
+	#ifdef TMP
+	std::cout << COLOUR_LOG << "<" + name + "> ";
     for (t_vec_str_cit it = v.begin(); it != v.end(); ++it){
         std::cout << "[" << *it << "] ";
     }
     std::cout << RESET << std::endl;
+	#endif //TMP
 }
 
 // -------------------------------------------------------------------------- //

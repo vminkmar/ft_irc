@@ -186,8 +186,6 @@ void Server::CMD_PRIVMSG(int socket)
 
     t_str_c &target = m_parameters[0];
 
-    /* @note what if nickname starts with a channel sign like # & */
-
     if (um.checkForNickname(target) == true)
     {
         if (target == "Marvin")
@@ -256,8 +254,6 @@ void Server::CMD_TOPIC(int socket)
         ERR_NOTONCHANNEL(socket, channelName);
         return;
     }
-
-    /* @note how to check if trail is an empty string and not just empty? */
 
     if (m_trail.empty() == true)
     {
@@ -373,8 +369,6 @@ void Server::CMD_KICK(int socketSender)
         }
 
         Channel const *channel = um.getChannel(channelName);
-
-        /* @note not sure about the order */
 
         if (channel->isMember(socketSender) == false)
         {
