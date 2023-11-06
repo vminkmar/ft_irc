@@ -39,8 +39,7 @@ void Server::CMD_NICK(int socket)
             RPL_NICKCHANGE(socket, socket, newNickname, oldNickname);
         }
         um.setNickname(socket, newNickname);
-        if (um.getUsername(socket).empty() == false &&
-            um.getWelcomedStatus(socket) == false)
+        if (um.getUsername(socket).empty() == false && um.getWelcomedStatus(socket) == false)
         {
             RPL_WELCOME(socket, um.getUsername(socket));
             um.setWelcomedStatus(socket, true);
@@ -52,8 +51,7 @@ void Server::CMD_NICK(int socket)
             t_str_c &channelName = *it;
             if (um.getChannel(channelName)->isMember(socket) == true)
             {
-                broadcast(um.getNickname(socket), channelName, oldNickname, "",
-                          "NICK");
+                broadcast(um.getNickname(socket), channelName, oldNickname, "", "NICK");
             }
         }
     }
@@ -67,8 +65,7 @@ void Server::CMD_USER(int socket)
         ERR_NEEDMOREPARAMS(socket, m_command);
     }
 
-    if (um.checkForUser(socket) == true &&
-        um.getUsername(socket).empty() == false)
+    if (um.checkForUser(socket) == true && um.getUsername(socket).empty() == false)
     {
         ERR_ALREADYREGISTRED(socket);
     }
@@ -93,8 +90,7 @@ void Server::CMD_PING(int socket)
 void Server::CMD_QUIT(int socket)
 {
     um.setOnlineStatus(socket, OFFLINE);
-    LOG("Socket #" + itostr(socket) + " has gone offline (" +
-        um.getNickname(socket) + ")");
+    LOG("Socket #" + itostr(socket) + " has gone offline (" + um.getNickname(socket) + ")");
 
     t_vec_str_c channels = split(um.getChannelNames(), ',');
     for (t_vec_str_cit it = channels.begin(); it != channels.end(); ++it)
@@ -195,13 +191,11 @@ void Server::CMD_PRIVMSG(int socket)
             if (m_trail == "!server")
             {
                 RPL_PRIVMSG(Marvin.socket, um.getNickname(socket),
-                            "Number of Users on server: " +
-                                itostr(m_pollfds.size() - 2));
+                            "Number of Users on server: " + itostr(m_pollfds.size() - 2));
             }
             else
             {
-                RPL_PRIVMSG(Marvin.socket, um.getNickname(socket),
-                            "I am Marvin! Ask me anything...");
+                RPL_PRIVMSG(Marvin.socket, um.getNickname(socket), "I am Marvin! Ask me anything...");
             }
         }
         else
@@ -221,15 +215,12 @@ void Server::CMD_PRIVMSG(int socket)
         {
             if (m_trail == "!operator")
             {
-                t_str_c msg =
-                    "Operator: " + um.getChannelOperatorNicknames(target);
-                broadcast(Marvin.self->getNickname(), target, "", msg,
-                          "PRIVMSG");
+                t_str_c msg = "Operator: " + um.getChannelOperatorNicknames(target);
+                broadcast(Marvin.self->getNickname(), target, "", msg, "PRIVMSG");
             }
             else
             {
-                broadcast(um.getNickname(socket), target, "", m_trail,
-                          "PRIVMSG");
+                broadcast(um.getNickname(socket), target, "", m_trail, "PRIVMSG");
             }
         }
         return;
@@ -356,8 +347,7 @@ void Server::CMD_KICK(int socketSender)
     t_vec_str_c channelNames = split(m_parameters[0], ',');
     t_vec_str_c targets = split(m_parameters[1], ',');
 
-    for (t_vec_str_cit it = channelNames.begin(); it != channelNames.end();
-         ++it)
+    for (t_vec_str_cit it = channelNames.begin(); it != channelNames.end(); ++it)
     {
 
         t_str_c channelName = *it;
@@ -397,21 +387,17 @@ void Server::CMD_KICK(int socketSender)
                 int socketTarget = um.getSocket(nicknameKicked);
                 if (channel->isMember(socketTarget) == false)
                 {
-                    ERR_USERNOTINCHANNEL(socketSender, socketTarget,
-                                         channelName);
+                    ERR_USERNOTINCHANNEL(socketSender, socketTarget, channelName);
                     continue;
                 }
 
                 um.eraseUserFromChannel(socketTarget, channelName);
                 if (socketSender != socketTarget)
                 {
-                    RPL_KICK(socketSender, socketTarget, channelName,
-                             nicknameKicked, m_trail);
+                    RPL_KICK(socketSender, socketTarget, channelName, nicknameKicked, m_trail);
                 }
-                RPL_KICK(socketSender, socketSender, channelName,
-                         nicknameKicked, m_trail);
-                broadcast(um.getNickname(socketSender), channelName,
-                          nicknameKicked, m_trail, "KICK");
+                RPL_KICK(socketSender, socketSender, channelName, nicknameKicked, m_trail);
+                broadcast(um.getNickname(socketSender), channelName, nicknameKicked, m_trail, "KICK");
             }
         }
     }
@@ -445,8 +431,7 @@ void Server::CMD_MODE(int socket)
         return;
     }
 
-    for (t_vec_str_cit it = m_parameters.begin() + 1; it != m_parameters.end();
-         ++it)
+    for (t_vec_str_cit it = m_parameters.begin() + 1; it != m_parameters.end(); ++it)
     {
 
         t_str str = *it;
@@ -483,8 +468,7 @@ void Server::CMD_MODE(int socket)
             }
             else if (modechar == 't')
             {
-                if ((plusorminus == '-' &&
-                     channel->isTopicEditable() == true) ||
+                if ((plusorminus == '-' && channel->isTopicEditable() == true) ||
                     (plusorminus == '+' && channel->isTopicEditable() == false))
                 {
                     channel->toggleTopicEditable();
@@ -556,12 +540,10 @@ void Server::CMD_MODE(int socket)
                     ++it;
                     t_str_c &target = *it;
 
-                    if (target.find_first_not_of("0123456789") !=
-                        std::string::npos)
+                    if (target.find_first_not_of("0123456789") != std::string::npos)
                     {
                         t_str_c errMsg = substr + " " + target;
-                        ERR_MODEWRONGPARAM(socket, channelName,
-                                           substr + " " + target);
+                        ERR_MODEWRONGPARAM(socket, channelName, substr + " " + target);
                         continue;
                     }
 
@@ -576,16 +558,9 @@ void Server::CMD_MODE(int socket)
             {
                 param = *it;
             }
-            RPL_CHANNELMODEIS(socket, socket, channelName,
-                              std::string(1, plusorminus) + modechar, param);
-            t_str msg = "Channel mode changed with: "
-                        + std::string(1, plusorminus)
-                        + modechar + " " + param;
-            broadcast(Marvin.self->getNickname(),
-                      channelName,
-                      "",
-                      msg,
-                      "PRIVMSG");
+            RPL_CHANNELMODEIS(socket, socket, channelName, std::string(1, plusorminus) + modechar, param);
+            t_str msg = "Channel mode changed with: " + std::string(1, plusorminus) + modechar + " " + param;
+            broadcast(Marvin.self->getNickname(), channelName, "", msg, "PRIVMSG");
         }
     }
 }

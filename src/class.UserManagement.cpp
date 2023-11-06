@@ -15,10 +15,10 @@
 
 static inline void print_log(std::string message)
 {
-  if (DEBUG)
-  { 
-    std::cerr << YELLOW << "User Management: " << message << RESET << std::endl;
-  }
+    if (DEBUG)
+    {
+        std::cerr << YELLOW << "User Management: " << message << RESET << std::endl;
+    }
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
