@@ -225,7 +225,7 @@ void Server::CMD_PRIVMSG(int socket)
             {
                 t_str_c msg =
                     "Operator: " + um.getChannelOperatorNicknames(target);
-                broadcast(um.getNickname(Marvin.socket), target, "", msg,
+                broadcast(Marvin.self->getNickname(), target, "", msg,
                           "PRIVMSG");
             }
             else
@@ -587,7 +587,7 @@ void Server::CMD_MODE(int socket)
             t_str msg = "Channel mode changed with: "
                         + std::string(1, plusorminus)
                         + modechar + " " + param;
-            broadcast(um.getNickname(Marvin.socket),
+            broadcast(Marvin.self->getNickname(),
                       channelName,
                       "",
                       msg,

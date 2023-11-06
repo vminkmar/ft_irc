@@ -99,14 +99,14 @@ class Server{
                                       t_str_c& message,
                                       t_str_c& command);
 
-        /* log functions */
+        /* log functions --> Server.Logs.cpp */
         void LOG      (t_str_c& message)              const;
         void LOG_INC  (int socket, t_str_c& message)  const;
         void LOG_SEND (int socket, t_str_c& message)  const;
         void LOG_ERR  (t_str_c& message)              const;
         void LOG_VEC  (t_str_c& name, t_vec_str_c& v) const;
 
-        /* messages / commands */
+        /* messages / commands --> Server.Messages.cpp */
         void CMD_CAP    (int socket);
         void CMD_NICK   (int socket);
         void CMD_USER   (int socket);
@@ -120,7 +120,7 @@ class Server{
         void CMD_KICK   (int socket);
         void CMD_MODE   (int socket);
 
-        /* success replies */
+        /* success replies --> Server.Responses.cpp */
         /* @note could add a server variable socketSender / socketTarget */
         void RPL_CAP            (int socket);
         void RPL_JOIN           (int socketSender,
@@ -171,7 +171,7 @@ class Server{
                                  t_str_c& modechar,
                                  t_str_c& parameter);
 
-        /* error replies */
+        /* error replies --> Server.Responses.cpp */
         /* @note prob dont have to pass the command */
         /* @note would benefit from server socketSender/socketTarget var too */
         void ERR_NOSUCHCHANNEL   (int socket, t_str_c& channelName);

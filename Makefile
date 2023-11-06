@@ -16,7 +16,7 @@ SRC_MAIN        := main.cpp
 SRC_SOURCES     := class.Server.cpp\
                    class.Server.Messages.cpp\
                    class.Server.Responses.cpp\
-                   class.Server.Log.cpp\
+                   class.Server.Logs.cpp\
                    class.UserManagement.cpp\
                    class.UserManagement.Users.cpp\
                    class.UserManagement.Channels.cpp\
