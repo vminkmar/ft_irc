@@ -41,21 +41,21 @@ class UserManagement{
         void eraseBuffer      (int socket, int start, int end, int flag);
 
         /* <---- user map getters */
-        int   getSocket        (t_str_c& nickname)    const;
-        t_str getNickname      (int socket)           const;
-        t_str getNicknames     ()                     const;
-        t_str getUsername      (int socket)           const;
-        t_str getUsernames     ()                     const;
-        t_str getBuffer        (int socket, int flag) const;
-        bool  getOnlineStatus  (int socket)           const;
-        bool  getWelcomedStatus(int socket)           const;
-		User * getUser(int socket);
+        int    getSocket        (t_str_c& nickname)    const;
+        t_str  getNickname      (int socket)           const;
+        t_str  getNicknames     ()                     const;
+        t_str  getUsername      (int socket)           const;
+        t_str  getUsernames     ()                     const;
+        t_str  getBuffer        (int socket, int flag) const;
+        bool   getOnlineStatus  (int socket)           const;
+        bool   getWelcomedStatus(int socket)           const;
+		User * getUser          (int socket);
 
         /* <------ channel map operations-----> */
         void addChannel      (t_str_c& channelName);
         void eraseChannel    (t_str_c& channelName);
-        bool checkForChannel (t_str_c& channelName) const;
-        void printChannelInfo(t_str_c& channelName) const;
+        bool checkForChannel (t_str_c& channelName)  const;
+        void printChannelInfo(t_str_c& channelName)  const;
 
         /* <---- channel map setters */
         void addUserToChannel    (int socket,
@@ -64,12 +64,12 @@ class UserManagement{
         void eraseUserFromChannel(int socket, t_str_c& channelName);
         
         /* <---- channel map getters */
-        Channel const* getChannel         (t_str_c& channelName) const;
-        Channel *      getChannel         (t_str_c& channelName);
-        t_str          getChannelNames()                         const;
-        t_str          getChannelUsernames(t_str_c& channelName) const;
-        t_str          getChannelNicknames(t_str_c& channelName) const;
-		t_str          getChannelOperatorNicknames(t_str_c& channelName) const;
+        Channel const* getChannel                 (t_str_c& channelName)  const;
+        Channel *      getChannel                 (t_str_c& channelName);
+        t_str          getChannelNames()                                  const;
+        t_str          getChannelUsernames        (t_str_c& channelName)  const;
+        t_str          getChannelNicknames        (t_str_c& channelName)  const;
+		t_str          getChannelOperatorNicknames(t_str_c& channelName)  const;
 
 };
 

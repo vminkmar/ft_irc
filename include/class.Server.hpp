@@ -52,10 +52,7 @@ class Server{
         UserManagement           um;
 
         /* server bot */
-        struct ServerBot{
-            int    socket;
-            User * self;
-        }                       Marvin;
+        struct ServerBot         Marvin;
 
 // ------------------ private functions --------------------------- // 
 
@@ -74,18 +71,18 @@ class Server{
         void autoPromoteOperator();
 
         /* command parsing */
-        void    Messages                (int socket);
-        t_str   getParameter            (t_str_c& message);
-        void    getCommand              (t_str&   message);
-        t_str_c getPartMessage          ()                            const;
-        void    comparePassword         ();
-        void    parseIncomingMessage    (t_str_c& incomingMessage,
-                                         int socket);
-        bool    hasUnallowedChar        (t_str_c& strToCheck,
-                                         t_str_c& unallowedChars)     const;
+        void    Messages             (int socket);
+        t_str   getParameter         (t_str_c& message);
+        void    getCommand           (t_str&   message);
+        t_str_c getPartMessage       ()                          const;
+        void    comparePassword      ();
+        void    parseIncomingMessage (t_str_c& incomingMessage,
+                                      int socket);
+        bool    hasUnallowedChar     (t_str_c& strToCheck,
+                                      t_str_c& unallowedChars)   const;
         
         /* user/channel handling */
-        bool isErasable              (int socket)                     const;
+        bool isErasable              (int socket)                const;
         void eraseUserFromAllChannels(int socket);
         void createChannelBy         (int socket,
                                       t_str_c& channelName,
@@ -100,11 +97,11 @@ class Server{
                                       t_str_c& command);
 
         /* log functions --> Server.Logs.cpp */
-        void LOG      (t_str_c& message)              const;
-        void LOG_INC  (int socket, t_str_c& message)  const;
-        void LOG_SEND (int socket, t_str_c& message)  const;
-        void LOG_ERR  (t_str_c& message)              const;
-        void LOG_VEC  (t_str_c& name, t_vec_str_c& v) const;
+        void LOG     (t_str_c& message)              const;
+        void LOG_INC (int socket, t_str_c& message)  const;
+        void LOG_SEND(int socket, t_str_c& message)  const;
+        void LOG_ERR (t_str_c& message)              const;
+        void LOG_VEC (t_str_c& name, t_vec_str_c& v) const;
 
         /* messages / commands --> Server.Messages.cpp */
         void CMD_CAP    (int socket);
