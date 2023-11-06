@@ -10,6 +10,7 @@
 void UserManagement::addUser(int socket){
     m_users[socket] = User(); /* c11 std::map.emplace */
     setOnlineStatus(socket, ONLINE);
+	setRegisteredStatus(socket, false);
 }
 
 void UserManagement::eraseUser(int socket){
@@ -89,6 +90,15 @@ void UserManagement::setWelcomedStatus(int socket, bool flag){
         return ;
     }
     throw std::runtime_error("setWelcomedStatus: User not found!");
+}
+
+void UserManagement::setRegisteredStatus(int socket, bool flag){
+	t_um_users_it it = m_users.find(socket);
+    if (it != m_users.end()){
+        it->second.setRegisteredStatus(flag);
+       	return ;
+    }
+    throw std::runtime_error("setRegisteredStatus: User not found!");
 }
 
 void UserManagement::appendToBuffer(int socket, t_str_c& message, int flag){
@@ -202,6 +212,14 @@ User * UserManagement::getUser(int socket){
 	t_um_users_it it = m_users.find(socket);
 	if (it != m_users.end()){
 		return &(m_users.find(socket)->second);
+	}
+	throw std::runtime_error("getUser: User not found!");
+}
+
+bool UserManagement::getRegisteredStatus(int socket) const{
+	t_um_users_cit it = m_users.find(socket);
+	if (it != m_users.end()){
+		return it->second.getRegisteredStatus();
 	}
 	throw std::runtime_error("getUser: User not found!");
 }

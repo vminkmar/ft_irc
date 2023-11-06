@@ -19,10 +19,10 @@ class Server{
 
         static bool serverRunning;
 
-        void        start();
+        void        start(int argc, char **argv);
 
         /* @note think we can handle these two inside the class (private) */
-        void        getPortAndPasswd(char **argv);
+		bool        getPortAndPasswd(char **argv);
 		static void signal_handler(int sig);
 
 // ------------------ private variables --------------------------- //
@@ -74,12 +74,12 @@ class Server{
         void    Messages             (int socket);
         t_str   getParameter         (t_str_c& message);
         void    getCommand           (t_str&   message);
-        t_str_c getPartMessage       ()                          const;
-        void    comparePassword      ();
+        t_str_c getPartMessage       ()                            const;
+        void    comparePassword      (int socket);
         void    parseIncomingMessage (t_str_c& incomingMessage,
                                       int socket);
         bool    hasUnallowedChar     (t_str_c& strToCheck,
-                                      t_str_c& unallowedChars)   const;
+                                      t_str_c& unallowedChars)     const;
         
         /* user/channel handling */
         bool isErasable              (int socket)                const;
@@ -198,7 +198,7 @@ class Server{
                                   t_str_c& channelName,
                                   t_str_c& message);
         void ERR_UNKNOWNCOMMAND  (int socketSender);
-
+		void ERR_PASSWDMISMATCH  (int socketSender);
 };
 
 #endif // CLASS_SERVER_HPP

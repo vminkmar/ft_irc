@@ -26,9 +26,13 @@ bool Server::serverRunning = true;
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> member functions */
 
-void Server::start(){
+void Server::start(int argc, char **argv){
   
     /* get sizeof of struct sockaddr_in address */
+	if(inputCheck(argc) == false)
+		return;
+	if (getPortAndPasswd(argv) == false)
+		return;
     this->m_addrlen = sizeof(this->address);
 
     /* set socket int to m_server_fd */
@@ -82,18 +86,21 @@ void Server::start(){
         routine();
     }
 	close(m_server_fd);
-	/* @note close bot fd*/
+	close(Marvin.socket);
 }
 
-// void Server::getPortAndPasswd(char **argv) {
-//   std::string str = argv[1];
-//   for (size_t i = 0; i < str.size() - 1; i++)
-//     if (isnumber(str[i]) == false)
-//       error("Bad input as Port");
-//   this->m_port = atoi(argv[1]);
-// 	std::string passwd = argv[2];
-// 	m_passwd = passwd;
-// }
+bool Server::getPortAndPasswd(char **argv) {
+  std::string str = argv[1];
+  for (size_t i = 0; i < str.size() - 1; i++)
+    if (isnumber(str[i]) == false){
+      LOG_ERR("Bad input as Port");
+	  return false;
+	}
+  	this->m_port = atoi(argv[1]);
+	std::string passwd = argv[2];
+	m_passwd = passwd;
+	return true;
+}
 
 
 void Server::signal_handler(int sig){
@@ -286,48 +293,52 @@ void Server::autoPromoteOperator()
 
 void Server::Messages(int socket){
     /* @note switch statements! */
-    if (m_command == "CAP"){
-        CMD_CAP(socket);
+	
+	if (m_command == "PASS"){
+        comparePassword(socket);
+		return;
     }
-    else if (m_command == "NICK"){
-        CMD_NICK(socket);
-    }
-    else if (m_command == "USER"){
-        CMD_USER(socket);
-    }
-    else if (m_command == "PING"){
-        CMD_PING(socket);
-    }
-    else if (m_command == "QUIT"){
-        CMD_QUIT(socket);
-    }
-    else if (m_command == "JOIN"){
-        CMD_JOIN(socket);
-    }
-    else if (m_command == "PART"){
-        CMD_PART(socket);
-    }
-    else if (m_command == "PRIVMSG"){
-        CMD_PRIVMSG(socket);
-    }
-    else if (m_command == "TOPIC"){
-        CMD_TOPIC(socket);
-    }
-    else if (m_command == "INVITE"){
-        CMD_INVITE(socket);
-    }
-    else if (m_command == "KICK"){
-        CMD_KICK(socket);
-    }
-    else if (m_command == "MODE"){
-        CMD_MODE(socket);
+    if(um.getRegisteredStatus(socket) == true){
+		if (m_command == "CAP"){
+   		    CMD_CAP(socket);
+   		}
+   		else if (m_command == "NICK"){
+   		    CMD_NICK(socket);
+   		}
+   		else if (m_command == "USER"){
+   		    CMD_USER(socket);
+   		}
+    	else if (m_command == "PING"){
+    	    CMD_PING(socket);
+    	}
+    	else if (m_command == "QUIT"){
+    	    CMD_QUIT(socket);
+    	}
+    	else if (m_command == "JOIN"){
+    	    CMD_JOIN(socket);
+    	}
+    	else if (m_command == "PART"){
+    	    CMD_PART(socket);
+    	}
+    	else if (m_command == "PRIVMSG"){
+    	    CMD_PRIVMSG(socket);
+    	}
+    	else if (m_command == "TOPIC"){
+    	    CMD_TOPIC(socket);
+    	}
+    	else if (m_command == "INVITE"){
+    	    CMD_INVITE(socket);
+    	}
+    	else if (m_command == "KICK"){
+    	    CMD_KICK(socket);
+    	}
+    	else if (m_command == "MODE"){
+    	    CMD_MODE(socket);
+		}
+    	else{
+			ERR_UNKNOWNCOMMAND(socket);
+    	}
 	}
-    // else if (m_command == "PASS")
-    //     comparePassword();
-    // }
-    else{
-		ERR_UNKNOWNCOMMAND(socket);
-    }
     cleanEmptyChannels();
     autoPromoteOperator();
 }
@@ -367,13 +378,16 @@ t_str_c Server::getPartMessage() const{
     return DEFMSG_PART;
 }
 
-// void Server::comparePassword(){
-// 	if(m_passwd == m_parameters[0])
-
-// 	else
-// 		throw sendError()
-// 		writeToOutputBuffer(ERR_PASSWD)
-// }
+void Server::comparePassword(int socket){
+	if(um.getRegisteredStatus(socket) == true)
+		ERR_ALREADYREGISTRED(socket);
+	else if(m_passwd != m_parameters[0])
+		ERR_PASSWDMISMATCH(socket);
+	else{
+		um.setRegisteredStatus(socket, true);
+		LOG_ERR(itostr(um.getRegisteredStatus(socket)));
+	}
+}
 
 void Server::parseIncomingMessage(t_str_c& incomingMessage, int socket){
     t_str message = incomingMessage;

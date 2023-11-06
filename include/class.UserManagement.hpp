@@ -37,20 +37,21 @@ class UserManagement{
         void setNickname      (int socket, t_str_c& newNickname);
         void setOnlineStatus  (int socket, bool flag);
         void setWelcomedStatus(int socket, bool flag);
+		void setRegisteredStatus (int socket, bool flag);
         void appendToBuffer   (int socket, t_str_c& message, int flag);
         void eraseBuffer      (int socket, int start, int end, int flag);
 
         /* <---- user map getters */
-        int    getSocket        (t_str_c& nickname)    const;
-        t_str  getNickname      (int socket)           const;
-        t_str  getNicknames     ()                     const;
-        t_str  getUsername      (int socket)           const;
-        t_str  getUsernames     ()                     const;
-        t_str  getBuffer        (int socket, int flag) const;
-        bool   getOnlineStatus  (int socket)           const;
-        bool   getWelcomedStatus(int socket)           const;
-		User * getUser          (int socket);
-
+        int    getSocket          (t_str_c& nickname)    const;
+        t_str  getNickname        (int socket)           const;
+        t_str  getNicknames       ()                     const;
+        t_str  getUsername        (int socket)           const;
+        t_str  getUsernames       ()                     const;
+        t_str  getBuffer          (int socket, int flag) const;
+        bool   getOnlineStatus    (int socket)           const;
+        bool   getWelcomedStatus  (int socket)           const;
+		User * getUser            (int socket);
+		bool   getRegisteredStatus(int socket)          const;
         /* <------ channel map operations-----> */
         void addChannel      (t_str_c& channelName);
         void eraseChannel    (t_str_c& channelName);

@@ -48,6 +48,15 @@ void User::setUsername(t_str_c& username){
     m_username = username;
 }
 
+void User::setRegisteredStatus(bool flag){
+	if(flag == true){
+		m_registeredStatus = true;
+	}
+	else{
+		m_registeredStatus = false;
+	}
+}
+
 void User::appendInputBuffer(t_str_c& message){
 	m_inputBuffer.append(message);
 }
@@ -95,6 +104,10 @@ bool User::getOnlineStatus() const{
 
 bool User::getWelcomedStatus() const{
     return m_welcomed;
+}
+
+bool User::getRegisteredStatus() const{
+	return m_registeredStatus;
 }
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> operator overloads */

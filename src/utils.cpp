@@ -43,4 +43,10 @@ t_vec_str split(t_str_c &parameter, char delimiter)
     return split;
 }
 
+bool inputCheck(int argc){
+	if(argc != 3)
+		return false;
+	return true;
+}
+
 // -------------------------------------------------------------------------- //

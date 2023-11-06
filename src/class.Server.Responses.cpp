@@ -293,4 +293,10 @@ void Server::ERR_UNKNOWNCOMMAND(int socketSender){
   um.appendToBuffer(socketSender, str, OUTPUT);
 }
 
+void Server::ERR_PASSWDMISMATCH(int socketSender){
+	LOG_ERR("password false");
+	t_str str = ":" + SERVERNAME + " 464 " + "PASS" + " :Password incorrect\r\n";;
+	um.appendToBuffer(socketSender, str, OUTPUT);
+}
+
 // -------------------------------------------------------------------------- //

@@ -16,6 +16,7 @@
      * and stores it in a vector (std::string) */
     t_vec_str split(t_str_c& parameter, char delimiter);
 
+	bool inputCheck(int argc);
 #endif // UTILS_HPP
 
 // -------------------------------------------------------------------------- //
