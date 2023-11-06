@@ -210,7 +210,7 @@ void Server::ERR_BADCHANNELKEY(int socket, t_str_c &channelName)
 void Server::ERR_INVITEONLYCHAN(int socket, t_str_c &channelName)
 {
     LOG_ERR("Tried to join invite-only channel " + channelName + "!");
-    t_str str = "473 " + um.getNickname(socket) + " " + channelName + " :Cannot join channel (+j)\r\n";
+    t_str str = "473 " + um.getNickname(socket) + " " + channelName + " :Cannot join channel (+i)\r\n";
     um.appendToBuffer(socket, str, OUTPUT);
 }
 

@@ -151,6 +151,19 @@ int Channel::getFirstUserSocket() const
     throw std::runtime_error("getFirstUserSocket: No Users in Channel!");
 }
 
+int Channel::getLastUserSocket() const
+{
+    if (m_users.size() > 1)
+    {
+        return (--m_users.end())->first;
+    }
+    if (m_users.size() == 1)
+    {
+        return m_users.begin()->first;
+    }
+    throw std::runtime_error("getFirstUserSocket: No Users in Channel!");
+}
+
 bool Channel::isInviteOnly() const
 {
     return m_inviteOnly;

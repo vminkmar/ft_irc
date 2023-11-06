@@ -553,13 +553,18 @@ void Server::CMD_MODE(int socket)
                 }
             }
 
+            t_str modechange = std::string(1, plusorminus) + modechar;
             t_str param;
             if (it != m_parameters.end())
             {
-                param = *it;
+                param = *(it);
             }
-            RPL_CHANNELMODEIS(socket, socket, channelName, std::string(1, plusorminus) + modechar, param);
-            t_str msg = "Channel mode changed with: " + std::string(1, plusorminus) + modechar + " " + param;
+            if (param == modechange)
+            {
+                param = "";
+            }
+            RPL_CHANNELMODEIS(socket, socket, channelName, modechange, param);
+            t_str msg = "Channel mode changed with: " + modechange + " " + param;
             broadcast(Marvin.self->getNickname(), channelName, "", msg, "PRIVMSG");
         }
     }

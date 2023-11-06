@@ -295,10 +295,10 @@ void Server::cleanEmptyChannels()
     t_vec_str_c channelNames = split(um.getChannelNames(), ',');
     for (t_vec_str_cit it = channelNames.begin(); it != channelNames.end(); ++it)
     {
-
         t_str_c channelName = *it;
         Channel const *channel = um.getChannel(channelName);
-        if (channel->getNumberOfUsers() == 1)
+        if (channel->getNumberOfUsers() < 1 ||
+            (channel->getNumberOfUsers() == 1 && um.getNickname(channel->getFirstUserSocket()) == "Marvin"))
         {
             um.eraseChannel(channelName);
             LOG(channelName + " has been removed (no Users)");
@@ -312,20 +312,19 @@ void Server::autoPromoteOperator()
 
     for (t_vec_str_cit it = channelNames.begin(); it != channelNames.end(); ++it)
     {
-
         t_str_c &channelName = *it;
         Channel *channel = um.getChannel(*it);
 
         if (channel->hasOperator() == false)
         {
+            int socketLastUser = channel->getLastUserSocket();
+            t_str_c &nicknameLastUser = um.getNickname(socketLastUser);
 
-            int socketFirstUser = channel->getFirstUserSocket();
-            t_str_c &nicknameFirstUser = um.getNickname(socketFirstUser);
+            channel->addUser(socketLastUser, OPERATOR);
 
-            channel->addUser(socketFirstUser, OPERATOR);
+            t_str msg = nicknameLastUser + t_str_c(DEFMSG_PROMOTION);
 
-            t_str msg = t_str_c(DEFMSG_PROMOTION) + "(Last Operator left the channel)";
-            broadcast(nicknameFirstUser, channelName, "", msg, "PRIVMSG");
+            broadcast(Marvin.self->getNickname(), channelName, "", msg, "PRIVMSG");
         }
     }
 }

@@ -19,7 +19,7 @@
 #define COLOUR_ERR RED
 
 #ifndef TMP
-// #define TMP
+#define TMP
 #endif // TMP
 
 void Server::LOG(t_str_c &message) const
