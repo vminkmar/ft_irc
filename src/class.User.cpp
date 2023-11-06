@@ -1,7 +1,8 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/class.User.hpp" // needed for User class, std::string, ENUM
-#include <iostream>                  // needed for std::ostream
+#include "../include/class.User.hpp" // needed for User class, t_str, ENUM
+
+#include <iostream> // needed for std::ostream
 
 #ifndef DEBUG
 #define DEBUG 0
@@ -12,7 +13,7 @@
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> non-class functions */
 
-static inline void print_log(std::string const& message){
+static inline void print_log(t_str_c& message){
   if (DEBUG) {
     std::cerr << YELLOW << "User: " << message << RESET << std::endl;
   }
@@ -39,19 +40,19 @@ User::~User(){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> setters */
 
-void User::setNickname(std::string const& nickname){
+void User::setNickname(t_str_c& nickname){
     m_nickname = nickname;
 }
 
-void User::setUsername(std::string const& username){
+void User::setUsername(t_str_c& username){
     m_username = username;
 }
 
-void User::appendInputBuffer(std::string const& message){
+void User::appendInputBuffer(t_str_c& message){
 	m_inputBuffer.append(message);
 }
 
-void User::appendOutputBuffer(std::string const& message){
+void User::appendOutputBuffer(t_str_c& message){
 	m_outputBuffer.append(message);
 }
 
@@ -72,19 +73,19 @@ void User::toggleWelcomedStatus(){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> getters */
 
-std::string const& User::getNickname() const{
+t_str_c& User::getNickname() const{
     return m_nickname;
 }
 
-std::string const& User::getUsername() const{
+t_str_c& User::getUsername() const{
     return m_username;
 }
 
-std::string const& User::getInputBuffer() const{
+t_str_c& User::getInputBuffer() const{
     return m_inputBuffer;
 }
 
-std::string const& User::getOutputBuffer() const{
+t_str_c& User::getOutputBuffer() const{
 	return m_outputBuffer;
 }
 

@@ -126,7 +126,7 @@ int UserManagement::getSocket(t_str_c& nickname) const{
     throw std::runtime_error("getSocket: User not found!");
 }
 
-UserManagement::t_str UserManagement::getNickname(int socket) const{
+t_str UserManagement::getNickname(int socket) const{
     t_um_users_cit it = m_users.find(socket);
     if (it != m_users.end()){
         return it->second.getNickname();
@@ -134,7 +134,7 @@ UserManagement::t_str UserManagement::getNickname(int socket) const{
     throw std::runtime_error("getNickname: User not found!");
 }
 
-UserManagement::t_str UserManagement::getNicknames() const{
+t_str UserManagement::getNicknames() const{
     if (m_users.empty()){
         return "";
     }
@@ -149,7 +149,7 @@ UserManagement::t_str UserManagement::getNicknames() const{
     return ss.str();
 }
 
-UserManagement::t_str UserManagement::getUsername(int socket) const {
+t_str UserManagement::getUsername(int socket) const {
     t_um_users_cit it = m_users.find(socket);
     if (it != m_users.end()){
         return it->second.getUsername();
@@ -157,7 +157,7 @@ UserManagement::t_str UserManagement::getUsername(int socket) const {
     throw std::runtime_error("getUsername: User not found!");
 }
 
-UserManagement::t_str UserManagement::getUsernames() const{
+t_str UserManagement::getUsernames() const{
     if (m_users.empty()){
         return "";
     }
@@ -172,7 +172,7 @@ UserManagement::t_str UserManagement::getUsernames() const{
     return ss.str();
 }
 
-UserManagement::t_str UserManagement::getBuffer(int socket, int flag) const{
+t_str UserManagement::getBuffer(int socket, int flag) const{
     if (flag == INPUT){
         return m_users.find(socket)->second.getInputBuffer();
     }

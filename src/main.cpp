@@ -1,6 +1,6 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/class.Server.hpp"
+#include "../include/class.Server.hpp" // needed for Server class
 
 int main(int argc, char *argv[]) {
     (void)argc;

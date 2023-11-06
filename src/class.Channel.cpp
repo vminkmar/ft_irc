@@ -1,6 +1,7 @@
 // -------------------------------------------------------------------------- //
 
-#include "../include/class.Channel.hpp" // needed for Channel class
+#include "../include/class.Channel.hpp"       // needed for Channel class
+#include "../include/class.Server.Config.hpp" // needed for CHANNEL_USERLIMIT
 
 #include <iostream>  // needed for std::cerr, std::endl
 
@@ -13,7 +14,7 @@
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> non-class functions */
 
-static inline void print_log(std::string message){
+static inline void print_log(t_str message){
     if (DEBUG){
         std::cerr << YELLOW << "Channel: " << message << RESET << std::endl;
     }
@@ -31,7 +32,7 @@ static inline void print_bool(std::ostream& os, bool is, bool nl){
 	}
 }
 
-static inline void print_stdstr(std::ostream& os, std::string str, bool nl){
+static inline void print_stdstr(std::ostream& os, t_str str, bool nl){
     if (str.empty() == true){
 		os << "not set";
 	}
@@ -45,10 +46,10 @@ static inline void print_stdstr(std::ostream& os, std::string str, bool nl){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> constructors */
 
-Channel::Channel(std::string const& name) : m_name(name),
-                                            m_userLimit(USER_LIMIT_MAX),
-                                            m_inviteOnly(false),
-                                            m_topicEditable(true){
+Channel::Channel(t_str_c& name) : m_name(name),
+                                  m_userLimit(CHANNEL_USERLIMIT),
+                                  m_inviteOnly(false),
+                                  m_topicEditable(true){
 	print_log("name constructor called");
 }
 
@@ -67,15 +68,15 @@ Channel::~Channel(){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> setters */
 
-void Channel::setName(std::string const& newName){
+void Channel::setName(t_str_c& newName){
 	m_name = newName;
 }
 
-void Channel::setTopic(std::string const& newTopic){
+void Channel::setTopic(t_str_c& newTopic){
 	m_topic = newTopic;
 }
 
-void Channel::setPassword(std::string const& newPassword){
+void Channel::setPassword(t_str_c& newPassword){
 	m_password = newPassword;
 }
 
@@ -93,15 +94,15 @@ void Channel::toggleTopicEditable(){
 
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> getters */
 
-std::string const& Channel::getName() const{
+t_str_c& Channel::getName() const{
 	return m_name;
 }
 
-std::string const& Channel::getTopic() const{
+t_str_c& Channel::getTopic() const{
 	return m_topic;
 }
 
-std::string const& Channel::getPassword() const{
+t_str_c& Channel::getPassword() const{
 	return m_password;
 }
 

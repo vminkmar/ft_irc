@@ -4,10 +4,11 @@
 # define CLASS_SERVERCONFIG_HPP
 
 /* MAIN SETTINGS */
-#define PORT       6667
-#define HOST       "localhost"
-#define SERVERNAME std::string("vmeeeezy")
-#define MAX_CLIENTS 512
+#define PORT              6667
+#define HOST              "localhost"
+#define SERVERNAME        std::string("vmeeeezy")
+#define MAX_CLIENTS       512
+#define CHANNEL_USERLIMIT 10
 
 /* UN/AllOWED CHARS */
 #define CHAR_UNALLOWED_NICK  " !@#$%^&*()[]{}<>:;,/"

@@ -549,7 +549,7 @@ void Server::CMD_MODE(int socket)
             {
                 if (plusorminus == '-')
                 {
-                    channel->setUserLimit(USER_LIMIT_MAX);
+                    channel->setUserLimit(CHANNEL_USERLIMIT);
                 }
                 else
                 {

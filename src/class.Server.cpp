@@ -567,9 +567,9 @@ void Server::broadcast(t_str_c& sender,
     
     int socketSender = um.getSocket(sender);
     Channel const* channel = um.getChannel(channelName);
-    Channel::t_channel_users members = channel->getUserMap();
+    t_channel_users members = channel->getUserMap();
 
-    for (Channel::t_channel_users_cit it = members.begin();
+    for (t_channel_users_cit it = members.begin();
                                       it != members.end();
                                       ++it){
         t_str_c& nickname = um.getNickname(it->first);

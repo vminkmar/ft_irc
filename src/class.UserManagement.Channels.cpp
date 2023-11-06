@@ -108,8 +108,8 @@ std::string UserManagement::getChannelNames() const{
 std::string UserManagement::getChannelUsernames
                                         (std::string const& channelName) const{
     std::stringstream ss;
-    Channel::t_channel_users UserMap = getChannel(channelName)->getUserMap();
-    for (Channel::t_channel_users_cit it = UserMap.begin();
+    t_channel_users UserMap = getChannel(channelName)->getUserMap();
+    for (t_channel_users_cit it = UserMap.begin();
                                       it != UserMap.end();
                                       ++it){
         t_um_users_cit usr = m_users.find(it->first);
@@ -130,8 +130,8 @@ std::string UserManagement::getChannelUsernames
 std::string UserManagement::getChannelNicknames
                                         (std::string const& channelName) const{
     std::stringstream ss;
-    Channel::t_channel_users UserMap = getChannel(channelName)->getUserMap();
-    for (Channel::t_channel_users_cit it = UserMap.begin();
+    t_channel_users UserMap = getChannel(channelName)->getUserMap();
+    for (t_channel_users_cit it = UserMap.begin();
                                       it != UserMap.end();
                                       ++it){
         t_um_users_cit usr = m_users.find(it->first);
@@ -147,9 +147,9 @@ std::string UserManagement::getChannelNicknames
 
 std::string UserManagement::getChannelOperatorNicknames(t_str_c& channelName) const{
     std::stringstream ss;
-    Channel::t_channel_users UserMap = getChannel(channelName)->getUserMap();
-	Channel::t_channel_users_cit last = --UserMap.end();
-    for (Channel::t_channel_users_cit it = UserMap.begin();
+    t_channel_users UserMap = getChannel(channelName)->getUserMap();
+	t_channel_users_cit last = --UserMap.end();
+    for (t_channel_users_cit it = UserMap.begin();
                                       it != UserMap.end();
                                       ++it){
         t_um_users_cit usr = m_users.find(it->first);
