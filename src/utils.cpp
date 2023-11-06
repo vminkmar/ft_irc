@@ -2,6 +2,7 @@
 
 #include "../include/utils.hpp" // needed for declaration
 
+#include <iostream> // needed for std::cerr
 #include <sstream> // needed for std::stringstream
 
 t_str_c itostr(int i)
@@ -44,8 +45,9 @@ t_vec_str split(t_str_c &parameter, char delimiter)
 }
 
 bool inputCheck(int argc){
-	if(argc != 3)
+	if(argc != 3){
 		return false;
+	}
 	return true;
 }
 

@@ -30,9 +30,15 @@ void Server::start(int argc, char **argv){
   
     /* get sizeof of struct sockaddr_in address */
 	if(inputCheck(argc) == false)
+	{
+		LOG_ERR("Wrong number of arguments");
+		LOG("Usage: ./ircserv <PORT> <PASSWD>");
 		return;
+	}
 	if (getPortAndPasswd(argv) == false)
+	{
 		return;
+	}
     this->m_addrlen = sizeof(this->address);
 
     /* set socket int to m_server_fd */
@@ -91,12 +97,16 @@ void Server::start(int argc, char **argv){
 
 bool Server::getPortAndPasswd(char **argv) {
   std::string str = argv[1];
-  for (size_t i = 0; i < str.size() - 1; i++)
+  for (size_t i = 0; i < str.size(); i++)
     if (isnumber(str[i]) == false){
       LOG_ERR("Bad input as Port");
 	  return false;
 	}
   	this->m_port = atoi(argv[1]);
+	if (this->m_port != PORT){
+		LOG_ERR("Wrong Port given. Use Port # 6667!");
+		return false;
+	}
 	std::string passwd = argv[2];
 	m_passwd = passwd;
 	return true;
@@ -292,8 +302,6 @@ void Server::autoPromoteOperator()
 /* <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> command parsing */
 
 void Server::Messages(int socket){
-    /* @note switch statements! */
-	
 	if (m_command == "PASS"){
         comparePassword(socket);
 		return;
