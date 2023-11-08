@@ -3,8 +3,6 @@
 #ifndef TYPEDEFS_HPP
 #define TYPEDEFS_HPP
 
-// #include "class.User.hpp"    // needed for User class
-// #include "class.Channel.hpp" // needed for Channel class
 #include <map>    // needed for std::map <-- c11 would be unordered map
 #include <poll.h> // needed for poll_fd
 #include <string> // needed for std::string
@@ -18,15 +16,15 @@ class Channel;
 /* used to describe channel users rights */
 enum UserPrivilege
 {
-    USER,
-    OPERATOR,
+  USER,
+  OPERATOR,
 };
 
 /* used to store bot information/data */
 struct ServerBot
 {
-    int socket;
-    User *self;
+  int socket;
+  User *self;
 };
 
 // ------------------ std::string --------------------------- //
