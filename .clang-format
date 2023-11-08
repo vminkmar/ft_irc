@@ -1,0 +1,9 @@
+Language:             Cpp
+BasedOnStyle:         Microsoft
+AccessModifierOffset: -4
+BreakBeforeBraces:    Allman
+AllowShortFunctionsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+IndentWidth:          4
+TabWidth:             4
