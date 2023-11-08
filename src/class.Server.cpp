@@ -113,12 +113,13 @@ void Server::start(int argc, char **argv)
 bool Server::getPortAndPasswd(char **argv)
 {
     std::string str = argv[1];
-    for (size_t i = 0; i < str.size(); i++)
-        if (isnumber(str[i]) == false)
+    for (size_t i = 0; i < str.size(); i++){
+        if (std::isdigit(str[i]) == false)
         {
             LOG_ERR("Bad input as Port");
             return false;
         }
+    }
     this->m_port = atoi(argv[1]);
     if (this->m_port != PORT)
     {

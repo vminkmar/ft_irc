@@ -44,13 +44,13 @@ typedef t_vec_str const t_vec_str_c;
 typedef t_vec_str::iterator t_vec_str_it;
 typedef t_vec_str::const_iterator t_vec_str_cit;
 
-/* used to store all accepted socket fd */
+/* used to store all accepted socket fds */
 typedef std::vector<pollfd> t_vec_pollfd;
 typedef t_vec_pollfd::iterator t_vec_pollfd_it;
 
 // ------------------ std::maps --------------------------- //
 
-/* used to store sockets and their User class */
+/* used to store user sockets and their User class */
 typedef std::map<int, User> t_um_users;
 typedef t_um_users::iterator t_um_users_it;
 typedef t_um_users::const_iterator t_um_users_cit;
@@ -60,7 +60,7 @@ typedef std::map<t_str, Channel> t_um_channels;
 typedef t_um_channels::iterator t_um_channels_it;
 typedef t_um_channels::const_iterator t_um_channels_cit;
 
-/* used to store users and their privileges in a channel */
+/* used to store user sockets and their privileges in a channel */
 typedef std::map<int, UserPrivilege> t_channel_users;
 typedef t_channel_users::iterator t_channel_users_it;
 typedef t_channel_users::const_iterator t_channel_users_cit;
