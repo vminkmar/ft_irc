@@ -22,4 +22,4 @@ You need to install Weechat.
 
 `make`
 
-`./irc <port> <password>`
+`./ircserv <port> <password>`
