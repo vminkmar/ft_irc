@@ -18,7 +18,9 @@ This is a C++ 98 implementation of an IRC server named ircserv. The server is de
 
 ### **Usage**
 
-You need to install WeeChat. You can run WeeChat multiple times and set different users. If you attempt to use the same user, our server will send back an error message, and WeeChat will automatically change the name, retrying the login with the updated name.
+You need to install WeeChat.
+
+You can run WeeChat multiple times and set different users. If you attempt to use the same user, our server will send back an error message, and WeeChat will automatically change the name, retrying the login with the updated name.
 
 `make`
 
