@@ -1,7 +1,9 @@
 # **ft_irc**
 This is a C++ 98 implementation of an IRC server named ircserv. The server is designed to handle multiple clients concurrently without hanging, utilizing non-blocking I/O operations. The project strictly adheres to certain guidelines and specifications outlined in this README.
 
-## **Functionality**
+##**Project Overview**
+
+### **Features**
 - Capable of handling multiple clients simultaneously without hanging.
 - Capable of handling multiple clients simultaneously without hanging.
 - All I/O operations must be non-blocking.
@@ -14,3 +16,10 @@ This is a C++ 98 implementation of an IRC server named ircserv. The server is de
 - Implement commands for channel operators: KICK, INVITE, TOPIC, MODE (with subcommands).
   MODE subcommands: i, t, k, o, l.
 
+### **Usage**
+
+You need to install Weechat.
+
+`make`
+
+`./irc <port> <password>`
