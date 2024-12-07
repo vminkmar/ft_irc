@@ -384,6 +384,14 @@ void Server::CMD_KICK(int socketSender)
             }
             else
             {
+                if (nicknameKicked == "Marvin")
+                {
+                    broadcast(nicknameKicked, channelName, "",
+                              "Hey " + um.getNickname(socketSender) + ", you tried to kick me ... Bloody Bastard!",
+                              "PRIVMSG");
+                    continue;
+                }
+
                 int socketTarget = um.getSocket(nicknameKicked);
                 if (channel->isMember(socketTarget) == false)
                 {
